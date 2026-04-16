@@ -1,0 +1,87 @@
+import api from './client';
+
+// Auth
+export const login = (email, password) =>
+  api.post('/auth/login/', { email, password });
+
+export const register = (data) =>
+  api.post('/auth/registration/', data);
+
+export const googleLogin = (code) =>
+  api.post('/users/google/', { code });
+
+export const refreshToken = (refresh) =>
+  api.post('/auth/token/refresh/', { refresh });
+
+export const logout = () =>
+  api.post('/auth/logout/');
+
+// Users
+export const getCurrentUser = () =>
+  api.get('/users/me/');
+
+export const updateCurrentUser = (data) =>
+  api.patch('/users/me/', data);
+
+export const updateCurrentUserWithFile = (formData) =>
+  api.patch('/users/me/', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const getPublicUser = (id) =>
+  api.get(`/users/${id}/`);
+
+// Categories
+export const getCategories = () =>
+  api.get('/categories/');
+
+export const getCategory = (slug) =>
+  api.get(`/categories/${slug}/`);
+
+// Professionals
+export const getProfessionals = (params) =>
+  api.get('/professionals/', { params });
+
+export const getProfessional = (id) =>
+  api.get(`/professionals/${id}/`);
+
+export const createProfessionalProfile = (data) =>
+  api.post('/professionals/', data);
+
+export const updateProfessionalProfile = (id, data) =>
+  api.patch(`/professionals/${id}/`, data);
+
+export const deleteProfessionalProfile = (id) =>
+  api.delete(`/professionals/${id}/`);
+
+// Jobs
+export const getJobs = (params) =>
+  api.get('/jobs/', { params });
+
+export const getJob = (id) =>
+  api.get(`/jobs/${id}/`);
+
+export const createJob = (data) =>
+  api.post('/jobs/', data);
+
+export const updateJob = (id, data) =>
+  api.patch(`/jobs/${id}/`, data);
+
+export const deleteJob = (id) =>
+  api.delete(`/jobs/${id}/`);
+
+// Reviews
+export const getReviews = (params) =>
+  api.get('/reviews/', { params });
+
+export const getReview = (id) =>
+  api.get(`/reviews/${id}/`);
+
+export const createReview = (data) =>
+  api.post('/reviews/', data);
+
+export const updateReview = (id, data) =>
+  api.patch(`/reviews/${id}/`, data);
+
+export const deleteReview = (id) =>
+  api.delete(`/reviews/${id}/`);
