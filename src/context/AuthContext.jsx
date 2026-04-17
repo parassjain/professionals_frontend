@@ -45,6 +45,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const { data } = await apiLogin(email, password);
+    localStorage.setItem('tokens', JSON.stringify({ access: data.access, refresh: data.refresh }));
     const userRes = await getCurrentUser();
     saveAuth(data, userRes.data);
     return userRes.data;
@@ -52,6 +53,7 @@ export function AuthProvider({ children }) {
 
   const register = async (formData) => {
     const { data } = await apiRegister(formData);
+    localStorage.setItem('tokens', JSON.stringify({ access: data.access, refresh: data.refresh }));
     const userRes = await getCurrentUser();
     saveAuth(data, userRes.data);
     return userRes.data;
@@ -59,6 +61,7 @@ export function AuthProvider({ children }) {
 
   const googleLogin = async (code) => {
     const { data } = await apiGoogleLogin(code);
+    localStorage.setItem('tokens', JSON.stringify({ access: data.access, refresh: data.refresh }));
     const userRes = await getCurrentUser();
     saveAuth(data, userRes.data);
     return userRes.data;
