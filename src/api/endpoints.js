@@ -38,6 +38,15 @@ export const getCategories = () =>
 export const getCategory = (slug) =>
   api.get(`/categories/${slug}/`);
 
+export const createCategory = (data) =>
+  api.post('/categories/', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+
+export const updateCategory = (slug, data) =>
+  api.patch(`/categories/${slug}/`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+
+export const deleteCategory = (slug) =>
+  api.delete(`/categories/${slug}/`);
+
 // Professionals
 export const getProfessionals = (params) =>
   api.get('/professionals/', { params });
