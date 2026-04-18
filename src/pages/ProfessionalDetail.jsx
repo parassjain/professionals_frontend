@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProfessional, getReviews, createReview, updateReview, revealContact } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Clock, Shield, Star } from 'lucide-react';
+import { MapPin, Clock, Shield, Star, CheckCircle, XCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import StarInput from '../components/StarInput';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -281,14 +281,40 @@ export default function ProfessionalDetail() {
               <h3>Contact Info</h3>
               {contactInfo ? (
                 <>
-                  {contactInfo.email && <p style={{ wordBreak: 'break-all' }}>{contactInfo.email}</p>}
-                  {contactInfo.phone && <p>{contactInfo.phone}</p>}
+                  {contactInfo.email && (
+                    <p style={{ wordBreak: 'break-all' }}>
+                      {contactInfo.email}
+                      {pro.user?.is_email_verified
+                        ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email verified" />
+                        : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email not verified" />}
+                    </p>
+                  )}
+                  {contactInfo.phone && (
+                    <p>
+                      {contactInfo.phone}
+                      {pro.user?.is_phone_verified
+                        ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone verified" />
+                        : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone not verified" />}
+                    </p>
+                  )}
                   {!contactInfo.email && !contactInfo.phone && <p className="text-muted">No contact info available.</p>}
                 </>
               ) : (
                 <>
-                  <p className="text-muted">{pro.masked_email}</p>
-                  {pro.masked_phone && <p className="text-muted">{pro.masked_phone}</p>}
+                  <p className="text-muted">
+                    {pro.masked_email}
+                    {pro.user?.is_email_verified
+                      ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email verified" />
+                      : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email not verified" />}
+                  </p>
+                  {pro.masked_phone && (
+                    <p className="text-muted">
+                      {pro.masked_phone}
+                      {pro.user?.is_phone_verified
+                        ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone verified" />
+                        : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone not verified" />}
+                    </p>
+                  )}
                   {contactError && <p className="text-muted text-sm" style={{ marginTop: '6px', color: '#ef4444' }}>{contactError}</p>}
                   {isAuthenticated ? (
                     <button
