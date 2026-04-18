@@ -19,6 +19,8 @@ export default function ProfessionalDetail() {
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editForm, setEditForm] = useState({ rating: 5, comment: '' });
   const [editError, setEditError] = useState('');
+  const [reviewImage, setReviewImage] = useState(null);
+  const [editImage, setEditImage] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -40,10 +42,16 @@ export default function ProfessionalDetail() {
     setReviewError('');
     setSubmitting(true);
     try {
-      await createReview({ reviewed_user: pro.user.id, ...reviewForm });
+      const fd = new FormData();
+      fd.append('reviewed_user', pro.user.id);
+      fd.append('rating', reviewForm.rating);
+      fd.append('comment', reviewForm.comment);
+      if (reviewImage) fd.append('image', reviewImage);
+      await createReview(fd);
       const revRes = await getReviews({ reviewed_user: pro.user.id });
       setReviews(revRes.data.results || revRes.data);
       setReviewForm({ rating: 5, comment: '' });
+      setReviewImage(null);
       // Refresh pro to update avg rating
       const proRes = await getProfessional(id);
       setPro(proRes.data);
@@ -59,10 +67,15 @@ export default function ProfessionalDetail() {
     setEditError('');
     setSubmitting(true);
     try {
-      await updateReview(editingReviewId, editForm);
+      const fd = new FormData();
+      fd.append('rating', editForm.rating);
+      fd.append('comment', editForm.comment);
+      if (editImage) fd.append('image', editImage);
+      await updateReview(editingReviewId, fd);
       const revRes = await getReviews({ reviewed_user: pro.user.id });
       setReviews(revRes.data.results || revRes.data);
       setEditingReviewId(null);
+      setEditImage(null);
       const proRes = await getProfessional(id);
       setPro(proRes.data);
     } catch (err) {
@@ -143,6 +156,10 @@ export default function ProfessionalDetail() {
                       rows={3}
                     />
                   </div>
+                  <div className="form-group">
+                    <label>Photo (optional)</label>
+                    <input type="file" accept="image/*" onChange={(e) => setReviewImage(e.target.files[0] || null)} />
+                  </div>
                   <button type="submit" className="btn btn-primary" disabled={submitting}>
                     {submitting ? 'Submitting...' : 'Submit Review'}
                   </button>
@@ -197,17 +214,30 @@ export default function ProfessionalDetail() {
                                 rows={3}
                               />
                             </div>
+                            <div className="form-group">
+                              <label>Photo</label>
+                              {r.image && !editImage && (
+                                <img src={r.image} alt="Current review photo" style={{ display: 'block', maxWidth: '200px', marginBottom: '6px', borderRadius: '6px' }} />
+                              )}
+                              {editImage && (
+                                <img src={URL.createObjectURL(editImage)} alt="New review photo" style={{ display: 'block', maxWidth: '200px', marginBottom: '6px', borderRadius: '6px' }} />
+                              )}
+                              <input type="file" accept="image/*" onChange={(e) => setEditImage(e.target.files[0] || null)} />
+                            </div>
                             <div style={{ display: 'flex', gap: '8px' }}>
                               <button type="submit" className="btn btn-primary btn-sm" disabled={submitting}>
                                 {submitting ? 'Saving...' : 'Save'}
                               </button>
-                              <button type="button" className="btn btn-outline btn-sm" onClick={() => setEditingReviewId(null)}>
+                              <button type="button" className="btn btn-outline btn-sm" onClick={() => { setEditingReviewId(null); setEditImage(null); }}>
                                 Cancel
                               </button>
                             </div>
                           </form>
                         ) : (
-                          r.comment && <p>{r.comment}</p>
+                          <>
+                            {r.comment && <p>{r.comment}</p>}
+                            {r.image && <img src={r.image} alt="Review photo" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', marginTop: '8px' }} />}
+                          </>
                         )}
                       </div>
                     );
