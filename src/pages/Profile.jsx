@@ -79,7 +79,7 @@ export default function Profile() {
             {/* Profile Header */}
             <div className="profile-header">
               <div className="avatar avatar-lg">
-                {user.avatar ? <img src={user.avatar} alt="" /> : <span>{user.first_name?.[0]}{user.last_name?.[0]}</span>}
+                {(user.avatar || user.avatar_url) ? <img src={user.avatar || user.avatar_url} alt="" /> : <span>{user.first_name?.[0]}{user.last_name?.[0]}</span>}
                 <label className="avatar-upload">
                   <Edit size={14} />
                   <input type="file" accept="image/*" onChange={handleAvatarChange} hidden />

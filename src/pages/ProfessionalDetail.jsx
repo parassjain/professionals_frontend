@@ -65,7 +65,7 @@ export default function ProfessionalDetail() {
           <div className="detail-main">
             <div className="pro-detail-header">
               <div className="avatar avatar-lg">
-                {pro.user?.avatar ? <img src={pro.user.avatar} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
+                {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
               </div>
               <div>
                 <h1>{pro.user?.first_name} {pro.user?.last_name}</h1>

@@ -116,7 +116,7 @@ export default function Professionals() {
                 <Link to={`/professionals/${pro.id}`} key={pro.id} className="pro-card">
                   <div className="pro-card-header">
                     <div className="avatar">
-                      {pro.user?.avatar ? <img src={pro.user.avatar} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
+                      {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
                     </div>
                     <div>
                       <h3>{pro.user?.first_name} {pro.user?.last_name}</h3>
