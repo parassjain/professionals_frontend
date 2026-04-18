@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProfessional, getReviews, createReview } from '../api/endpoints';
+import { getProfessional, getReviews, createReview, updateReview } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
 import { MapPin, Clock, Shield, Star } from 'lucide-react';
 import StarRating from '../components/StarRating';
@@ -16,6 +16,9 @@ export default function ProfessionalDetail() {
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
   const [reviewError, setReviewError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editForm, setEditForm] = useState({ rating: 5, comment: '' });
+  const [editError, setEditError] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -46,6 +49,24 @@ export default function ProfessionalDetail() {
       setPro(proRes.data);
     } catch (err) {
       setReviewError(err.response?.data?.non_field_errors?.[0] || err.response?.data?.detail || 'Failed to submit review.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setEditError('');
+    setSubmitting(true);
+    try {
+      await updateReview(editingReviewId, editForm);
+      const revRes = await getReviews({ reviewed_user: pro.user.id });
+      setReviews(revRes.data.results || revRes.data);
+      setEditingReviewId(null);
+      const proRes = await getProfessional(id);
+      setPro(proRes.data);
+    } catch (err) {
+      setEditError(err.response?.data?.non_field_errors?.[0] || err.response?.data?.detail || 'Failed to update review.');
     } finally {
       setSubmitting(false);
     }
@@ -132,21 +153,65 @@ export default function ProfessionalDetail() {
                 <p className="text-muted">No reviews yet. Be the first to review!</p>
               ) : (
                 <div className="reviews-list">
-                  {reviews.map((r) => (
-                    <div key={r.id} className="review-card">
-                      <div className="review-header">
-                        <div className="avatar avatar-sm">
-                          <span>{r.reviewer?.first_name?.[0]}{r.reviewer?.last_name?.[0]}</span>
+                  {reviews.map((r) => {
+                    const isOwn = r.reviewer?.id === user?.id;
+                    const isEditing = editingReviewId === r.id;
+
+                    return (
+                      <div key={r.id} className="review-card">
+                        <div className="review-header">
+                          <div className="avatar avatar-sm">
+                            <span>{r.reviewer?.first_name?.[0]}{r.reviewer?.last_name?.[0]}</span>
+                          </div>
+                          <div>
+                            <strong>{r.reviewer?.first_name} {r.reviewer?.last_name}</strong>
+                            {!isEditing && <StarRating rating={r.rating} size={14} />}
+                          </div>
+                          <span className="text-muted text-sm">{new Date(r.created_at).toLocaleDateString()}</span>
+                          {isOwn && !isEditing && (
+                            <button
+                              className="btn btn-outline btn-sm"
+                              onClick={() => {
+                                setEditForm({ rating: r.rating, comment: r.comment });
+                                setEditError('');
+                                setEditingReviewId(r.id);
+                              }}
+                            >
+                              Edit
+                            </button>
+                          )}
                         </div>
-                        <div>
-                          <strong>{r.reviewer?.first_name} {r.reviewer?.last_name}</strong>
-                          <StarRating rating={r.rating} size={14} />
-                        </div>
-                        <span className="text-muted text-sm">{new Date(r.created_at).toLocaleDateString()}</span>
+
+                        {isEditing ? (
+                          <form onSubmit={handleEditSubmit}>
+                            {editError && <div className="alert alert-error">{editError}</div>}
+                            <div className="form-group">
+                              <label>Rating</label>
+                              <StarInput value={editForm.rating} onChange={(v) => setEditForm({ ...editForm, rating: v })} />
+                            </div>
+                            <div className="form-group">
+                              <label>Comment</label>
+                              <textarea
+                                value={editForm.comment}
+                                onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
+                                rows={3}
+                              />
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <button type="submit" className="btn btn-primary btn-sm" disabled={submitting}>
+                                {submitting ? 'Saving...' : 'Save'}
+                              </button>
+                              <button type="button" className="btn btn-outline btn-sm" onClick={() => setEditingReviewId(null)}>
+                                Cancel
+                              </button>
+                            </div>
+                          </form>
+                        ) : (
+                          r.comment && <p>{r.comment}</p>
+                        )}
                       </div>
-                      {r.comment && <p>{r.comment}</p>}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
