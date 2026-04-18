@@ -87,6 +87,18 @@ export default function ProfessionalDetail() {
     }
   };
 
+  const handleRevealContact = async () => {
+    setContactLoading(true);
+    try {
+      const res = await revealContact(id);
+      setContactInfo(res.data);
+    } catch {
+      // silently ignore
+    } finally {
+      setContactLoading(false);
+    }
+  };
+
   if (loading) return <LoadingSpinner />;
   if (!pro) return <div className="section container"><p>Professional not found.</p></div>;
 
@@ -261,6 +273,36 @@ export default function ProfessionalDetail() {
               )}
               <p><Star size={16} /> {pro.review_count || 0} reviews</p>
               <p>Member since {new Date(pro.created_at).toLocaleDateString()}</p>
+            </div>
+
+            <div className="sidebar-card">
+              <h3>Contact Info</h3>
+              {contactInfo ? (
+                <>
+                  {contactInfo.email && <p style={{ wordBreak: 'break-all' }}>{contactInfo.email}</p>}
+                  {contactInfo.phone && <p>{contactInfo.phone}</p>}
+                  {!contactInfo.email && !contactInfo.phone && <p className="text-muted">No contact info available.</p>}
+                </>
+              ) : (
+                <>
+                  <p className="text-muted">{pro.masked_email}</p>
+                  {pro.masked_phone && <p className="text-muted">{pro.masked_phone}</p>}
+                  {isAuthenticated ? (
+                    <button
+                      className="btn btn-primary btn-sm"
+                      style={{ marginTop: '8px', width: '100%' }}
+                      onClick={handleRevealContact}
+                      disabled={contactLoading}
+                    >
+                      {contactLoading ? 'Loading...' : 'View Contact Info'}
+                    </button>
+                  ) : (
+                    <Link to="/login" className="btn btn-outline btn-sm" style={{ marginTop: '8px', display: 'block', textAlign: 'center' }}>
+                      Login to view contact info
+                    </Link>
+                  )}
+                </>
+              )}
             </div>
           </aside>
         </div>
