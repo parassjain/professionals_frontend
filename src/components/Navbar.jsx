@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Menu, X, User, LogOut, Briefcase, Search, LayoutDashboard } from 'lucide-react';
+import { Menu, X, LogOut, Briefcase, Search, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
@@ -40,8 +40,13 @@ export default function Navbar() {
                   <LayoutDashboard size={16} /> Admin
                 </Link>
               )}
-              <Link to="/profile" onClick={() => setOpen(false)}>
-                <User size={16} /> {user?.first_name || 'Profile'}
+              <Link to="/profile" onClick={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <div className="avatar avatar-sm">
+                  {(user?.avatar || user?.avatar_url)
+                    ? <img src={user.avatar || user.avatar_url} alt="" />
+                    : <span>{user?.first_name?.[0]}{user?.last_name?.[0]}</span>}
+                </div>
+                {user?.first_name || 'Profile'}
               </Link>
               {!user?.is_professional && (
                 <Link to="/become-professional" className="btn btn-sm btn-primary" onClick={() => setOpen(false)}>
