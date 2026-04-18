@@ -35,6 +35,11 @@ export default function Navbar() {
 
           {isAuthenticated ? (
             <>
+              {user?.is_staff && (
+                <Link to="/admin" onClick={() => setOpen(false)} className="btn btn-sm" style={{ background: 'var(--gray-800)', color: 'white' }}>
+                  <LayoutDashboard size={16} /> Admin
+                </Link>
+              )}
               <Link to="/profile" onClick={() => setOpen(false)}>
                 <User size={16} /> {user?.first_name || 'Profile'}
               </Link>
