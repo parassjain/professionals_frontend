@@ -16,7 +16,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="container navbar-inner">
-        <Link to="/" className="navbar-brand">ProConnect</Link>
+        <Link to="/" className="navbar-brand">Contact Hub</Link>
 
         <button className="mobile-menu-btn" onClick={() => setOpen(!open)}>
           {open ? <X size={24} /> : <Menu size={24} />}

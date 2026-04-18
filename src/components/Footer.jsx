@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <h3>ProConnect</h3>
+            <h3>Contact Hub</h3>
             <p>Find trusted professionals for any service you need.</p>
           </div>
           <div>
@@ -23,7 +23,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} ProConnect. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Contact Hub. All rights reserved.</p>
         </div>
       </div>
     </footer>

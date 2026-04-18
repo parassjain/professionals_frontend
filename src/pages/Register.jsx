@@ -51,7 +51,7 @@ export default function Register() {
     <div className="auth-page">
       <div className="auth-card">
         <h1>Create Account</h1>
-        <p className="text-muted">Join ProConnect today</p>
+        <p className="text-muted">Join Contact Hub today</p>
 
         {errors.general && <div className="alert alert-error">{errors.general}</div>}
         {errors.non_field_errors && <div className="alert alert-error">{errors.non_field_errors[0]}</div>}
