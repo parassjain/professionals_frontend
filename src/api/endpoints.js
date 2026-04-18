@@ -63,6 +63,9 @@ export const updateProfessionalProfile = (id, data) =>
 export const deleteProfessionalProfile = (id) =>
   api.delete(`/professionals/${id}/`);
 
+export const revealContact = (id) =>
+  api.post(`/professionals/${id}/contact/`);
+
 export const adminListProfessionals = () =>
   api.get('/professionals/admin-list/');
 

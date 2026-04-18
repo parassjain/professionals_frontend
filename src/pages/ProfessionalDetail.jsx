@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProfessional, getReviews, createReview, updateReview } from '../api/endpoints';
+import { getProfessional, getReviews, createReview, updateReview, revealContact } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
 import { MapPin, Clock, Shield, Star } from 'lucide-react';
 import StarRating from '../components/StarRating';
@@ -21,6 +21,8 @@ export default function ProfessionalDetail() {
   const [editError, setEditError] = useState('');
   const [reviewImage, setReviewImage] = useState(null);
   const [editImage, setEditImage] = useState(null);
+  const [contactInfo, setContactInfo] = useState(null);
+  const [contactLoading, setContactLoading] = useState(false);
 
   useEffect(() => {
     Promise.all([
