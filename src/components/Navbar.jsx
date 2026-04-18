@@ -1,12 +1,24 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Menu, X, LogOut, Briefcase, Search, LayoutDashboard } from 'lucide-react';
-import { useState } from 'react';
+import { Menu, X, LogOut, Briefcase, Search, LayoutDashboard, User, ChevronDown } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -40,22 +52,32 @@ export default function Navbar() {
                   <LayoutDashboard size={16} /> Admin
                 </Link>
               )}
-              <Link to="/profile" onClick={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <div className="avatar avatar-sm">
-                  {(user?.avatar || user?.avatar_url)
-                    ? <img src={user.avatar || user.avatar_url} alt="" />
-                    : <span>{user?.first_name?.[0]}{user?.last_name?.[0]}</span>}
-                </div>
-                {user?.first_name || 'Profile'}
-              </Link>
               {!user?.is_professional && (
                 <Link to="/become-professional" className="btn btn-sm btn-primary" onClick={() => setOpen(false)}>
                   Become a Pro
                 </Link>
               )}
-              <button className="btn btn-sm btn-outline" onClick={handleLogout}>
-                <LogOut size={16} /> Logout
-              </button>
+              <div className="profile-menu" ref={profileRef}>
+                <button className="profile-menu-trigger" onClick={() => setProfileOpen(p => !p)}>
+                  <div className="avatar avatar-sm">
+                    {(user?.avatar || user?.avatar_url)
+                      ? <img src={user.avatar || user.avatar_url} alt="" />
+                      : <span>{user?.first_name?.[0]}{user?.last_name?.[0]}</span>}
+                  </div>
+                  {user?.first_name || 'Profile'}
+                  <ChevronDown size={14} />
+                </button>
+                {profileOpen && (
+                  <div className="profile-dropdown">
+                    <Link to="/profile" onClick={() => { setProfileOpen(false); setOpen(false); }}>
+                      <User size={14} /> Profile
+                    </Link>
+                    <button className="logout-item" onClick={handleLogout}>
+                      <LogOut size={14} /> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <>

@@ -89,6 +89,56 @@ img { max-width: 100%; height: auto; }
   transition: all 0.15s;
 }
 .navbar-links a:hover { color: var(--primary); background: var(--primary-light); }
+.profile-menu {
+  position: relative;
+}
+.profile-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius);
+  transition: all 0.15s;
+}
+.profile-menu-trigger:hover { color: var(--primary); background: var(--primary-light); }
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 160px;
+  z-index: 200;
+  overflow: hidden;
+}
+.profile-dropdown a,
+.profile-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+.profile-dropdown a:hover,
+.profile-dropdown button:hover { background: var(--gray-100); }
+.profile-dropdown .logout-item { color: var(--error, #dc2626); }
+.profile-dropdown .logout-item:hover { background: #fef2f2; }
+
 .mobile-menu-btn {
   display: none;
   background: none;
