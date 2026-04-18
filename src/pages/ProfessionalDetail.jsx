@@ -23,6 +23,7 @@ export default function ProfessionalDetail() {
   const [editImage, setEditImage] = useState(null);
   const [contactInfo, setContactInfo] = useState(null);
   const [contactLoading, setContactLoading] = useState(false);
+  const [contactError, setContactError] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -89,11 +90,12 @@ export default function ProfessionalDetail() {
 
   const handleRevealContact = async () => {
     setContactLoading(true);
+    setContactError('');
     try {
       const res = await revealContact(id);
       setContactInfo(res.data);
-    } catch {
-      // silently ignore
+    } catch (err) {
+      setContactError(err.response?.data?.detail || 'Could not load contact info.');
     } finally {
       setContactLoading(false);
     }
@@ -287,12 +289,13 @@ export default function ProfessionalDetail() {
                 <>
                   <p className="text-muted">{pro.masked_email}</p>
                   {pro.masked_phone && <p className="text-muted">{pro.masked_phone}</p>}
+                  {contactError && <p className="text-muted text-sm" style={{ marginTop: '6px', color: '#ef4444' }}>{contactError}</p>}
                   {isAuthenticated ? (
                     <button
                       className="btn btn-primary btn-sm"
                       style={{ marginTop: '8px', width: '100%' }}
                       onClick={handleRevealContact}
-                      disabled={contactLoading}
+                      disabled={contactLoading || !!contactError}
                     >
                       {contactLoading ? 'Loading...' : 'View Contact Info'}
                     </button>
