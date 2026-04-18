@@ -104,8 +104,8 @@ export default function ProfessionalDetail() {
   if (loading) return <LoadingSpinner />;
   if (!pro) return <div className="section container"><p>Professional not found.</p></div>;
 
-  const canReview = isAuthenticated && user?.id !== pro.user.id;
-  const alreadyReviewed = reviews.some((r) => r.reviewer?.id === user?.id);
+  const canReview = isAuthenticated && user?.public_id !== pro.user.public_id;
+  const alreadyReviewed = reviews.some((r) => r.reviewer?.public_id === user?.public_id);
 
   return (
     <div className="section">
@@ -187,7 +187,7 @@ export default function ProfessionalDetail() {
               ) : (
                 <div className="reviews-list">
                   {reviews.map((r) => {
-                    const isOwn = r.reviewer?.id === user?.id;
+                    const isOwn = r.reviewer?.public_id === user?.public_id;
                     const isEditing = editingReviewId === r.id;
 
                     return (
