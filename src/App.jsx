@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -16,6 +17,7 @@ import Jobs from './pages/Jobs';
 import JobDetail from './pages/JobDetail';
 import JobForm from './pages/JobForm';
 import Profile from './pages/Profile';
+import AdminDashboard from './pages/AdminDashboard';
 import './index.css';
 
 export default function App() {
@@ -51,6 +53,10 @@ export default function App() {
                 <Route
                   path="/become-professional"
                   element={<ProtectedRoute><BecomeProfessional /></ProtectedRoute>}
+                />
+                <Route
+                  path="/admin"
+                  element={<AdminRoute><AdminDashboard /></AdminRoute>}
                 />
               </Routes>
             </main>
