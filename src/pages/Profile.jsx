@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { updateCurrentUser, updateCurrentUserWithFile, getProfessionals, getJobs, getReviews } from '../api/endpoints';
+import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getProfessionals, getJobs, getReviews } from '../api/endpoints';
 import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -140,13 +140,32 @@ export default function Profile() {
             {/* Professional Profile */}
             {proProfile && (
               <div className="detail-section">
-                <h2>Professional Profile</h2>
+                <div className="section-header-row">
+                  <h2>Professional Profile</h2>
+                  <button
+                    className={`btn btn-sm ${proProfile.is_active ? 'btn-outline' : 'btn-primary'}`}
+                    onClick={async () => {
+                      try {
+                        await updateProfessionalProfile(proProfile.id, { is_active: !proProfile.is_active });
+                        setProProfile({ ...proProfile, is_active: !proProfile.is_active });
+                      } catch { /* ignore */ }
+                    }}
+                  >
+                    {proProfile.is_active ? 'Disable Listing' : 'Enable Listing'}
+                  </button>
+                </div>
+                {!proProfile.is_active && (
+                  <div className="alert alert-error" style={{ marginBottom: '10px' }}>
+                    Your profile is hidden from the marketplace. Click "Enable Listing" to make it visible again.
+                  </div>
+                )}
                 <Link to={`/professionals/${proProfile.id}`} className="pro-card">
                   <h3>{proProfile.headline}</h3>
                   <div className="pro-card-meta">
                     {proProfile.avg_rating ? <StarRating rating={proProfile.avg_rating} /> : <span className="text-muted">No ratings</span>}
                     <span>({proProfile.review_count || 0} reviews)</span>
                     {proProfile.is_verified && <span className="badge badge-green">Verified</span>}
+                    {!proProfile.is_active && <span className="badge badge-gray">Hidden</span>}
                   </div>
                   <div className="pro-card-tags">
                     {proProfile.services?.map((s) => <span key={s.id} className="tag">{s.name}</span>)}
