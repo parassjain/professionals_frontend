@@ -52,11 +52,6 @@ export default function Navbar() {
                   <LayoutDashboard size={16} /> Admin
                 </Link>
               )}
-              {!user?.is_professional && (
-                <Link to="/become-professional" className="btn btn-sm btn-primary" onClick={() => setOpen(false)}>
-                  Become a Pro
-                </Link>
-              )}
               <div className="profile-menu" ref={profileRef}>
                 <button className="profile-menu-trigger" onClick={() => setProfileOpen(p => !p)}>
                   <div className="avatar avatar-sm">
