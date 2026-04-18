@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { updateCurrentUser, updateCurrentUserWithFile, getProfessionals, getJobs, getReviews } from '../api/endpoints';
-import { User, Mail, Phone, MapPin, Edit, Briefcase, Star } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -87,8 +87,20 @@ export default function Profile() {
               </div>
               <div>
                 <h1>{user.first_name} {user.last_name}</h1>
-                <p className="text-muted"><Mail size={14} /> {user.email}</p>
-                {user.phone && <p className="text-muted"><Phone size={14} /> {user.phone}</p>}
+                <p className="text-muted">
+                  <Mail size={14} /> {user.email}
+                  {user.is_email_verified
+                    ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email verified" />
+                    : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email not verified" />}
+                </p>
+                {user.phone && (
+                  <p className="text-muted">
+                    <Phone size={14} /> {user.phone}
+                    {user.is_phone_verified
+                      ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone verified" />
+                      : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone not verified" />}
+                  </p>
+                )}
                 {user.city && <p className="text-muted"><MapPin size={14} /> {user.city}</p>}
                 {user.is_professional && <span className="badge badge-blue">Professional</span>}
               </div>
