@@ -63,6 +63,12 @@ export const updateProfessionalProfile = (id, data) =>
 export const deleteProfessionalProfile = (id) =>
   api.delete(`/professionals/${id}/`);
 
+export const adminCreateProfessional = (data) =>
+  api.post('/professionals/admin-create/', data);
+
+export const adminVerifyProfessional = (id, is_verified) =>
+  api.patch(`/professionals/${id}/`, { is_verified });
+
 // Jobs
 export const getJobs = (params) =>
   api.get('/jobs/', { params });
