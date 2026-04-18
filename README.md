@@ -1,6 +1,6 @@
-# ProConnect Frontend
+# Contact Hub Frontend
 
-A React/Vite frontend for the ProConnect professional services marketplace. This frontend consumes the ProConnect Django REST Framework API to provide a modern web interface for discovering verified professionals, posting jobs, and leaving reviews.
+A React/Vite frontend for the Contact Hub professional services marketplace. This frontend consumes the Contact Hub Django REST Framework API to provide a modern web interface for discovering verified professionals, posting jobs, and leaving reviews.
 
 ## Features
 
@@ -60,7 +60,7 @@ The frontend will be available at `http://localhost:5173` and will proxy API req
 
 ## API Integration
 
-This frontend communicates with the ProConnect Django REST Framework API. Make sure the backend is running and accessible at `http://localhost:8000/api/` for full functionality.
+This frontend communicates with the Contact Hub Django REST Framework API. Make sure the backend is running and accessible at `http://localhost:8000/api/` for full functionality.
 
 ## Available Scripts
 
