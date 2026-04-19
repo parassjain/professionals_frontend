@@ -20,6 +20,9 @@ export const logout = () =>
 export const getCurrentUser = () =>
   api.get('/users/me/');
 
+export const getSiteStats = () =>
+  api.get('/users/stats/');
+
 export const updateCurrentUser = (data) =>
   api.patch('/users/me/', data);
 

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff } from 'lucide-react';
+import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
   getCategories, createCategory, updateCategory, deleteCategory,
   adminListProfessionals, adminCreateProfessional, deleteProfessionalProfile, adminVerifyProfessional,
+  getSiteStats,
 } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -380,6 +381,43 @@ function ProfessionalsTab() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   STATS ROW
+═══════════════════════════════════════════════════════════════ */
+function StatTile({ icon, label, value }) {
+  return (
+    <div style={{
+      background: 'var(--white)', border: '1px solid var(--gray-200)',
+      borderRadius: 10, padding: '1rem 1.25rem',
+      display: 'flex', alignItems: 'center', gap: '0.875rem',
+    }}>
+      <span style={{ color: 'var(--primary)', flexShrink: 0 }}>{icon}</span>
+      <div>
+        <div style={{ fontSize: '1.5rem', fontWeight: 700, lineHeight: 1.1 }}>
+          {value !== null ? Number(value).toLocaleString() : '—'}
+        </div>
+        <div style={{ fontSize: '0.8rem', color: 'var(--gray-500)', marginTop: '0.15rem' }}>{label}</div>
+      </div>
+    </div>
+  );
+}
+
+function StatsRow() {
+  const [stats, setStats] = useState(null);
+  useEffect(() => {
+    getSiteStats().then((r) => setStats(r.data)).catch(() => {});
+  }, []);
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '0.75rem', marginBottom: '1.75rem' }}>
+      <StatTile icon={<Users size={22} />} label="Registered Users" value={stats?.total_users ?? null} />
+      <StatTile icon={<Shield size={22} />} label="Active Professionals" value={stats?.total_professionals ?? null} />
+      <StatTile icon={<Star size={22} />} label="Reviews Posted" value={stats?.total_reviews ?? null} />
+      <StatTile icon={<Briefcase size={22} />} label="Jobs Posted" value={stats?.total_jobs ?? null} />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
    MAIN DASHBOARD (tabs)
 ═══════════════════════════════════════════════════════════════ */
 export default function AdminDashboard() {
@@ -397,6 +435,8 @@ export default function AdminDashboard() {
           <h1 className="page-title" style={{ marginBottom: '0.25rem' }}>Admin Dashboard</h1>
           <p className="text-muted text-sm">Manage categories and professionals</p>
         </div>
+
+        <StatsRow />
 
         {/* Tab bar */}
         <div style={{ display: 'flex', gap: '0.25rem', borderBottom: '2px solid var(--gray-200)', marginBottom: '1.5rem' }}>

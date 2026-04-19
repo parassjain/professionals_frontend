@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCategories, getProfessionals } from '../api/endpoints';
-import { Search, Shield, Star, Users } from 'lucide-react';
+import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
+import { Search, Shield, Star, Users, Briefcase } from 'lucide-react';
 import StarRating from '../components/StarRating';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [topPros, setTopPros] = useState([]);
+  const [stats, setStats] = useState(null);
 
   useEffect(() => {
     getCategories().then((r) => setCategories(r.data.slice(0, 6))).catch(() => {});
     getProfessionals({ ordering: '-avg_rating', page_size: 4 }).then((r) => setTopPros(r.data.results || r.data)).catch(() => {});
+    getSiteStats().then((r) => setStats(r.data)).catch(() => {});
   }, []);
 
   return (
@@ -36,18 +38,23 @@ export default function Home() {
         <div className="container stats-grid">
           <div className="stat-card">
             <Users size={32} />
-            <h3>Trusted Pros</h3>
-            <p>Browse verified professional profiles</p>
+            <h3>{stats ? stats.total_users.toLocaleString() : '—'}</h3>
+            <p>Registered Users</p>
           </div>
           <div className="stat-card">
             <Shield size={32} />
-            <h3>Verified Reviews</h3>
-            <p>Real reviews from real customers</p>
+            <h3>{stats ? stats.total_professionals.toLocaleString() : '—'}</h3>
+            <p>Active Professionals</p>
           </div>
           <div className="stat-card">
             <Star size={32} />
-            <h3>Quality Service</h3>
-            <p>Top-rated professionals at your fingertips</p>
+            <h3>{stats ? stats.total_reviews.toLocaleString() : '—'}</h3>
+            <p>Reviews Posted</p>
+          </div>
+          <div className="stat-card">
+            <Briefcase size={32} />
+            <h3>{stats ? stats.total_jobs.toLocaleString() : '—'}</h3>
+            <p>Jobs Posted</p>
           </div>
         </div>
       </section>
