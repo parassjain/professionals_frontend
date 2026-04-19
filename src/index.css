@@ -248,7 +248,10 @@ img { max-width: 100%; height: auto; }
 .category-card p { color: var(--gray-500); font-size: 0.8rem; display: none; }
 .category-icon { width: 32px; height: 32px; margin-bottom: 0.5rem; object-fit: contain; color: var(--primary); }
 .category-section { margin-bottom: 3rem; }
-.category-section .section-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.category-section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.category-section-icon { flex-shrink: 0; width: 40px; height: 40px; color: var(--primary); }
+.category-section-icon img { width: 100%; height: 100%; }
+.category-section .section-title { font-size: 1.5rem; margin: 0; }
 .category-super-name { font-size: 0.65rem; text-transform: uppercase; color: var(--primary); font-weight: 600; letter-spacing: 0.05em; }
 
 /* ===== Professional Card ===== */

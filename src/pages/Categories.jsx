@@ -31,7 +31,10 @@ export default function Categories() {
 
         {supercategories.map((superCat) => (
           <div key={superCat.id} className="category-section">
-            <h2 className="section-title">{superCat.name}</h2>
+            <div className="category-section-header">
+              <CategoryIcon icon={superCat.icon} slug={superCat.slug} name={superCat.name} size={40} className="category-section-icon" />
+              <h2 className="section-title">{superCat.name}</h2>
+            </div>
             {superCat.description && <p className="text-muted mb-2">{superCat.description}</p>}
             <div className="card-grid">
               {superCat.subcategories?.map((cat) => (
