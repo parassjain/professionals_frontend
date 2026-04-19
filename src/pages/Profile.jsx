@@ -213,6 +213,52 @@ export default function Profile() {
               </form>
             )}
 
+            {/* Social Links */}
+            <div className="detail-section">
+              <div className="section-header-row">
+                <h2><Link2 size={20} /> Social Links</h2>
+              </div>
+              {socialLinks.length > 0 && (
+                <div className="social-links-list">
+                  {socialLinks.map((link) => (
+                    <div key={link.id} className="social-link-row">
+                      {platformIcon(link.platform)}
+                      <span className="social-link-label">{PLATFORM_LABELS[link.platform]}</span>
+                      <a href={link.url} target="_blank" rel="noopener noreferrer" className="social-link-url">{link.url}</a>
+                      <button className="btn-icon" onClick={() => handleDeleteSocialLink(link.id)} title="Remove">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {availablePlatforms.length > 0 && (
+                <form className="social-link-form" onSubmit={handleAddSocialLink}>
+                  {socialError && <div className="alert alert-error">{socialError}</div>}
+                  <div className="social-link-form-row">
+                    <select
+                      value={socialForm.platform}
+                      onChange={(e) => setSocialForm({ ...socialForm, platform: e.target.value })}
+                      required
+                    >
+                      <option value="">Platform</option>
+                      {availablePlatforms.map((p) => (
+                        <option key={p} value={p}>{PLATFORM_LABELS[p]}</option>
+                      ))}
+                    </select>
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      value={socialForm.url}
+                      onChange={(e) => setSocialForm({ ...socialForm, url: e.target.value })}
+                      required
+                    />
+                    <button type="submit" className="btn btn-primary btn-sm">Add</button>
+                  </div>
+                </form>
+              )}
+            </div>
+
             {/* Professional Profile */}
             {proProfile && (
               <div className="detail-section">

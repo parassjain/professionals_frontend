@@ -596,6 +596,86 @@ img { max-width: 100%; height: auto; }
 .job-detail-poster { padding-top: 1rem; border-top: 1px solid var(--gray-200); }
 .poster-link { display: flex; align-items: center; gap: 0.35rem; font-weight: 500; }
 
+/* ===== Social Links ===== */
+.social-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.social-link-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.social-link-row--clickable {
+  text-decoration: none;
+  color: var(--text);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.social-link-row--clickable:hover {
+  background: var(--bg-alt);
+  color: var(--primary);
+}
+
+.social-link-label {
+  font-weight: 500;
+  min-width: 90px;
+  font-size: 0.875rem;
+}
+
+.social-link-url {
+  flex: 1;
+  font-size: 0.8rem;
+  color: var(--primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.social-link-form {
+  margin-top: 0.5rem;
+}
+
+.social-link-form-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.social-link-form-row select,
+.social-link-form-row input {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.social-link-form-row select { min-width: 130px; }
+.social-link-form-row input { flex: 1; min-width: 160px; }
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.btn-icon:hover { color: #ef4444; }
+
 /* ===== Portfolio ===== */
 .portfolio-grid {
   display: grid;

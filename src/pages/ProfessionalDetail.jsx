@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProfessional, getReviews, createReview, updateReview, revealContact } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Clock, Shield, Star, CheckCircle, XCircle } from 'lucide-react';
+import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Github, Linkedin, Twitter, Globe } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import StarInput from '../components/StarInput';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -323,6 +323,27 @@ export default function ProfessionalDetail() {
               <p><Star size={16} /> {pro.review_count || 0} reviews</p>
               <p>Member since {new Date(pro.created_at).toLocaleDateString()}</p>
             </div>
+
+            {pro.user?.social_links?.length > 0 && (
+              <div className="sidebar-card">
+                <h3>Social Links</h3>
+                <div className="social-links-list">
+                  {pro.user.social_links.map((link) => {
+                    const icon = link.platform === 'github' ? <Github size={16} />
+                      : link.platform === 'linkedin' ? <Linkedin size={16} />
+                      : link.platform === 'twitter' ? <Twitter size={16} />
+                      : <Globe size={16} />;
+                    const label = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' }[link.platform] || link.platform;
+                    return (
+                      <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="social-link-row social-link-row--clickable">
+                        {icon}
+                        <span>{label}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             <div className="sidebar-card">
               <h3>Contact Info</h3>
