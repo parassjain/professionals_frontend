@@ -81,6 +81,9 @@ export const deleteProfessionalProfile = (id) =>
 export const revealContact = (id) =>
   api.post(`/professionals/${id}/contact/`);
 
+export const getMyProfessionalProfile = () =>
+  api.get('/professionals/mine/');
+
 export const adminListProfessionals = () =>
   api.get('/professionals/admin-list/');
 
