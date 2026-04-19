@@ -14,6 +14,7 @@ export default function Profile() {
   const [proProfile, setProProfile] = useState(null);
   const [myJobs, setMyJobs] = useState([]);
   const [myReviews, setMyReviews] = useState([]);
+  const [receivedReviews, setReceivedReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [portfolioImages, setPortfolioImages] = useState([]);
@@ -26,6 +27,7 @@ export default function Profile() {
     const fetches = [
       getJobs({ posted_by: user.public_id }).catch(() => ({ data: { results: [] } })),
       getReviews({ reviewer: user.public_id }).catch(() => ({ data: { results: [] } })),
+      getReviews({ reviewed_user: user.public_id }).catch(() => ({ data: { results: [] } })),
     ];
 
     if (user.is_professional) {
@@ -35,9 +37,10 @@ export default function Profile() {
     }
 
     Promise.all(fetches)
-      .then(([jobsRes, reviewsRes, prosRes]) => {
+      .then(([jobsRes, reviewsRes, receivedRes, prosRes]) => {
         setMyJobs(jobsRes.data.results || jobsRes.data || []);
         setMyReviews(reviewsRes.data.results || reviewsRes.data || []);
+        setReceivedReviews(receivedRes.data.results || receivedRes.data || []);
         if (prosRes) {
           const pros = prosRes.data.results || prosRes.data || [];
           const myPro = pros.find((p) => p.user?.public_id === user.public_id);
@@ -284,7 +287,30 @@ export default function Profile() {
               )}
             </div>
 
-            {/* My Reviews */}
+            {/* Reviews Received */}
+            <div className="detail-section">
+              <h2><Star size={20} /> Reviews About Me</h2>
+              {receivedReviews.length === 0 ? (
+                <p className="text-muted">You haven't received any reviews yet.</p>
+              ) : (
+                <div className="reviews-list">
+                  {receivedReviews.slice(0, 5).map((r) => (
+                    <div key={r.id} className="review-card">
+                      <div className="review-header">
+                        {r.reviewer
+                          ? <strong>From: {r.reviewer.first_name} {r.reviewer.last_name}</strong>
+                          : <strong className="text-muted">From: Anonymous</strong>}
+                        <StarRating rating={r.rating} size={14} />
+                        <span className="text-muted text-sm">{new Date(r.created_at).toLocaleDateString()}</span>
+                      </div>
+                      {r.comment && <p>{r.comment}</p>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Reviews I've Given */}
             <div className="detail-section">
               <h2><Star size={20} /> Reviews I've Given</h2>
               {myReviews.length === 0 ? (
@@ -312,6 +338,7 @@ export default function Profile() {
               <h3><User size={16} /> Quick Stats</h3>
               <p>Jobs Posted: {myJobs.length}</p>
               <p>Reviews Given: {myReviews.length}</p>
+              <p>Reviews Received: {receivedReviews.length}</p>
               <p>Member since: {new Date(user.date_joined).toLocaleDateString()}</p>
             </div>
           </aside>
