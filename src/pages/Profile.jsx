@@ -102,7 +102,8 @@ export default function Profile() {
       await fetchUser();
       setEditing(false);
     } catch (err) {
-      setError('Failed to update profile.');
+      const msg = err.response?.data?.error || err.response?.data?.phone?.[0] || err.response?.data?.email?.[0] || 'Failed to update profile.';
+      setError(msg);
     }
   };
 
@@ -201,8 +202,15 @@ export default function Profile() {
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Phone</label>
-                    <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                    <label>Phone {user.is_phone_verified && <span className="badge badge-gray" style={{ marginLeft: 8 }}>Verified</span>}</label>
+                    <input 
+                      type="tel" 
+                      value={form.phone} 
+                      onChange={(e) => setForm({ ...form, phone: e.target.value })} 
+                      disabled={user.is_phone_verified}
+                      placeholder={user.is_phone_verified ? user.phone : ''}
+                    />
+                    {user.is_phone_verified && <p className="text-muted text-sm" style={{ marginTop: 4 }}>Phone cannot be changed after verification</p>}
                   </div>
                   <div className="form-group">
                     <label>City</label>
