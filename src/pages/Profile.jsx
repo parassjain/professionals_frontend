@@ -25,6 +25,16 @@ export default function Profile() {
 
   const PLATFORMS = ['facebook', 'linkedin', 'twitter', 'github', 'instagram', 'youtube', 'website'];
   const PLATFORM_LABELS = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' };
+  const MAX_IMAGE_SIZE_MB = 2;
+  const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+
+  const validateImage = (file) => {
+    if (!file) return null;
+    if (file.size > MAX_IMAGE_SIZE_BYTES) return `Image must be less than ${MAX_IMAGE_SIZE_MB}MB`;
+    if (!file.type.startsWith('image/')) return 'File must be an image';
+    return null;
+  };
+
   const platformIcon = (p) => {
     if (p === 'github') return <Code size={16} />;
     if (p === 'linkedin') return <Link2 size={16} />;
@@ -103,17 +113,25 @@ export default function Profile() {
   const handleAvatarChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const err = validateImage(file);
+    if (err) { setError(err); return; }
     const fd = new FormData();
     fd.append('avatar', file);
     try {
       await updateCurrentUserWithFile(fd);
       await fetchUser();
-    } catch { /* ignore */ }
+    } catch (er) { setError(er.response?.data?.error || 'Failed to upload avatar'); }
   };
 
   const handlePortfolioUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length || !proProfile) return;
+
+    for (const file of files) {
+      const err = validateImage(file);
+      if (err) { setError(err); return; }
+    }
+
     const remaining = 10 - portfolioImages.length;
     const toUpload = files.slice(0, remaining);
     setPortfolioUploading(true);

@@ -24,6 +24,15 @@ export default function ProfessionalDetail() {
   const [contactInfo, setContactInfo] = useState(null);
   const [contactLoading, setContactLoading] = useState(false);
   const [contactError, setContactError] = useState('');
+  const MAX_IMAGE_SIZE_MB = 2;
+  const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+
+  const validateImage = (file) => {
+    if (!file) return null;
+    if (file.size > MAX_IMAGE_SIZE_BYTES) return `Image must be less than ${MAX_IMAGE_SIZE_MB}MB`;
+    if (!file.type.startsWith('image/')) return 'File must be an image';
+    return null;
+  };
 
   useEffect(() => {
     Promise.all([
@@ -195,8 +204,8 @@ export default function ProfessionalDetail() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Photo (optional)</label>
-                    <input type="file" accept="image/*" onChange={(e) => setReviewImage(e.target.files[0] || null)} />
+                    <label>Photo (optional, max 2MB)</label>
+                    <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files[0] || null; const err = validateImage(f); if (err) setReviewError(err); else setReviewImage(f); }} />
                   </div>
                   <label className="anonymous-toggle">
                     <input
@@ -274,7 +283,7 @@ export default function ProfessionalDetail() {
                               {editImage && (
                                 <img src={URL.createObjectURL(editImage)} alt="New review photo" style={{ display: 'block', maxWidth: '200px', marginBottom: '6px', borderRadius: '6px' }} />
                               )}
-                              <input type="file" accept="image/*" onChange={(e) => setEditImage(e.target.files[0] || null)} />
+                              <input type="file" accept="image/*" onChange={(e) => { const f = e.target.files[0] || null; const err = validateImage(f); if (err) setEditError(err); else setEditImage(f); }} />
                             </div>
                             <label className="anonymous-toggle">
                               <input
