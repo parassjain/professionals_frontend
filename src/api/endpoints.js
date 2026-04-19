@@ -102,6 +102,9 @@ export const deletePortfolioImage = (proId, imgId) =>
 export const getJobs = (params) =>
   api.get('/jobs/', { params });
 
+export const getMyJobs = () =>
+  api.get('/jobs/mine/');
+
 export const getJob = (id) =>
   api.get(`/jobs/${id}/`);
 
