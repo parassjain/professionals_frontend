@@ -19,10 +19,24 @@ export default function Profile() {
   const [error, setError] = useState('');
   const [portfolioImages, setPortfolioImages] = useState([]);
   const [portfolioUploading, setPortfolioUploading] = useState(false);
+  const [socialLinks, setSocialLinks] = useState([]);
+  const [socialForm, setSocialForm] = useState({ platform: '', url: '' });
+  const [socialError, setSocialError] = useState('');
+
+  const PLATFORMS = ['facebook', 'linkedin', 'twitter', 'github', 'instagram', 'youtube', 'website'];
+  const PLATFORM_LABELS = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' };
+  const platformIcon = (p) => {
+    if (p === 'github') return <Github size={16} />;
+    if (p === 'linkedin') return <Linkedin size={16} />;
+    if (p === 'twitter') return <Twitter size={16} />;
+    return <Globe size={16} />;
+  };
+  const availablePlatforms = PLATFORMS.filter((p) => !socialLinks.some((l) => l.platform === p));
 
   useEffect(() => {
     if (!user) return;
     setForm({ first_name: user.first_name, last_name: user.last_name, phone: user.phone || '', city: user.city || '' });
+    setSocialLinks(user.social_links || []);
 
     const fetches = [
       getJobs({ posted_by: user.public_id }).catch(() => ({ data: { results: [] } })),
