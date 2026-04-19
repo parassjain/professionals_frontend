@@ -246,7 +246,7 @@ img { max-width: 100%; height: auto; }
 .category-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); color: var(--gray-800); }
 .category-card h3 { margin-bottom: 0.5rem; }
 .category-card p { color: var(--gray-500); font-size: 0.9rem; }
-.category-icon { width: 56px; height: 56px; margin-bottom: 1rem; object-fit: contain; }
+.category-icon { width: 56px; height: 56px; margin-bottom: 1rem; object-fit: contain; color: var(--primary); }
 
 /* ===== Professional Card ===== */
 .pro-card {

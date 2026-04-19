@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
 import { Search, Shield, Star, Users, Briefcase } from 'lucide-react';
 import StarRating from '../components/StarRating';
+import CategoryIcon from '../components/CategoryIcon';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
@@ -67,7 +68,7 @@ export default function Home() {
             <div className="card-grid">
               {categories.map((cat) => (
                 <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
-                  {cat.icon && <img src={cat.icon} alt={cat.name} className="category-icon" />}
+                  <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
                   <h3>{cat.name}</h3>
                   {cat.description && <p>{cat.description}</p>}
                 </Link>

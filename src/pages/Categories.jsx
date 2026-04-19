@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCategories } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
+import CategoryIcon from '../components/CategoryIcon';
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
@@ -24,7 +25,7 @@ export default function Categories() {
         <div className="card-grid">
           {categories.map((cat) => (
             <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
-              {cat.icon && <img src={cat.icon} alt={cat.name} className="category-icon" />}
+              <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
               <h3>{cat.name}</h3>
               {cat.description && <p>{cat.description}</p>}
             </Link>
