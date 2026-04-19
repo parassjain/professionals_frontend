@@ -917,4 +917,12 @@ img { max-width: 100%; height: auto; }
   .pro-detail-header { flex-direction: column; align-items: center; text-align: center; }
   .profile-header { flex-direction: column; align-items: center; text-align: center; }
   .job-detail-header { flex-direction: column; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--gray-200); }
+.modal-header h2 { font-size: 1.25rem; margin: 0; }
+.modal-body { padding: 1.5rem; }
+.btn-link { color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; }
 }

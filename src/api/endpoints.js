@@ -141,3 +141,7 @@ export const updateReview = (id, data) =>
 
 export const deleteReview = (id) =>
   api.delete(`/reviews/${id}/`);
+
+// Contact / Feedback
+export const submitFeedback = (data) =>
+  api.post('/contact/', data);
