@@ -296,6 +296,7 @@ export default function Profile() {
                       <div className="review-header">
                         <strong>To: {r.reviewed_user?.first_name} {r.reviewed_user?.last_name}</strong>
                         <StarRating rating={r.rating} size={14} />
+                        {r.is_anonymous && <span className="badge badge-gray" style={{ fontSize: '0.7rem' }}>Anonymous</span>}
                         <span className="text-muted text-sm">{new Date(r.created_at).toLocaleDateString()}</span>
                       </div>
                       {r.comment && <p>{r.comment}</p>}

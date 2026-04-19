@@ -13,11 +13,11 @@ export default function ProfessionalDetail() {
   const [pro, setPro] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '', is_anonymous: false });
   const [reviewError, setReviewError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [editingReviewId, setEditingReviewId] = useState(null);
-  const [editForm, setEditForm] = useState({ rating: 5, comment: '' });
+  const [editForm, setEditForm] = useState({ rating: 5, comment: '', is_anonymous: false });
   const [editError, setEditError] = useState('');
   const [reviewImage, setReviewImage] = useState(null);
   const [editImage, setEditImage] = useState(null);
@@ -49,11 +49,12 @@ export default function ProfessionalDetail() {
       fd.append('reviewed_user', pro.user.id);
       fd.append('rating', reviewForm.rating);
       fd.append('comment', reviewForm.comment);
+      fd.append('is_anonymous', reviewForm.is_anonymous);
       if (reviewImage) fd.append('image', reviewImage);
       await createReview(fd);
       const revRes = await getReviews({ reviewed_user: pro.user.id });
       setReviews(revRes.data.results || revRes.data);
-      setReviewForm({ rating: 5, comment: '' });
+      setReviewForm({ rating: 5, comment: '', is_anonymous: false });
       setReviewImage(null);
       // Refresh pro to update avg rating
       const proRes = await getProfessional(id);
@@ -73,6 +74,7 @@ export default function ProfessionalDetail() {
       const fd = new FormData();
       fd.append('rating', editForm.rating);
       fd.append('comment', editForm.comment);
+      fd.append('is_anonymous', editForm.is_anonymous);
       if (editImage) fd.append('image', editImage);
       await updateReview(editingReviewId, fd);
       const revRes = await getReviews({ reviewed_user: pro.user.id });
@@ -188,6 +190,17 @@ export default function ProfessionalDetail() {
                     <label>Photo (optional)</label>
                     <input type="file" accept="image/*" onChange={(e) => setReviewImage(e.target.files[0] || null)} />
                   </div>
+                  <label className="anonymous-toggle">
+                    <input
+                      type="checkbox"
+                      checked={reviewForm.is_anonymous}
+                      onChange={(e) => setReviewForm({ ...reviewForm, is_anonymous: e.target.checked })}
+                    />
+                    Post anonymously
+                  </label>
+                  {reviewForm.is_anonymous && (
+                    <p className="anonymous-note">Your name will be hidden from other users. Admins can still see your identity.</p>
+                  )}
                   <button type="submit" className="btn btn-primary" disabled={submitting}>
                     {submitting ? 'Submitting...' : 'Submit Review'}
                   </button>
@@ -206,10 +219,13 @@ export default function ProfessionalDetail() {
                       <div key={r.id} className="review-card">
                         <div className="review-header">
                           <div className="avatar avatar-sm">
-                            <span>{r.reviewer?.first_name?.[0]}{r.reviewer?.last_name?.[0]}</span>
+                            <span>{r.is_anonymous ? '?' : (r.reviewer?.first_name?.[0] || '?')}{r.is_anonymous ? '' : r.reviewer?.last_name?.[0]}</span>
                           </div>
                           <div>
-                            <strong>{r.reviewer?.first_name} {r.reviewer?.last_name}</strong>
+                            <strong>
+                              {r.is_anonymous ? 'Anonymous' : `${r.reviewer?.first_name} ${r.reviewer?.last_name}`}
+                              {r.is_anonymous && isOwn && <span className="badge badge-gray" style={{ marginLeft: '6px', fontSize: '0.7rem' }}>you</span>}
+                            </strong>
                             {!isEditing && <StarRating rating={r.rating} size={14} />}
                           </div>
                           <span className="text-muted text-sm">{new Date(r.created_at).toLocaleDateString()}</span>
@@ -217,7 +233,7 @@ export default function ProfessionalDetail() {
                             <button
                               className="btn btn-outline btn-sm"
                               onClick={() => {
-                                setEditForm({ rating: r.rating, comment: r.comment });
+                                setEditForm({ rating: r.rating, comment: r.comment, is_anonymous: r.is_anonymous });
                                 setEditError('');
                                 setEditingReviewId(r.id);
                               }}
@@ -252,6 +268,17 @@ export default function ProfessionalDetail() {
                               )}
                               <input type="file" accept="image/*" onChange={(e) => setEditImage(e.target.files[0] || null)} />
                             </div>
+                            <label className="anonymous-toggle">
+                              <input
+                                type="checkbox"
+                                checked={editForm.is_anonymous}
+                                onChange={(e) => setEditForm({ ...editForm, is_anonymous: e.target.checked })}
+                              />
+                              Post anonymously
+                            </label>
+                            {editForm.is_anonymous && (
+                              <p className="anonymous-note">Your name will be hidden from other users. Admins can still see your identity.</p>
+                            )}
                             <div style={{ display: 'flex', gap: '8px' }}>
                               <button type="submit" className="btn btn-primary btn-sm" disabled={submitting}>
                                 {submitting ? 'Saving...' : 'Save'}
