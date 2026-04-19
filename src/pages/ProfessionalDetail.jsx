@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProfessional, getReviews, createReview, updateReview, revealContact } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Github, Linkedin, Twitter, Globe } from 'lucide-react';
+import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Github, Linkedin as LinkedIn, Twitter, Globe } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import StarInput from '../components/StarInput';
 import LoadingSpinner from '../components/LoadingSpinner';

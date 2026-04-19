@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getProfessional, getProfessionals, getJobs, getReviews, addPortfolioImage, deletePortfolioImage, addSocialLink, deleteSocialLink } from '../api/endpoints';
-import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Github, Linkedin, Twitter, Globe } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Github, Linkedin as LinkedIn, Twitter, Globe } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -27,7 +27,7 @@ export default function Profile() {
   const PLATFORM_LABELS = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' };
   const platformIcon = (p) => {
     if (p === 'github') return <Github size={16} />;
-    if (p === 'linkedin') return <Linkedin size={16} />;
+    if (p === 'linkedin') return <LinkedIn size={16} />;
     if (p === 'twitter') return <Twitter size={16} />;
     return <Globe size={16} />;
   };
