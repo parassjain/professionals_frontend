@@ -1,50 +1,91 @@
 import {
-  Wrench, Hammer, Paintbrush, Drill, Zap, Droplets, Scissors,
-  Laptop, Code, Globe, ShoppingCart, Heart, Baby, Dog, Cat,
-  Trees, Car, Home, Building, Truck, Package, Users, UserCheck,
-  GraduationCap, FlaskConical, Stethoscope, Pill, Plus, Banknote,
-  UtensilsCrossed, Coffee, ChefHat, Camera, Video, Music, Palette,
-  BookOpen, PenTool, Calculator, FileText, Briefcase, ClipboardList,
-  Shield, Lock, Key, Eye, Mail, Phone, MapPin, Calendar, Clock,
-  Star, Award, Trophy, Medal, Gift, PartyPopper, Sparkles
+  Wrench, Hammer, Zap, Droplets, Scissors, Laptop, Code, Globe,
+  Heart, Baby, Dog, Car, Home, Truck, Package, Users,
+  GraduationCap, Stethoscope, ChefHat, Camera, Video, Music, Palette,
+  BookOpen, PenTool, Calculator, FileText, Briefcase, Shield,
+  Dumbbell, Monitor, Smartphone, Wifi, Brush, Leaf, PawPrint,
+  Plane, Bus, Scroll, Book, Mic, TestTube,
+  Activity, PersonStanding, Accessibility, Waves, Sparkle,
+  Utensils
 } from 'lucide-react';
 
 const iconMap = {
-  'plumbing': Droplets,
-  'electrical': Zap,
-  'carpentry': Hammer,
-  'painting': Paintbrush,
-  'cleaning': Droplets,
-  'moving': Truck,
-  'pool': Droplets,
-  'hvac': Zap,
-  'roofing': Home,
-  'landscaping': Trees,
-  'pets': Dog,
-  'tutoring': GraduationCap,
-  'technology': Laptop,
-  'web-design': Code,
-  'accounting': Calculator,
-  'legal': FileText,
-  'health': Stethoscope,
-  'fitness': Heart,
-  'beauty': Scissors,
-  'photography': Camera,
-  'videography': Video,
-  'music': Music,
-  'design': Palette,
-  'writing': PenTool,
-  'cooking': ChefHat,
-  'baby': Baby,
-  'senior-care': Users,
-  'personal-trainer': Heart,
-  'language': Globe,
-  'online': Globe,
+  'home-help': Users,
+  'maid': Scissors,
+  'cook': ChefHat,
+  'driver': Car,
+  'baby-sitter': Baby,
+  'elder-care': PersonStanding,
+  'nanny': Baby,
+  'housekeeper': Home,
+  
   'home-repair': Wrench,
-  'handyman': Wrench,
-  'auto': Car,
-  'delivery': Package,
-  'security': Shield,
+  'plumber': Droplets,
+  'electrician': Zap,
+  'carpenter': Hammer,
+  'ac-repair': Monitor,
+  'appliance-repair': Monitor,
+  'painter': Brush,
+  'pest-control': Shield,
+  
+  'driving': Car,
+  'personal-driver': Car,
+  'car-rental': Car,
+  'airport-pickup': Plane,
+  'intercity-driver': Bus,
+  
+  'tutoring': GraduationCap,
+  'math-tutor': Calculator,
+  'physics-tutor': Book,
+  'chemistry-tutor': TestTube,
+  'english-tutor': Book,
+  'science-tutor': Book,
+  'computer-tutor': Code,
+  'test-prep': Scroll,
+  
+  'beauty': Sparkle,
+  'salon-at-home': Scissors,
+  'makeup-artist': Sparkle,
+  'mehendi-artist': PenTool,
+  'nail-artist': Sparkle,
+  'spa-at-home': Waves,
+  
+  'health-fitness': Activity,
+  'personal-trainer': Dumbbell,
+  'yoga-instructor': PersonStanding,
+  'dietitian': Heart,
+  'physiotherapist': Accessibility,
+  'massage-therapist': Accessibility,
+  
+  'pet-care': PawPrint,
+  'pet-sitter': Home,
+  'dog-walker': Dog,
+  'pet-groomer': Scissors,
+  'veterinarian': Stethoscope,
+  
+  'events': Camera,
+  'photographer': Camera,
+  'videographer': Video,
+  'caterer': Utensils,
+  'bartender': Heart,
+  
+  'technology': Laptop,
+  'computer-repair': Monitor,
+  'mobile-repair': Smartphone,
+  'web-developer': Code,
+  'wifi-setup': Wifi,
+};
+
+const defaultIcons = {
+  'home-help': Users,
+  'home-repair': Wrench,
+  'driving': Car,
+  'tutoring': GraduationCap,
+  'beauty': Sparkle,
+  'health-fitness': Activity,
+  'pet-care': PawPrint,
+  'events': Camera,
+  'technology': Laptop,
 };
 
 function normalizeSlug(name) {
@@ -58,6 +99,10 @@ function getIconComponent(slugOrName) {
   if (iconMap[slug]) return iconMap[slug];
   
   for (const [key, Icon] of Object.entries(iconMap)) {
+    if (slug.includes(key) || name.includes(key)) return Icon;
+  }
+  
+  for (const [key, Icon] of Object.entries(defaultIcons)) {
     if (slug.includes(key) || name.includes(key)) return Icon;
   }
   
