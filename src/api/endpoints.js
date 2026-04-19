@@ -47,6 +47,9 @@ export const deleteSocialLink = (id) =>
 export const getCategories = () =>
   api.get('/categories/');
 
+export const getCategoryTree = () =>
+  api.get('/categories/tree/');
+
 export const getCategory = (slug) =>
   api.get(`/categories/${slug}/`);
 

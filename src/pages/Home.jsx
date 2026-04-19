@@ -1,17 +1,24 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
+import { getCategoryTree, getProfessionals, getSiteStats } from '../api/endpoints';
 import { Search, Shield, Star, Users, Briefcase } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import CategoryIcon from '../components/CategoryIcon';
 
 export default function Home() {
-  const [categories, setCategories] = useState([]);
+  const [supercategories, setSupercategories] = useState([]);
+  const [uncategorized, setUncategorized] = useState([]);
   const [topPros, setTopPros] = useState([]);
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    getCategories().then((r) => setCategories(r.data.slice(0, 6))).catch(() => {});
+    getCategoryTree()
+      .then((r) => {
+        const tree = r.data;
+        setSupercategories(tree.slice(0, 4));
+        setUncategorized(tree.slice(4).flatMap((s) => s.subcategories || []));
+      })
+      .catch(() => {});
     getProfessionals({ ordering: '-avg_rating', page_size: 4 }).then((r) => setTopPros(r.data.results || r.data)).catch(() => {});
     getSiteStats().then((r) => setStats(r.data)).catch(() => {});
   }, []);
@@ -61,16 +68,24 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      {categories.length > 0 && (
+      {(supercategories.length > 0 || uncategorized.length > 0) && (
         <section className="section">
           <div className="container">
-            <h2 className="section-title">Popular Categories</h2>
+            <h2 className="section-title">Browse by Category</h2>
             <div className="card-grid">
-              {categories.map((cat) => (
+              {supercategories.slice(0, 4).map((superCat) =>
+                superCat.subcategories?.slice(0, 4).map((cat) => (
+                  <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
+                    <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
+                    <span className="category-super-name">{superCat.name}</span>
+                    <h3>{cat.name}</h3>
+                  </Link>
+                ))
+              )}
+              {uncategorized.slice(0, 4).map((cat) => (
                 <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
                   <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
                   <h3>{cat.name}</h3>
-                  {cat.description && <p>{cat.description}</p>}
                 </Link>
               ))}
             </div>
