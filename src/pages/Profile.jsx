@@ -39,34 +39,27 @@ export default function Profile() {
     setSocialLinks(user.social_links || []);
 
     const fetches = [
-      getJobs({ posted_by: user.public_id }).catch(() => ({ data: { results: [] } })),
-      getReviews({ reviewer: user.public_id }).catch(() => ({ data: { results: [] } })),
-      getReviews({ reviewed_user: user.public_id }).catch(() => ({ data: { results: [] } })),
+      getMyJobs().catch(() => ({ data: { results: [] } })),
+      getMyGivenReviews().catch(() => ({ data: { results: [] } })),
+      getMyReceivedReviews().catch(() => ({ data: { results: [] } })),
     ];
 
     if (user.is_professional) {
       fetches.push(
-        getProfessionals({ search: user.first_name }).catch(() => ({ data: { results: [] } }))
+        getMyProfessionalProfile().catch(() => null)
       );
     }
 
     Promise.all(fetches)
-      .then(([jobsRes, reviewsRes, receivedRes, prosRes]) => {
+      .then(([jobsRes, reviewsRes, receivedRes, proRes]) => {
         setMyJobs(jobsRes.data.results || jobsRes.data || []);
         setMyReviews(reviewsRes.data.results || reviewsRes.data || []);
         setReceivedReviews(receivedRes.data.results || receivedRes.data || []);
-        if (prosRes) {
-          const pros = prosRes.data.results || prosRes.data || [];
-          const myPro = pros.find((p) => p.user?.public_id === user.public_id);
-          if (myPro) {
-            setProProfile(myPro);
-            return getProfessional(myPro.public_id);
-          }
+        if (proRes) {
+          setProProfile(proRes.data);
+          setPortfolioImages(proRes.data.portfolio_images || []);
         }
         return null;
-      })
-      .then((detailRes) => {
-        if (detailRes) setPortfolioImages(detailRes.data.portfolio_images || []);
       })
       .finally(() => setLoading(false));
   }, [user]);
