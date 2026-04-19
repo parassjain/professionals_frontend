@@ -63,7 +63,7 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      {(supercategories.length > 0 || uncategorized.length > 0) && (
+      {supercategories.length > 0 && (
         <section className="section">
           <div className="container">
             <h2 className="section-title">Browse by Category</h2>
