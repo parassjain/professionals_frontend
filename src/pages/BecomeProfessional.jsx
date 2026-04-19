@@ -30,7 +30,7 @@ export default function BecomeProfessional() {
     setLoading(true);
     try {
       const res = await createProfessionalProfile(form);
-      setCreatedProId(res.data.id);
+      setCreatedProId(res.data.public_id);
       await fetchUser();
       setStep('portfolio');
     } catch (err) {

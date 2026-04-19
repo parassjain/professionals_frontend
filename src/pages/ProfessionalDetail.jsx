@@ -33,7 +33,7 @@ export default function ProfessionalDetail() {
       .then(([proRes]) => {
         setPro(proRes.data);
         // Fetch reviews for this professional's user
-        return getReviews({ reviewed_user: proRes.data.user.id });
+        return getReviews({ reviewed_user: proRes.data.user.public_id });
       })
       .then((revRes) => setReviews(revRes.data.results || revRes.data))
       .catch(() => {})
