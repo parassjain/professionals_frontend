@@ -108,6 +108,7 @@ export default function ProfessionalDetail() {
 
   const canReview = isAuthenticated && user?.public_id !== pro.user.public_id;
   const alreadyReviewed = reviews.some((r) => r.reviewer?.public_id === user?.public_id);
+  const profileComplete = !!(user?.email && user?.phone);
 
   return (
     <div className="section">
@@ -169,7 +170,14 @@ export default function ProfessionalDetail() {
             <div className="detail-section">
               <h2>Reviews ({reviews.length})</h2>
 
-              {canReview && !alreadyReviewed && (
+              {canReview && !alreadyReviewed && !profileComplete && (
+                <div className="alert alert-error" style={{ marginBottom: '1rem' }}>
+                  You need a phone number on your account before leaving a review.{' '}
+                  <Link to="/profile">Complete your profile →</Link>
+                </div>
+              )}
+
+              {canReview && !alreadyReviewed && profileComplete && (
                 <form className="review-form" onSubmit={handleReviewSubmit}>
                   <h3>Leave a Review</h3>
                   {reviewError && <div className="alert alert-error">{reviewError}</div>}
@@ -355,7 +363,11 @@ export default function ProfessionalDetail() {
                     </p>
                   )}
                   {contactError && <p className="text-muted text-sm" style={{ marginTop: '6px', color: '#ef4444' }}>{contactError}</p>}
-                  {isAuthenticated ? (
+                  {isAuthenticated && !profileComplete ? (
+                    <p className="text-muted text-sm" style={{ marginTop: '8px' }}>
+                      Add your phone number to <Link to="/profile">your profile</Link> to view contact info.
+                    </p>
+                  ) : isAuthenticated ? (
                     <button
                       className="btn btn-primary btn-sm"
                       style={{ marginTop: '8px', width: '100%' }}
