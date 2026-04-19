@@ -71,6 +71,29 @@ export default function Profile() {
       .finally(() => setLoading(false));
   }, [user]);
 
+  const handleAddSocialLink = async (e) => {
+    e.preventDefault();
+    setSocialError('');
+    if (!socialForm.platform || !socialForm.url) return;
+    try {
+      const res = await addSocialLink(socialForm);
+      setSocialLinks((prev) => {
+        const filtered = prev.filter((l) => l.platform !== res.data.platform);
+        return [...filtered, res.data];
+      });
+      setSocialForm({ platform: '', url: '' });
+    } catch (err) {
+      setSocialError(err.response?.data?.url?.[0] || 'Failed to save link.');
+    }
+  };
+
+  const handleDeleteSocialLink = async (id) => {
+    try {
+      await deleteSocialLink(id);
+      setSocialLinks((prev) => prev.filter((l) => l.id !== id));
+    } catch { /* ignore */ }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setError('');
