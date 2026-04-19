@@ -24,8 +24,8 @@ export default function Profile() {
     setForm({ first_name: user.first_name, last_name: user.last_name, phone: user.phone || '', city: user.city || '' });
 
     const fetches = [
-      getJobs({ posted_by: user.id }).catch(() => ({ data: { results: [] } })),
-      getReviews({ reviewer: user.id }).catch(() => ({ data: { results: [] } })),
+      getJobs({ posted_by: user.public_id }).catch(() => ({ data: { results: [] } })),
+      getReviews({ reviewer: user.public_id }).catch(() => ({ data: { results: [] } })),
     ];
 
     if (user.is_professional) {

@@ -46,13 +46,13 @@ export default function ProfessionalDetail() {
     setSubmitting(true);
     try {
       const fd = new FormData();
-      fd.append('reviewed_user', pro.user.id);
+      fd.append('reviewed_user', pro.user.public_id);
       fd.append('rating', reviewForm.rating);
       fd.append('comment', reviewForm.comment);
       fd.append('is_anonymous', reviewForm.is_anonymous);
       if (reviewImage) fd.append('image', reviewImage);
       await createReview(fd);
-      const revRes = await getReviews({ reviewed_user: pro.user.id });
+      const revRes = await getReviews({ reviewed_user: pro.user.public_id });
       setReviews(revRes.data.results || revRes.data);
       setReviewForm({ rating: 5, comment: '', is_anonymous: false });
       setReviewImage(null);
@@ -77,7 +77,7 @@ export default function ProfessionalDetail() {
       fd.append('is_anonymous', editForm.is_anonymous);
       if (editImage) fd.append('image', editImage);
       await updateReview(editingReviewId, fd);
-      const revRes = await getReviews({ reviewed_user: pro.user.id });
+      const revRes = await getReviews({ reviewed_user: pro.user.public_id });
       setReviews(revRes.data.results || revRes.data);
       setEditingReviewId(null);
       setEditImage(null);
