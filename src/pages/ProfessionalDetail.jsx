@@ -324,27 +324,6 @@ export default function ProfessionalDetail() {
               <p>Member since {new Date(pro.created_at).toLocaleDateString()}</p>
             </div>
 
-            {pro.user?.social_links?.length > 0 && (
-              <div className="sidebar-card">
-                <h3>Social Links</h3>
-                <div className="social-links-list">
-                  {pro.user.social_links.map((link) => {
-                    const icon = link.platform === 'github' ? <Code size={16} />
-                      : link.platform === 'linkedin' ? <Link2 size={16} />
-                      : link.platform === 'twitter' ? <Globe size={16} />
-                      : <Globe size={16} />;
-                    const label = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' }[link.platform] || link.platform;
-                    return (
-                      <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="social-link-row social-link-row--clickable">
-                        {icon}
-                        <span>{label}</span>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
             <div className="sidebar-card">
               <h3>Contact Info</h3>
               {contactInfo ? (
@@ -365,7 +344,27 @@ export default function ProfessionalDetail() {
                         : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone not verified" />}
                     </p>
                   )}
-                  {!contactInfo.email && !contactInfo.phone && <p className="text-muted">No contact info available.</p>}
+                  {pro.user?.social_links?.length > 0 && (
+                    <div style={{ marginTop: '0.75rem', borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+                      {pro.user.social_links.map((link) => {
+                        const LABELS = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' };
+                        const icon = link.platform === 'github' ? <Code size={14} />
+                          : link.platform === 'linkedin' ? <Link2 size={14} />
+                          : <Globe size={14} />;
+                        return (
+                          <p key={link.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            {icon}
+                            <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', wordBreak: 'break-all', fontSize: '0.875rem' }}>
+                              {LABELS[link.platform] || link.platform}
+                            </a>
+                          </p>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {!contactInfo.email && !contactInfo.phone && !pro.user?.social_links?.length && (
+                    <p className="text-muted">No contact info available.</p>
+                  )}
                 </>
               ) : (
                 <>
@@ -381,6 +380,11 @@ export default function ProfessionalDetail() {
                       {pro.user?.is_phone_verified
                         ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone verified" />
                         : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone not verified" />}
+                    </p>
+                  )}
+                  {pro.user?.social_links?.length > 0 && (
+                    <p className="text-muted text-sm" style={{ marginTop: '6px' }}>
+                      + {pro.user.social_links.length} social link{pro.user.social_links.length > 1 ? 's' : ''}
                     </p>
                   )}
                   {contactError && <p className="text-muted text-sm" style={{ marginTop: '6px', color: '#ef4444' }}>{contactError}</p>}
