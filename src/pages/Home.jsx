@@ -87,7 +87,7 @@ export default function Home() {
             <h2 className="section-title">Top Rated Professionals</h2>
             <div className="card-grid">
               {topPros.map((pro) => (
-                <Link to={`/professionals/${pro.id}`} key={pro.id} className="pro-card">
+                <Link to={`/professionals/${pro.public_id}`} key={pro.public_id} className="pro-card">
                   <div className="pro-card-header">
                     <div className="avatar">
                       {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}

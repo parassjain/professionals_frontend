@@ -43,7 +43,7 @@ export default function Profile() {
           const myPro = pros.find((p) => p.user?.public_id === user.public_id);
           if (myPro) {
             setProProfile(myPro);
-            return getProfessional(myPro.id);
+            return getProfessional(myPro.public_id);
           }
         }
         return null;
@@ -87,7 +87,7 @@ export default function Profile() {
       for (const file of toUpload) {
         const fd = new FormData();
         fd.append('image', file);
-        const res = await addPortfolioImage(proProfile.id, fd);
+        const res = await addPortfolioImage(proProfile.public_id, fd);
         setPortfolioImages((prev) => [...prev, res.data]);
       }
     } catch { /* ignore */ } finally {
@@ -99,7 +99,7 @@ export default function Profile() {
   const handlePortfolioDelete = async (imgId) => {
     if (!proProfile) return;
     try {
-      await deletePortfolioImage(proProfile.id, imgId);
+      await deletePortfolioImage(proProfile.public_id, imgId);
       setPortfolioImages((prev) => prev.filter((img) => img.id !== imgId));
     } catch { /* ignore */ }
   };
@@ -182,7 +182,7 @@ export default function Profile() {
                     className={`btn btn-sm ${proProfile.is_active ? 'btn-outline' : 'btn-primary'}`}
                     onClick={async () => {
                       try {
-                        await updateProfessionalProfile(proProfile.id, { is_active: !proProfile.is_active });
+                        await updateProfessionalProfile(proProfile.public_id, { is_active: !proProfile.is_active });
                         setProProfile({ ...proProfile, is_active: !proProfile.is_active });
                       } catch { /* ignore */ }
                     }}
@@ -195,7 +195,7 @@ export default function Profile() {
                     Your profile is hidden from the marketplace. Click "Enable Listing" to make it visible again.
                   </div>
                 )}
-                <Link to={`/professionals/${proProfile.id}`} className="pro-card">
+                <Link to={`/professionals/${proProfile.public_id}`} className="pro-card">
                   <h3>{proProfile.headline}</h3>
                   <div className="pro-card-meta">
                     {proProfile.avg_rating ? <StarRating rating={proProfile.avg_rating} /> : <span className="text-muted">No ratings</span>}

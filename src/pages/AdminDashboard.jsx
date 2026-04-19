@@ -206,14 +206,14 @@ function ProfessionalsTab() {
   };
 
   const handleDelete = async (id) => {
-    try { await deleteProfessionalProfile(id); setDeleteConfirm(null); setProfessionals((p) => p.filter((pro) => pro.id !== id)); }
+    try { await deleteProfessionalProfile(id); setDeleteConfirm(null); setProfessionals((p) => p.filter((pro) => pro.public_id !== id)); }
     catch { setError('Failed to delete professional.'); }
   };
 
   const handleToggleVerify = async (pro) => {
     try {
-      await adminVerifyProfessional(pro.id, !pro.is_verified);
-      setProfessionals((prev) => prev.map((p) => p.id === pro.id ? { ...p, is_verified: !p.is_verified } : p));
+      await adminVerifyProfessional(pro.public_id, !pro.is_verified);
+      setProfessionals((prev) => prev.map((p) => p.public_id === pro.public_id ? { ...p, is_verified: !p.is_verified } : p));
     } catch { setError('Failed to update verification.'); }
   };
 
@@ -329,7 +329,7 @@ function ProfessionalsTab() {
           </thead>
           <tbody>
             {professionals.map((pro) => (
-              <tr key={pro.id} style={{ borderBottom: '1px solid var(--gray-100)' }}>
+              <tr key={pro.public_id} style={{ borderBottom: '1px solid var(--gray-100)' }}>
                 <td style={{ ...tdStyle, fontWeight: 500 }}>
                   {pro.user.first_name} {pro.user.last_name}
                 </td>
@@ -356,14 +356,14 @@ function ProfessionalsTab() {
                   </button>
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
-                  {deleteConfirm === pro.id ? (
+                  {deleteConfirm === pro.public_id ? (
                     <span style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
                       <span style={{ fontSize: '0.8rem', color: 'var(--gray-600)' }}>Delete?</span>
-                      <button className="btn btn-sm" style={{ background: 'var(--red)', color: 'white', border: 'none' }} onClick={() => handleDelete(pro.id)}>Yes</button>
+                      <button className="btn btn-sm" style={{ background: 'var(--red)', color: 'white', border: 'none' }} onClick={() => handleDelete(pro.public_id)}>Yes</button>
                       <button className="btn btn-sm btn-outline" onClick={() => setDeleteConfirm(null)}>No</button>
                     </span>
                   ) : (
-                    <button className="btn btn-sm" style={{ background: 'var(--red-light)', color: 'var(--red)', border: 'none' }} onClick={() => setDeleteConfirm(pro.id)} title="Delete">
+                    <button className="btn btn-sm" style={{ background: 'var(--red-light)', color: 'var(--red)', border: 'none' }} onClick={() => setDeleteConfirm(pro.public_id)} title="Delete">
                       <Trash2 size={14} />
                     </button>
                   )}

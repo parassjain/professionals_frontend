@@ -113,7 +113,7 @@ export default function Professionals() {
           <>
             <div className="card-grid">
               {professionals.map((pro) => (
-                <Link to={`/professionals/${pro.id}`} key={pro.id} className="pro-card">
+                <Link to={`/professionals/${pro.public_id}`} key={pro.public_id} className="pro-card">
                   <div className="pro-card-header">
                     <div className="avatar">
                       {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
