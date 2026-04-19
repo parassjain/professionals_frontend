@@ -330,7 +330,7 @@ export default function ProfessionalDetail() {
                 <div className="social-links-list">
                   {pro.user.social_links.map((link) => {
                     const icon = link.platform === 'github' ? <Github size={16} />
-                      : link.platform === 'linkedin' ? <Linkedin size={16} />
+                      : link.platform === 'linkedin' ? <LinkedIn size={16} />
                       : link.platform === 'twitter' ? <Twitter size={16} />
                       : <Globe size={16} />;
                     const label = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' }[link.platform] || link.platform;
