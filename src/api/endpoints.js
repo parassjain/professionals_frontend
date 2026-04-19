@@ -34,6 +34,15 @@ export const updateCurrentUserWithFile = (formData) =>
 export const getPublicUser = (id) =>
   api.get(`/users/${id}/`);
 
+export const getSocialLinks = () =>
+  api.get('/users/social-links/');
+
+export const addSocialLink = (data) =>
+  api.post('/users/social-links/', data);
+
+export const deleteSocialLink = (id) =>
+  api.delete(`/users/social-links/${id}/`);
+
 // Categories
 export const getCategories = () =>
   api.get('/categories/');
