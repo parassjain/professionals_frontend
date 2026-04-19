@@ -1,23 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getCategoryTree, getProfessionals, getSiteStats } from '../api/endpoints';
+import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
 import { Search, Shield, Star, Users, Briefcase } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import CategoryIcon from '../components/CategoryIcon';
 
 export default function Home() {
   const [supercategories, setSupercategories] = useState([]);
-  const [uncategorized, setUncategorized] = useState([]);
   const [topPros, setTopPros] = useState([]);
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    getCategoryTree()
-      .then((r) => {
-        const tree = r.data;
-        setSupercategories(tree.slice(0, 4));
-        setUncategorized(tree.slice(4).flatMap((s) => s.subcategories || []));
-      })
+    getCategories()
+      .then((r) => setSupercategories(r.data.slice(0, 4)))
       .catch(() => {});
     getProfessionals({ ordering: '-avg_rating', page_size: 4 }).then((r) => setTopPros(r.data.results || r.data)).catch(() => {});
     getSiteStats().then((r) => setStats(r.data)).catch(() => {});
@@ -73,7 +68,7 @@ export default function Home() {
           <div className="container">
             <h2 className="section-title">Browse by Category</h2>
             <div className="card-grid">
-              {supercategories.slice(0, 4).map((superCat) =>
+              {supercategories.map((superCat) =>
                 superCat.subcategories?.slice(0, 4).map((cat) => (
                   <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
                     <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
@@ -82,12 +77,6 @@ export default function Home() {
                   </Link>
                 ))
               )}
-              {uncategorized.slice(0, 4).map((cat) => (
-                <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
-                  <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
-                  <h3>{cat.name}</h3>
-                </Link>
-              ))}
             </div>
             <div className="text-center mt-2">
               <Link to="/categories" className="btn btn-outline">View All Categories</Link>

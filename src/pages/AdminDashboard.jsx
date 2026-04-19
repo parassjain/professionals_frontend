@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
-  getCategories, createCategory, updateCategory, deleteCategory,
-  adminListProfessionals, adminCreateProfessional, deleteProfessionalProfile, adminVerifyProfessional,
-  getSiteStats,
+  getAllCategories, createCategory, updateCategory, deleteCategory,
+  adminListProfessionals, adminVerifyProfessional, getCategories
 } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -31,7 +30,7 @@ function CategoriesTab() {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const fetchCategories = () =>
-    getCategories().then((r) => setCategories(r.data)).finally(() => setLoading(false));
+    getAllCategories().then((r) => setCategories(r.data)).finally(() => setLoading(false));
 
   useEffect(() => { fetchCategories(); }, []);
 

@@ -1,22 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCategoryTree, getCategories } from '../api/endpoints';
+import { getCategories } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CategoryIcon from '../components/CategoryIcon';
 
 export default function Categories() {
   const [supercategories, setSupercategories] = useState([]);
-  const [uncategorized, setUncategorized] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([getCategoryTree(), getCategories()])
-      .then(([treeRes, allRes]) => {
-        setSupercategories(treeRes.data);
-        const all = allRes.data;
-        const orphaned = all.filter((c) => c.parent === null && !treeRes.data.some((s) => s.id === c.id));
-        setUncategorized(orphaned);
-      })
+    getCategories()
+      .then((r) => setSupercategories(r.data))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -48,22 +42,7 @@ export default function Categories() {
           </div>
         ))}
 
-        {uncategorized.length > 0 && (
-          <div className="category-section">
-            <h2 className="section-title">Other Services</h2>
-            <div className="card-grid">
-              {uncategorized.map((cat) => (
-                <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
-                  <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
-                  <h3>{cat.name}</h3>
-                  {cat.description && <p>{cat.description}</p>}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {supercategories.length === 0 && uncategorized.length === 0 && (
+        {supercategories.length === 0 && (
           <p className="text-center text-muted">No categories available yet.</p>
         )}
       </div>
