@@ -75,6 +75,14 @@ export const adminCreateProfessional = (data) =>
 export const adminVerifyProfessional = (id, is_verified) =>
   api.patch(`/professionals/${id}/`, { is_verified });
 
+export const addPortfolioImage = (proId, formData) =>
+  api.post(`/professionals/${proId}/portfolio/`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const deletePortfolioImage = (proId, imgId) =>
+  api.delete(`/professionals/${proId}/portfolio/${imgId}/`);
+
 // Jobs
 export const getJobs = (params) =>
   api.get('/jobs/', { params });

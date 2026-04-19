@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getProfessionals, getJobs, getReviews } from '../api/endpoints';
-import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle } from 'lucide-react';
+import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getProfessional, getProfessionals, getJobs, getReviews, addPortfolioImage, deletePortfolioImage } from '../api/endpoints';
+import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -16,6 +16,8 @@ export default function Profile() {
   const [myReviews, setMyReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [portfolioImages, setPortfolioImages] = useState([]);
+  const [portfolioUploading, setPortfolioUploading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -38,9 +40,16 @@ export default function Profile() {
         setMyReviews(reviewsRes.data.results || reviewsRes.data || []);
         if (prosRes) {
           const pros = prosRes.data.results || prosRes.data || [];
-          const myPro = pros.find((p) => p.user?.id === user.id);
-          setProProfile(myPro || null);
+          const myPro = pros.find((p) => p.user?.public_id === user.public_id);
+          if (myPro) {
+            setProProfile(myPro);
+            return getProfessional(myPro.id);
+          }
         }
+        return null;
+      })
+      .then((detailRes) => {
+        if (detailRes) setPortfolioImages(detailRes.data.portfolio_images || []);
       })
       .finally(() => setLoading(false));
   }, [user]);
@@ -65,6 +74,33 @@ export default function Profile() {
     try {
       await updateCurrentUserWithFile(fd);
       await fetchUser();
+    } catch { /* ignore */ }
+  };
+
+  const handlePortfolioUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length || !proProfile) return;
+    const remaining = 10 - portfolioImages.length;
+    const toUpload = files.slice(0, remaining);
+    setPortfolioUploading(true);
+    try {
+      for (const file of toUpload) {
+        const fd = new FormData();
+        fd.append('image', file);
+        const res = await addPortfolioImage(proProfile.id, fd);
+        setPortfolioImages((prev) => [...prev, res.data]);
+      }
+    } catch { /* ignore */ } finally {
+      setPortfolioUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  const handlePortfolioDelete = async (imgId) => {
+    if (!proProfile) return;
+    try {
+      await deletePortfolioImage(proProfile.id, imgId);
+      setPortfolioImages((prev) => prev.filter((img) => img.id !== imgId));
     } catch { /* ignore */ }
   };
 
@@ -171,6 +207,46 @@ export default function Profile() {
                     {proProfile.services?.map((s) => <span key={s.id} className="tag">{s.name}</span>)}
                   </div>
                 </Link>
+              </div>
+            )}
+
+            {/* Portfolio Management */}
+            {proProfile && (
+              <div className="detail-section">
+                <div className="section-header-row">
+                  <h2><ImagePlus size={20} /> Portfolio ({portfolioImages.length}/10)</h2>
+                  {portfolioImages.length < 10 && (
+                    <label className="btn btn-sm btn-outline" style={{ cursor: 'pointer' }}>
+                      {portfolioUploading ? 'Uploading...' : 'Add Photos'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        hidden
+                        disabled={portfolioUploading}
+                        onChange={handlePortfolioUpload}
+                      />
+                    </label>
+                  )}
+                </div>
+                {portfolioImages.length === 0 ? (
+                  <p className="text-muted">No portfolio photos yet. Add up to 10 photos to showcase your work.</p>
+                ) : (
+                  <div className="portfolio-grid">
+                    {portfolioImages.map((img) => (
+                      <div key={img.id} className="portfolio-item">
+                        <img src={img.image} alt="Portfolio" className="portfolio-img" />
+                        <button
+                          className="portfolio-delete-btn"
+                          onClick={() => handlePortfolioDelete(img.id)}
+                          title="Remove photo"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

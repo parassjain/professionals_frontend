@@ -18,6 +18,7 @@ import JobDetail from './pages/JobDetail';
 import JobForm from './pages/JobForm';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import FAQ from './pages/FAQ';
 import './index.css';
 
 export default function App() {
@@ -58,6 +59,7 @@ export default function App() {
                   path="/admin"
                   element={<AdminRoute><AdminDashboard /></AdminRoute>}
                 />
+                <Route path="/faq" element={<FAQ />} />
               </Routes>
             </main>
             <Footer />

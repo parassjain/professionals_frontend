@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createProfessionalProfile, getCategories } from '../api/endpoints';
+import { createProfessionalProfile, addPortfolioImage } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
+import { Trash2 } from 'lucide-react';
+import { getCategories } from '../api/endpoints';
 
 export default function BecomeProfessional() {
   const { user, fetchUser } = useAuth();
@@ -10,6 +12,12 @@ export default function BecomeProfessional() {
   const [form, setForm] = useState({ headline: '', bio: '', years_experience: 0, address: '', services: [] });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // portfolio step
+  const [step, setStep] = useState('form'); // 'form' | 'portfolio'
+  const [createdProId, setCreatedProId] = useState(null);
+  const [portfolioImages, setPortfolioImages] = useState([]); // { preview, file, uploaded }
+  const [portfolioUploading, setPortfolioUploading] = useState(false);
 
   useEffect(() => {
     if (user?.is_professional) navigate('/profile');
@@ -21,9 +29,10 @@ export default function BecomeProfessional() {
     setError('');
     setLoading(true);
     try {
-      await createProfessionalProfile(form);
+      const res = await createProfessionalProfile(form);
+      setCreatedProId(res.data.id);
       await fetchUser();
-      navigate('/profile');
+      setStep('portfolio');
     } catch (err) {
       const data = err.response?.data;
       setError(typeof data === 'string' ? data : data?.detail || data?.non_field_errors?.[0] || JSON.stringify(data) || 'Failed to create profile.');
@@ -38,6 +47,87 @@ export default function BecomeProfessional() {
       services: f.services.includes(id) ? f.services.filter((s) => s !== id) : [...f.services, id],
     }));
   };
+
+  const handlePortfolioSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    const remaining = 10 - portfolioImages.length;
+    const toAdd = files.slice(0, remaining).map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+      uploaded: false,
+    }));
+    setPortfolioImages((prev) => [...prev, ...toAdd]);
+    e.target.value = '';
+  };
+
+  const handlePortfolioRemoveLocal = (index) => {
+    setPortfolioImages((prev) => {
+      URL.revokeObjectURL(prev[index].preview);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const handlePortfolioFinish = async () => {
+    if (!createdProId) { navigate('/profile'); return; }
+    setPortfolioUploading(true);
+    try {
+      for (const item of portfolioImages) {
+        const fd = new FormData();
+        fd.append('image', item.file);
+        await addPortfolioImage(createdProId, fd);
+      }
+    } catch { /* ignore — user can add more from profile */ } finally {
+      setPortfolioUploading(false);
+      navigate('/profile');
+    }
+  };
+
+  if (step === 'portfolio') {
+    return (
+      <div className="section">
+        <div className="container container-sm">
+          <h1 className="page-title">Add Portfolio Photos</h1>
+          <p className="text-muted text-center mb-2">
+            Showcase your work — add up to 10 photos. You can also skip and add them later from your profile.
+          </p>
+
+          {portfolioImages.length > 0 && (
+            <div className="portfolio-grid" style={{ marginBottom: '1.5rem' }}>
+              {portfolioImages.map((img, i) => (
+                <div key={i} className="portfolio-item">
+                  <img src={img.preview} alt="Preview" className="portfolio-img" />
+                  <button
+                    className="portfolio-delete-btn"
+                    onClick={() => handlePortfolioRemoveLocal(i)}
+                    title="Remove"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+            {portfolioImages.length < 10 && (
+              <label className="btn btn-outline" style={{ cursor: 'pointer' }}>
+                Add Photos
+                <input type="file" accept="image/*" multiple hidden onChange={handlePortfolioSelect} />
+              </label>
+            )}
+            <button
+              className="btn btn-primary"
+              onClick={handlePortfolioFinish}
+              disabled={portfolioUploading}
+            >
+              {portfolioUploading ? 'Uploading...' : portfolioImages.length > 0 ? 'Upload & Continue' : 'Skip for Now'}
+            </button>
+          </div>
+          <p className="text-muted text-sm">You can manage portfolio photos anytime from your profile page.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="section">

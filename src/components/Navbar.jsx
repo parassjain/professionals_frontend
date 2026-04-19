@@ -41,9 +41,12 @@ export default function Navbar() {
           <Link to="/jobs" onClick={() => setOpen(false)}>
             <Briefcase size={16} /> Jobs
           </Link>
-          <Link to="/categories" onClick={() => setOpen(false)}>
-            Categories
-          </Link>
+<Link to="/categories" onClick={() => setOpen(false)}>
+              Categories
+            </Link>
+            <Link to="/faq" onClick={() => setOpen(false)}>
+              FAQ
+            </Link>
 
           {isAuthenticated ? (
             <>

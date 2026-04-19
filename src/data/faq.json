@@ -1,0 +1,174 @@
+[
+  {
+    "category": "Getting Started",
+    "questions": [
+      {
+        "question": "How do I create an account?",
+        "answer": "Click on the 'Sign Up' button in the top right corner of the homepage. You can sign up using your email address or through your Google account for faster registration."
+      },
+      {
+        "question": "Is it free to use the platform?",
+        "answer": "Yes, creating an account and browsing professionals is completely free. You only pay when you book services directly through the platform."
+      },
+      {
+        "question": "How do I find a professional?",
+        "answer": "Use our search feature to browse by category, location, or service type. You can also filter by ratings, price range, and availability to find the perfect match."
+      },
+      {
+        "question": "Can I use this platform for my business?",
+        "answer": "Absolutely! If you're a service provider, you can create a professional profile to showcase your services and attract new clients."
+      }
+    ]
+  },
+  {
+    "category": "For Customers",
+    "questions": [
+      {
+        "question": "How do I book a professional?",
+        "answer": "Navigate to the professional's profile and click 'Contact' or 'Book Now'. You can then send them a message or request to schedule a service."
+      },
+      {
+        "question": "How do reviews work?",
+        "answer": "After completing a service, you can leave a review for the professional. Your honest feedback helps other customers make informed decisions."
+      },
+      {
+        "question": "Can I negotiate pricing with professionals?",
+        "answer": "Yes, you can discuss pricing directly with professionals through our messaging system. Many professionals offer custom quotes for specific jobs."
+      },
+      {
+        "question": "What if I'm not satisfied with the service?",
+        "answer": "Contact the professional first to discuss your concerns. If the issue isn't resolved, you can report it to our support team for assistance."
+      },
+      {
+        "question": "How do I cancel a booking?",
+        "answer": "Go to your profile dashboard to manage your bookings. You can cancel or reschedule appointments directly from there, though please respect the professional's cancellation policy."
+      }
+    ]
+  },
+  {
+    "category": "For Professionals",
+    "questions": [
+      {
+        "question": "How do I become a verified professional?",
+        "answer": "Complete your profile with all required information, add your services, and submit verification documents. Our team will review your application within 2-3 business days."
+      },
+      {
+        "question": "How much does it cost to list my services?",
+        "answer": "Listing your services is free! We only charge a small commission on completed bookings. There are no monthly fees or subscriptions."
+      },
+      {
+        "question": "How do I manage my availability?",
+        "answer": "Go to your profile settings and update your availability calendar. You can set specific hours, block off dates, or enable instant booking for customers."
+      },
+      {
+        "question": "Can I offer discounts to attract clients?",
+        "answer": "Yes! You can create special offers, first-time customer discounts, or package deals directly from your dashboard."
+      },
+      {
+        "question": "How do I get paid?",
+        "answer": "Payments are processed securely through the platform after service completion. You can withdraw funds to your bank account or PayPal."
+      }
+    ]
+  },
+  {
+    "category": "Safety & Security",
+    "questions": [
+      {
+        "question": "How are professionals verified?",
+        "answer": "We verify identity documents, professional licenses, and conduct background checks. Look for the 'Verified' badge on profiles."
+      },
+      {
+        "question": "Is my personal information safe?",
+        "answer": "We use industry-standard encryption to protect your data. Professionals only see your contact information after you initiate a conversation."
+      },
+      {
+        "question": "What should I do if I feel unsafe?",
+        "answer": "If you ever feel threatened or uncomfortable, end communication immediately and report the user. We're committed to maintaining a safe community."
+      },
+      {
+        "question": "Are payments secure?",
+        "answer": "Yes, all payments are processed through secure payment gateways. We never store your full payment details on our servers."
+      }
+    ]
+  },
+  {
+    "category": "Billing & Payments",
+    "questions": [
+      {
+        "question": "What payment methods are accepted?",
+        "answer": "We accept major credit cards, debit cards, PayPal, and bank transfers depending on the professional's preferences."
+      },
+      {
+        "question": "When am I charged?",
+        "answer": "Payment is processed after the service is completed and you've confirmed satisfaction. Some professionals may require a deposit upfront."
+      },
+      {
+        "question": "How do refunds work?",
+        "answer": "Refund policies vary by professional. If you're entitled to a refund, it will be processed within 5-7 business days."
+      },
+      {
+        "question": "Can I get a receipt for my payment?",
+        "answer": "Yes, all transactions generate a digital receipt that's sent to your email and available in your account dashboard."
+      }
+    ]
+  },
+  {
+    "category": "Technical Support",
+    "questions": [
+      {
+        "question": "Why can't I log into my account?",
+        "answer": "Check that you're using the correct email and password. If you forgot your password, use the 'Forgot Password' link to reset it. Make sure caps lock isn't enabled."
+      },
+      {
+        "question": "The app isn't loading properly",
+        "answer": "Try clearing your browser cache and cookies, then refresh the page. Ensure your browser is updated to the latest version."
+      },
+      {
+        "question": "How do I update my profile photo?",
+        "answer": "Go to your profile settings and click on your current photo to upload a new one. Supported formats include JPG, PNG, and GIF."
+      },
+      {
+        "question": "I'm not receiving email notifications",
+        "answer": "Check your spam folder and ensure notifications are enabled in your account settings. Add our email address to your contacts."
+      }
+    ]
+  },
+  {
+    "category": "Privacy Policy",
+    "questions": [
+      {
+        "question": "What data do you collect?",
+        "answer": "We collect information you provide during registration, profile setup, and service usage. This includes name, contact details, and service history."
+      },
+      {
+        "question": "How is my data used?",
+        "answer": "Your data helps us provide and improve our services, match you with appropriate professionals, and communicate important updates."
+      },
+      {
+        "question": "Can I delete my account?",
+        "answer": "Yes, you can request account deletion from your settings. We'll remove your personal data within 30 days, except where required by law to retain certain information."
+      },
+      {
+        "question": "Do you share my data with third parties?",
+        "answer": "We only share data with professionals you explicitly contact and service providers necessary for payment processing. We never sell your data to advertisers."
+      }
+    ]
+  },
+  {
+    "category": "Contact Us",
+    "questions": [
+      {
+        "question": "How can I contact customer support?",
+        "answer": "Email us at support@contacthub.com or use the live chat feature on our website. We're available Monday through Friday, 9 AM to 6 PM."
+      },
+      {
+        "question": "I have a suggestion - how can I share it?",
+        "answer": "We love hearing from our users! Send your suggestions to feedback@contacthub.com. Your input helps us improve the platform."
+      },
+      {
+        "question": "I'm interested in a partnership - who do I contact?",
+        "answer": "For business partnerships, reach out to our partnerships team at partners@contacthub.com with details about your proposal."
+      }
+    ]
+  }
+]

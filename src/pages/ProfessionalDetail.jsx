@@ -151,6 +151,18 @@ export default function ProfessionalDetail() {
               </div>
             </div>
 
+            {/* Portfolio */}
+            {pro.portfolio_images?.length > 0 && (
+              <div className="detail-section">
+                <h2>Portfolio</h2>
+                <div className="portfolio-grid">
+                  {pro.portfolio_images.map((img) => (
+                    <img key={img.id} src={img.image} alt="Portfolio" className="portfolio-img" />
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Reviews */}
             <div className="detail-section">
               <h2>Reviews ({reviews.length})</h2>
