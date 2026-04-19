@@ -121,6 +121,12 @@ export const deleteJob = (id) =>
 export const getReviews = (params) =>
   api.get('/reviews/', { params });
 
+export const getMyGivenReviews = () =>
+  api.get('/reviews/my-given/');
+
+export const getMyReceivedReviews = () =>
+  api.get('/reviews/my-received/');
+
 export const getReview = (id) =>
   api.get(`/reviews/${id}/`);
 
