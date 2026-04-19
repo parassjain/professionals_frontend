@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getProfessional, getReviews, createReview, updateReview, revealContact } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Github, Linkedin as LinkedIn, Twitter, Globe } from 'lucide-react';
+import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Code, Globe, Link2 } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import StarInput from '../components/StarInput';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -329,9 +329,9 @@ export default function ProfessionalDetail() {
                 <h3>Social Links</h3>
                 <div className="social-links-list">
                   {pro.user.social_links.map((link) => {
-                    const icon = link.platform === 'github' ? <Github size={16} />
-                      : link.platform === 'linkedin' ? <LinkedIn size={16} />
-                      : link.platform === 'twitter' ? <Twitter size={16} />
+                    const icon = link.platform === 'github' ? <Code size={16} />
+                      : link.platform === 'linkedin' ? <Link2 size={16} />
+                      : link.platform === 'twitter' ? <Globe size={16} />
                       : <Globe size={16} />;
                     const label = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' }[link.platform] || link.platform;
                     return (
