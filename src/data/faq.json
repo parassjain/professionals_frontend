@@ -21,6 +21,27 @@
     ]
   },
   {
+    "category": "Account",
+    "questions": [
+      {
+        "question": "How do I register on ProConnect?",
+        "answer": "You can register using your email or sign in with your Google account. Click on 'Sign Up' and fill in your details including first name, last name, and email."
+      },
+      {
+        "question": "How do I update my profile picture?",
+        "answer": "Go to your profile settings and click on the avatar/photo area to upload a new image. Your previous avatar versions are saved for reference."
+      },
+      {
+        "question": "How do I verify my phone number?",
+        "answer": "Add your phone number in profile settings and request a verification code. Enter the code to mark your phone as verified."
+      },
+      {
+        "question": "Why am I not receiving emails?",
+        "answer": "Check your email spam folder. Make sure your email is verified in account settings. Contact support if issues persist."
+      }
+    ]
+  },
+  {
     "category": "For Customers",
     "questions": [
       {
@@ -42,6 +63,22 @@
       {
         "question": "How do I cancel a booking?",
         "answer": "Go to your profile dashboard to manage your bookings. You can cancel or reschedule appointments directly from there, though please respect the professional's cancellation policy."
+      },
+      {
+        "question": "How do I post a job?",
+        "answer": "Navigate to Jobs section and click 'Post a Job'. Fill in the job title, description, category, and location. Jobs can be set to open or closed status."
+      },
+      {
+        "question": "How do I find professionals for a specific service?",
+        "answer": "Browse professionals by service category or search for specific skills. You can filter by location and view professional profiles."
+      },
+      {
+        "question": "How do I leave a review for a professional?",
+        "answer": "After working with a professional, go to their profile and click 'Leave a Review'. Rate your experience from 1-5 stars and add comments."
+      },
+      {
+        "question": "Can I change or delete my review?",
+        "answer": "Once submitted, reviews cannot be changed. You can delete your own review if needed. Each client-professional pair can only have one review."
       }
     ]
   },
@@ -67,6 +104,18 @@
       {
         "question": "How do I get paid?",
         "answer": "Payments are processed securely through the platform after service completion. You can withdraw funds to your bank account or PayPal."
+      },
+      {
+        "question": "How do I become a professional on the platform?",
+        "answer": "Go to your profile settings and enable 'Professional Account'. You'll need to complete your profile with services you offer and set your location."
+      },
+      {
+        "question": "How do I add the services I offer?",
+        "answer": "As a professional, you can select service categories from the available list when editing your profile. These help clients find you for specific services."
+      },
+      {
+        "question": "How do clients contact me?",
+        "answer": "Clients can view your profile and contact information. When they view your contact details, you'll see a record of who have viewed your info."
       }
     ]
   },
@@ -151,6 +200,10 @@
       {
         "question": "Do you share my data with third parties?",
         "answer": "We only share data with professionals you explicitly contact and service providers necessary for payment processing. We never sell your data to advertisers."
+      },
+      {
+        "question": "How is my data protected?",
+        "answer": "We follow security best practices including encrypted storage and secure authentication. Your personal data is never shared without consent."
       }
     ]
   },

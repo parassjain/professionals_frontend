@@ -117,7 +117,3 @@ export const updateReview = (id, data) =>
 
 export const deleteReview = (id) =>
   api.delete(`/reviews/${id}/`);
-
-// FAQ
-export const getFAQs = () =>
-  api.get('/faq/');
