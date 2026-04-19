@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getProfessional, getProfessionals, getJobs, getReviews, addPortfolioImage, deletePortfolioImage, addSocialLink, deleteSocialLink } from '../api/endpoints';
+import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getProfessional, getMyJobs, getMyGivenReviews, getMyReceivedReviews, getMyProfessionalProfile, addPortfolioImage, deletePortfolioImage, addSocialLink, deleteSocialLink } from '../api/endpoints';
 import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Code, Globe } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
