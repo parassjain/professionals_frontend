@@ -110,10 +110,10 @@ export const getReview = (id) =>
   api.get(`/reviews/${id}/`);
 
 export const createReview = (data) =>
-  api.post('/reviews/', data);
+  api.post('/reviews/', data, { headers: { 'Content-Type': 'multipart/form-data' } });
 
 export const updateReview = (id, data) =>
-  api.patch(`/reviews/${id}/`, data);
+  api.patch(`/reviews/${id}/`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
 
 export const deleteReview = (id) =>
   api.delete(`/reviews/${id}/`);
