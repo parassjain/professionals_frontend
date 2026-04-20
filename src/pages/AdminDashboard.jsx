@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
   getAllCategories, createCategory, updateCategory, deleteCategory,
-  adminListProfessionals, adminVerifyProfessional, getCategories
+  adminListProfessionals, adminVerifyProfessional, getCategories,
+  getSiteStats, adminCreateProfessional, deleteProfessionalProfile,
 } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
 
