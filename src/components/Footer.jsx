@@ -44,14 +44,15 @@ export default function Footer() {
         <div className="container">
           <div className="footer-grid">
             <div>
-              <h3>Contact Hub</h3>
-              <p>Find trusted professionals for any service you need.</p>
+              <div className="footer-brand">Contact Hub</div>
+              <p className="footer-desc">Find trusted professionals for any service you need. Connect with verified experts in your area.</p>
             </div>
             <div>
               <h4>Quick Links</h4>
               <Link to="/professionals">Find Professionals</Link>
-              <Link to="/jobs">Browse Work</Link>
+              <Link to="/jobs">Browse Jobs</Link>
               <Link to="/categories">Categories</Link>
+              <Link to="/faq">FAQ</Link>
             </div>
             <div>
               <h4>Account</h4>
@@ -60,10 +61,10 @@ export default function Footer() {
               <Link to="/profile">My Profile</Link>
             </div>
             <div>
-              <h4>Contact & Feedback</h4>
+              <h4>Support</h4>
               <button onClick={openModal} className="btn-link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit', font: 'inherit' }}>
                 <MessageCircle size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                Contact Us / Feedback
+                Contact & Feedback
               </button>
             </div>
           </div>

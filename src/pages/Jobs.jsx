@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getJobs, getCategories } from '../api/endpoints';
-import { Search, MapPin, Filter, Briefcase, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, MapPin, Filter, Briefcase, ChevronLeft, ChevronRight, DollarSign } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Jobs() {
@@ -58,15 +58,16 @@ export default function Jobs() {
     <div className="section">
       <div className="container">
         <div className="page-header-row">
-          <h1 className="page-title">Job Board</h1>
+          <h1 className="page-title" style={{ textAlign: 'left', marginBottom: 0 }}>Job Board</h1>
           <Link to="/jobs/create" className="btn btn-primary">
             <Briefcase size={16} /> Post a Job
           </Link>
         </div>
+        <p className="page-subtitle text-left" style={{ marginBottom: '2rem' }}>Browse and apply for available jobs</p>
 
         <form className="search-filters" onSubmit={applySearch}>
           <div className="search-bar">
-            <Search size={18} />
+            <Search size={20} />
             <input
               type="text"
               placeholder="Search jobs..."
@@ -77,14 +78,14 @@ export default function Jobs() {
           </div>
           <div className="filter-row">
             <div className="filter-group">
-              <Filter size={14} />
+              <Filter size={16} />
               <select value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })}>
                 <option value="">All Categories</option>
                 {categories.map((c) => <option key={c.id} value={c.slug}>{c.name}</option>)}
               </select>
             </div>
             <div className="filter-group">
-              <MapPin size={14} />
+              <MapPin size={16} />
               <input type="text" placeholder="City" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} />
             </div>
             <div className="filter-group">
@@ -111,15 +112,15 @@ export default function Jobs() {
                 <Link to={`/jobs/${job.id}`} key={job.id} className="job-card">
                   <div className="job-card-header">
                     <h3>{job.title}</h3>
-                    <span className={`badge ${job.status === 'open' ? 'badge-green' : 'badge-gray'}`}>
+                    <span className={`badge ${job.status === 'open' ? 'badge-success' : 'badge-gray'}`}>
                       {job.status}
                     </span>
                   </div>
-                  <p className="text-muted job-desc">{job.description?.slice(0, 150)}{job.description?.length > 150 ? '...' : ''}</p>
+                  <p className="job-desc">{job.description?.slice(0, 180)}{job.description?.length > 180 ? '...' : ''}</p>
                   <div className="job-card-meta">
                     {job.category && <span className="tag">{job.category.name}</span>}
                     <span><MapPin size={14} /> {job.city}</span>
-                    {job.budget_range && <span>Budget: {job.budget_range}</span>}
+                    {job.budget_range && <span><DollarSign size={14} /> {job.budget_range}</span>}
                     <span className="text-muted">{new Date(job.created_at).toLocaleDateString()}</span>
                   </div>
                   <div className="job-card-poster">

@@ -36,17 +36,17 @@ export default function Navbar() {
 
         <div className={`navbar-links ${open ? 'open' : ''}`}>
           <Link to="/professionals" onClick={() => setOpen(false)}>
-            <Search size={16} /> Find Professionals
+            <Search size={16} /> Find Pros
           </Link>
           <Link to="/jobs" onClick={() => setOpen(false)}>
             <Briefcase size={16} /> Jobs
           </Link>
-<Link to="/categories" onClick={() => setOpen(false)}>
-              Categories
-            </Link>
-            <Link to="/faq" onClick={() => setOpen(false)}>
-              FAQ
-            </Link>
+          <Link to="/categories" onClick={() => setOpen(false)}>
+            Categories
+          </Link>
+          <Link to="/faq" onClick={() => setOpen(false)}>
+            FAQ
+          </Link>
 
           {isAuthenticated ? (
             <>

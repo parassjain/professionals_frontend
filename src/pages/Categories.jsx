@@ -21,19 +21,36 @@ export default function Categories() {
     <div className="section">
       <div className="container">
         <h1 className="page-title">Service Categories</h1>
-        <p className="text-muted text-center mb-2">Browse professionals by category</p>
+        <p className="page-subtitle">Browse professionals by category to find the right expert</p>
 
         {supercategories.map((superCat) => (
-          <div key={superCat.id} className="category-section">
-            <div className="category-section-header">
-              <CategoryIcon icon={superCat.icon} slug={superCat.slug} name={superCat.name} size={40} className="category-section-icon" />
-              <h2 className="section-title">{superCat.name}</h2>
+          <div key={superCat.id} className="mb-4">
+            <div className="mb-3">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ 
+                  width: 48, 
+                  height: 48, 
+                  borderRadius: 12, 
+                  background: 'var(--primary-light)', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  color: 'var(--primary)'
+                }}>
+                  <CategoryIcon icon={superCat.icon} slug={superCat.slug} name={superCat.name} size={24} />
+                </div>
+                <div>
+                  <h2 className="section-title text-left" style={{ marginBottom: 0 }}>{superCat.name}</h2>
+                  {superCat.description && <p className="text-muted mt-1">{superCat.description}</p>}
+                </div>
+              </div>
             </div>
-            {superCat.description && <p className="text-muted mb-2">{superCat.description}</p>}
-            <div className="card-grid">
+            <div className="card-grid-4">
               {superCat.subcategories?.map((cat) => (
                 <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
-                  <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} className="category-icon" />
+                  <div className="category-card-icon">
+                    <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} size={28} />
+                  </div>
                   <h3>{cat.name}</h3>
                   {cat.description && <p>{cat.description}</p>}
                 </Link>
@@ -43,7 +60,9 @@ export default function Categories() {
         ))}
 
         {supercategories.length === 0 && (
-          <p className="text-center text-muted">No categories available yet.</p>
+          <div className="empty-state">
+            <p>No categories available yet.</p>
+          </div>
         )}
       </div>
     </div>

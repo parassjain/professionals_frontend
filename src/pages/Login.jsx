@@ -34,7 +34,7 @@ export default function Login() {
       try {
         await googleLogin(response.code);
         navigate('/');
-      } catch (err) {
+      } catch {
         setError('Google login failed. Please try again.');
       } finally {
         setLoading(false);

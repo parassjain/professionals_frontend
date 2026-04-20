@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getProfessionals, getCategories } from '../api/endpoints';
-import { Search, MapPin, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -61,10 +61,11 @@ export default function Professionals() {
     <div className="section">
       <div className="container">
         <h1 className="page-title">Find Professionals</h1>
+        <p className="page-subtitle">Browse through our network of verified experts</p>
 
         <form className="search-filters" onSubmit={applySearch}>
           <div className="search-bar">
-            <Search size={18} />
+            <Search size={20} />
             <input
               type="text"
               placeholder="Search by name, headline, skills..."
@@ -75,14 +76,14 @@ export default function Professionals() {
           </div>
           <div className="filter-row">
             <div className="filter-group">
-              <Filter size={14} />
+              <Filter size={16} />
               <select value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })}>
                 <option value="">All Categories</option>
                 {categories.map((c) => <option key={c.id} value={c.slug}>{c.name}</option>)}
               </select>
             </div>
             <div className="filter-group">
-              <MapPin size={14} />
+              <MapPin size={16} />
               <input type="text" placeholder="City" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} />
             </div>
             <div className="filter-group">
@@ -106,6 +107,7 @@ export default function Professionals() {
           <LoadingSpinner />
         ) : professionals.length === 0 ? (
           <div className="empty-state">
+            <Search size={48} />
             <p>No professionals found matching your criteria.</p>
             <Link to="/professionals" className="btn btn-outline">Clear Filters</Link>
           </div>
@@ -126,7 +128,7 @@ export default function Professionals() {
                   <div className="pro-card-meta">
                     {pro.avg_rating ? <StarRating rating={pro.avg_rating} /> : <span className="text-muted">No ratings</span>}
                     <span className="text-muted">({pro.review_count || 0})</span>
-                    {pro.is_verified && <span className="badge badge-green">Verified</span>}
+                    {pro.is_verified && <span className="badge badge-success"><Sparkles size={12} /> Verified</span>}
                   </div>
                   {pro.years_experience > 0 && <p className="text-sm text-muted">{pro.years_experience} years experience</p>}
                   <div className="pro-card-tags">
