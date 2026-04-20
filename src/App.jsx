@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -24,7 +24,7 @@ import './index.css';
 export default function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ''}>
-      <HashRouter>
+      <BrowserRouter>
         <AuthProvider>
           <div className="app-layout">
             <Navbar />
@@ -65,7 +65,7 @@ export default function App() {
             <Footer />
           </div>
         </AuthProvider>
-      </HashRouter>
+      </BrowserRouter>
     </GoogleOAuthProvider>
   );
 }

@@ -32,7 +32,7 @@ api.interceptors.response.use(
         } catch {
           localStorage.removeItem('tokens');
           localStorage.removeItem('user');
-          window.location.href = '/#/login';
+          window.location.href = '/login';
         }
       }
     }
