@@ -105,6 +105,7 @@ function CategoriesTab() {
               <th style={thStyle}>Icon</th>
               <th style={thStyle}>Name</th>
               <th style={thStyle}>Slug</th>
+              <th style={{ ...thStyle, textAlign: 'center' }}>Pros</th>
               <th style={thStyle}>Description</th>
               <th style={{ ...thStyle, textAlign: 'right' }}>Actions</th>
             </tr>
@@ -118,6 +119,23 @@ function CategoriesTab() {
                 </td>
                 <td style={{ ...tdStyle, fontWeight: 500 }}>{cat.name}</td>
                 <td style={{ ...tdStyle, color: 'var(--gray-500)', fontSize: '0.8rem', fontFamily: 'monospace' }}>{cat.slug}</td>
+                <td style={{ ...tdStyle, textAlign: 'center' }}>
+                  <span style={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    minWidth: 28, 
+                    height: 24, 
+                    padding: '0 6px',
+                    background: cat.professional_count > 0 ? 'var(--primary-light)' : 'var(--gray-100)', 
+                    color: cat.professional_count > 0 ? 'var(--primary)' : 'var(--gray-500)', 
+                    borderRadius: 6, 
+                    fontSize: '0.8rem', 
+                    fontWeight: 600 
+                  }}>
+                    {cat.professional_count || 0}
+                  </span>
+                </td>
                 <td style={{ ...tdStyle, color: 'var(--gray-600)', fontSize: '0.875rem', maxWidth: 240 }}>
                   {cat.description ? cat.description.slice(0, 70) + (cat.description.length > 70 ? '…' : '') : '—'}
                 </td>
@@ -138,7 +156,7 @@ function CategoriesTab() {
               </tr>
             ))}
             {categories.length === 0 && (
-              <tr><td colSpan={5} style={{ ...tdStyle, textAlign: 'center', color: 'var(--gray-400)' }}>No categories yet.</td></tr>
+              <tr><td colSpan={6} style={{ ...tdStyle, textAlign: 'center', color: 'var(--gray-400)' }}>No categories yet.</td></tr>
             )}
           </tbody>
         </table>
