@@ -50,6 +50,9 @@ export const getCategories = () =>
 export const getAllCategories = () =>
   api.get('/categories/all/');
 
+export const getPopularServices = () =>
+  api.get('/categories/popular/');
+
 export const getCategory = (slug) =>
   api.get(`/categories/${slug}/`);
 

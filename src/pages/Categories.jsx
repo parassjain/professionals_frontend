@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCategories } from '../api/endpoints';
+import { getCategories, getPopularServices } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CategoryIcon from '../components/CategoryIcon';
 
 export default function Categories() {
   const [supercategories, setSupercategories] = useState([]);
+  const [popularServices, setPopularServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCategories()
-      .then((r) => setSupercategories(r.data))
+    Promise.all([getCategories(), getPopularServices()])
+      .then(([cats, popular]) => {
+        setSupercategories(cats.data);
+        setPopularServices(popular.data);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -22,6 +26,23 @@ export default function Categories() {
       <div className="container">
         <h1 className="page-title">Service Categories</h1>
         <p className="page-subtitle">Browse professionals by category to find the right expert</p>
+
+        {popularServices.length > 0 && (
+          <div className="mb-4 mt-4">
+            <h2 className="section-title">Most Popular Services</h2>
+            <div className="card-grid-4">
+              {popularServices.map((cat) => (
+                <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
+                  <div className="category-card-icon">
+                    <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} size={28} />
+                  </div>
+                  <h3>{cat.name}</h3>
+                  <p className="text-muted">{cat.contact_count} contacts</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {supercategories.map((superCat) => (
           <div key={superCat.id} className="mb-4">
