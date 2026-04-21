@@ -34,6 +34,9 @@ export const updateCurrentUserWithFile = (formData) =>
 export const getPublicUser = (id) =>
   api.get(`/users/${id}/`);
 
+export const getUserContact = (public_id) =>
+  api.get(`/users/${public_id}/contact/`);
+
 export const getSocialLinks = () =>
   api.get('/users/social-links/');
 
