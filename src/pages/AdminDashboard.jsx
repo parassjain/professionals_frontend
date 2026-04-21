@@ -58,7 +58,7 @@ function CategoriesTab() {
       const fd = new FormData();
       fd.append('name', form.name.trim());
       fd.append('description', form.description.trim());
-      if (form.parent) fd.append('parent', form.parent);
+      if (form.parent && form.parent !== '') fd.append('parent', form.parent);
       if (form.icon) fd.append('icon', form.icon);
       if (editingSlug) { await updateCategory(editingSlug, fd); } else { await createCategory(fd); }
       closeForm(); setLoading(true); await fetchCategories();
