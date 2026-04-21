@@ -32,11 +32,14 @@ function CategoriesTab() {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const fetchCategories = async () => {
+    setLoading(true);
     try {
-      const [allRes, superRes] = await Promise.all([getAllCategoriesAdmin(), getSupercategories()]);
+      const [allRes, superRes] = await Promise.all([getAllCategories(), getSupercategories()]);
       setCategories(allRes.data);
       setSupercategories(superRes.data);
-    } catch {
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+    } finally {
       setLoading(false);
     }
   };
