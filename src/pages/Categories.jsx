@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getCategories, getPopularServices } from '../api/endpoints';
+import { SITE_URL, SITE_NAME } from '../config/site';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CategoryIcon from '../components/CategoryIcon';
 
@@ -21,8 +23,27 @@ export default function Categories() {
 
   if (loading) return <LoadingSpinner />;
 
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Professional Service Categories on ${SITE_NAME}`,
+    url: `${SITE_URL}/categories`,
+    itemListElement: supercategories.map((cat, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: cat.name,
+      url: `${SITE_URL}/professionals?category=${cat.slug}`,
+    })),
+  };
+
   return (
     <div className="section">
+      <Helmet>
+        <title>{`Professional Services Categories | ${SITE_NAME}`}</title>
+        <meta name="description" content={`Browse all service categories: maids, cooks, drivers, plumbers, electricians, brokers, tutors, carpenters and 50+ more. Find the right professional for your needs on ${SITE_NAME}.`} />
+        <link rel="canonical" href={`${SITE_URL}/categories`} />
+        <script type="application/ld+json">{JSON.stringify(itemListSchema)}</script>
+      </Helmet>
       <div className="container">
         <h1 className="page-title">Service Categories</h1>
         <p className="page-subtitle">Browse professionals by category to find the right expert</p>

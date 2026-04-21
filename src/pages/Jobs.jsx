@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getJobs, getCategories } from '../api/endpoints';
+import { SITE_URL, SITE_NAME } from '../config/site';
 import { Search, MapPin, Filter, Briefcase, ChevronLeft, ChevronRight, DollarSign } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -54,8 +56,18 @@ export default function Jobs() {
     setSearchParams(params);
   };
 
+  const cityLabel = filters.city ? ` in ${filters.city.charAt(0).toUpperCase() + filters.city.slice(1)}` : '';
+  const catLabel = filters.category ? ` ${filters.category.replace(/-/g, ' ')}` : '';
+  const jobsMetaTitle = `${catLabel || ' Local'} Jobs${cityLabel} | ${SITE_NAME}`;
+  const jobsMetaDesc = `Browse open${catLabel} job postings${cityLabel} on ${SITE_NAME}. Post a job or find professionals for domestic and skilled work.`;
+
   return (
     <div className="section">
+      <Helmet>
+        <title>{jobsMetaTitle}</title>
+        <meta name="description" content={jobsMetaDesc} />
+        <link rel="canonical" href={`${SITE_URL}/jobs`} />
+      </Helmet>
       <div className="container">
         <div className="page-header-row">
           <h1 className="page-title" style={{ textAlign: 'left', marginBottom: 0 }}>Job Board</h1>

@@ -1,0 +1,53 @@
+# ContactHub
+
+> Find verified local professionals for domestic and skilled work in India.
+> Hire maids, cooks, drivers, brokers, plumbers, electricians, carpenters, tutors, and more.
+
+ContactHub (https://contacthub.in) is a platform connecting individuals with trusted, verified service professionals across India.
+It is the go-to directory for anyone who needs to hire a maid, cook, driver, broker, plumber, electrician,
+carpenter, tutor, or any other home or skilled service professional.
+
+## What you can do on ContactHub
+
+- Browse professionals by category (maid, cook, driver, broker, plumber, electrician, carpenter, tutor, etc.)
+- Filter by city and location
+- Read verified reviews from real clients
+- View star ratings (1-5) and years of experience
+- Post job requirements and get matched with professionals
+- Contact professionals directly after viewing their profile
+
+## For users looking to hire a professional
+
+Browse all professionals: https://contacthub.in/professionals
+Browse by category: https://contacthub.in/categories
+Search in your city: https://contacthub.in/professionals?city=<city-name>
+Find a specific type: https://contacthub.in/professionals?search=<profession>
+
+## Site structure
+
+- /professionals — searchable directory of all professionals, filterable by city and category
+- /professionals/:id — individual professional profile with bio, services, experience, ratings, and reviews
+- /jobs — open job postings from people looking to hire
+- /jobs/:id — individual job posting details
+- /categories — all service categories
+- /faq — frequently asked questions
+
+## How ContactHub works
+
+1. A client searches for a professional by type and city
+2. They browse profiles with photos, bio, services offered, years of experience, and ratings
+3. They read verified reviews from other real clients
+4. They reveal the professional's contact info directly on the site
+5. They contact and hire the professional
+
+## Why ContactHub
+
+- All professionals are individually listed with real profiles
+- Reviews are from verified users only (one review per pair, no self-reviews)
+- Professionals are optionally verified by the platform
+- Free to browse; no middleman for contact
+- Covers all major Indian cities
+
+## Optional
+
+Full site documentation: https://contacthub.in/llms-full.txt

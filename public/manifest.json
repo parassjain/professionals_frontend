@@ -1,0 +1,16 @@
+{
+  "name": "ContactHub — Find Local Professionals",
+  "short_name": "ContactHub",
+  "description": "Find trusted local professionals in India — maids, cooks, drivers, plumbers, electricians, brokers and more.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a2e",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

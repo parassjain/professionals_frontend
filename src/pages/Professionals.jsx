@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getProfessionals, getCategories } from '../api/endpoints';
+import { SITE_URL, SITE_NAME } from '../config/site';
 import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -57,8 +59,22 @@ export default function Professionals() {
     setSearchParams(params);
   };
 
+  const professionLabel = search
+    ? search.charAt(0).toUpperCase() + search.slice(1) + 's'
+    : filters.category
+    ? filters.category.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) + 's'
+    : 'Local Professionals';
+  const locationLabel = filters.city ? ` in ${filters.city.charAt(0).toUpperCase() + filters.city.slice(1)}` : ' Near You';
+  const metaTitle = `Find ${professionLabel}${locationLabel} | ${SITE_NAME}`;
+  const metaDesc = `Browse verified ${professionLabel.toLowerCase()}${locationLabel.toLowerCase()}. Read reviews, compare profiles, contact directly on ${SITE_NAME}.`;
+
   return (
     <div className="section">
+      <Helmet>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDesc} />
+        <link rel="canonical" href={`${SITE_URL}/professionals`} />
+      </Helmet>
       <div className="container">
         <h1 className="page-title">Find Professionals</h1>
         <p className="page-subtitle">Browse through our network of verified experts</p>
@@ -118,7 +134,7 @@ export default function Professionals() {
                 <Link to={`/professionals/${pro.public_id}`} key={pro.public_id} className="pro-card">
                   <div className="pro-card-header">
                     <div className="avatar">
-                      {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
+                      {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt={`${pro.user?.first_name} ${pro.user?.last_name} — ${pro.headline}`} loading="lazy" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
                     </div>
                     <div>
                       <h3>{pro.user?.first_name} {pro.user?.last_name}</h3>

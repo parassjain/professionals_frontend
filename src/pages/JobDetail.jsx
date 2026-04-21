@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getJob, deleteJob } from '../api/endpoints';
+import { SITE_URL, SITE_NAME } from '../config/site';
 import { useAuth } from '../context/AuthContext';
 import { MapPin, Calendar, DollarSign, Tag, User, Trash2, Edit } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -31,9 +33,33 @@ export default function JobDetail() {
   if (!job) return <div className="section container"><p>Job not found.</p></div>;
 
   const isOwner = user?.public_id === job.posted_by?.public_id;
+  const categoryName = job.category?.name || 'Service';
+  const metaTitle = `${job.title} — ${categoryName} job in ${job.city} | ${SITE_NAME}`;
+  const metaDesc = `Looking for a ${categoryName} in ${job.city}. ${job.description?.slice(0, 150) || ''}`;
+
+  const jobSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: job.title,
+    description: job.description,
+    datePosted: job.created_at?.split('T')[0],
+    employmentType: 'CONTRACTOR',
+    jobLocation: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: job.city, addressCountry: 'IN' } },
+    hiringOrganization: { '@type': 'Organization', name: SITE_NAME, sameAs: SITE_URL },
+    occupationalCategory: categoryName,
+    ...(job.budget_range && { estimatedSalary: job.budget_range }),
+  };
 
   return (
     <div className="section">
+      <Helmet>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDesc} />
+        <link rel="canonical" href={`${SITE_URL}/jobs/${job.id}`} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDesc} />
+        <script type="application/ld+json">{JSON.stringify(jobSchema)}</script>
+      </Helmet>
       <div className="container container-md">
         <div className="job-detail-card">
           <div className="job-detail-header">

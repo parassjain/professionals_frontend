@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getProfessional, getReviews, createReview, updateReview, revealContact } from '../api/endpoints';
+import { SITE_URL, SITE_NAME } from '../config/site';
 import { useAuth } from '../context/AuthContext';
 import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Code, Globe, Link2 } from 'lucide-react';
 import StarRating from '../components/StarRating';
@@ -119,15 +121,67 @@ export default function ProfessionalDetail() {
   const alreadyReviewed = reviews.some((r) => r.reviewer?.public_id === user?.public_id);
   const profileComplete = !!(user?.email && user?.phone);
 
+  const fullName = `${pro.user?.first_name || ''} ${pro.user?.last_name || ''}`.trim();
+  const city = pro.user?.city || '';
+  const serviceNames = pro.services?.map((s) => s.name).join(', ') || pro.headline;
+  const avatarUrl = pro.user?.avatar_url || pro.user?.avatar || '';
+  const avgRating = pro.avg_rating ? parseFloat(pro.avg_rating).toFixed(1) : null;
+  const reviewCount = pro.review_count || 0;
+  const metaDesc = `${fullName} is a ${serviceNames}${city ? ` in ${city}` : ''}. ${pro.bio ? pro.bio.slice(0, 120) : pro.headline}. View profile, read ${reviewCount} reviews, get contact info on ContactHub.`;
+
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': ['Person', 'LocalBusiness'],
+    name: fullName,
+    description: pro.bio ? pro.bio.slice(0, 300) : pro.headline,
+    jobTitle: pro.headline,
+    url: `${SITE_URL}/professionals/${pro.public_id}`,
+    ...(avatarUrl && { image: avatarUrl }),
+    ...(city && { address: { '@type': 'PostalAddress', addressLocality: city, addressCountry: 'IN' } }),
+    ...(avgRating && reviewCount > 0 && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: avgRating,
+        reviewCount: String(reviewCount),
+        bestRating: '5',
+        worstRating: '1',
+      },
+    }),
+    knowsAbout: pro.services?.map((s) => s.name) || [],
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Professionals', item: `${SITE_URL}/professionals` },
+      { '@type': 'ListItem', position: 3, name: fullName, item: `${SITE_URL}/professionals/${pro.public_id}` },
+    ],
+  };
+
   return (
     <div className="section">
+      <Helmet>
+        <title>{`${fullName} — ${pro.headline} | ${SITE_NAME}`}</title>
+        <meta name="description" content={metaDesc} />
+        <link rel="canonical" href={`${SITE_URL}/professionals/${pro.public_id}`} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content={`${fullName} | ${SITE_NAME}`} />
+        <meta property="og:description" content={metaDesc} />
+        <meta property="og:url" content={`${SITE_URL}/professionals/${pro.public_id}`} />
+        {avatarUrl && <meta property="og:image" content={avatarUrl} />}
+        {avatarUrl && <meta name="twitter:image" content={avatarUrl} />}
+        <script type="application/ld+json">{JSON.stringify(personSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+      </Helmet>
       <div className="container">
         <div className="detail-layout">
           {/* Main Info */}
           <div className="detail-main">
             <div className="pro-detail-header">
               <div className="avatar avatar-lg">
-                {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
+                {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt={`${fullName} profile photo`} loading="eager" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
               </div>
               <div>
                 <h1>{pro.user?.first_name} {pro.user?.last_name}</h1>

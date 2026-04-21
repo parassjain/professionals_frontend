@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
+import { SITE_URL, SITE_NAME } from '../config/site';
 import { Search, Shield, Star, Users, Briefcase, ArrowRight, Sparkles } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import CategoryIcon from '../components/CategoryIcon';
@@ -18,8 +20,32 @@ export default function Home() {
     getSiteStats().then((r) => setStats(r.data)).catch(() => {});
   }, []);
 
+  const orgSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon.svg`,
+    description: "India's marketplace for finding trusted local service professionals — maids, cooks, drivers, plumbers, electricians, brokers and more.",
+    areaServed: { '@type': 'Country', name: 'India' },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_URL}/professionals?search={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <div>
+      <Helmet>
+        <title>{`${SITE_NAME} — Find Trusted Local Professionals in India`}</title>
+        <meta name="description" content={`Hire verified maids, cooks, drivers, plumbers, electricians, brokers and 50+ other professionals near you. Read real reviews. Contact directly on ${SITE_NAME}.`} />
+        <link rel="canonical" href={`${SITE_URL}/`} />
+        <meta property="og:title" content={`${SITE_NAME} — Find Trusted Local Professionals in India`} />
+        <meta property="og:description" content={`Hire verified maids, cooks, drivers, plumbers, electricians, brokers and 50+ other professionals near you. Read real reviews. Contact directly.`} />
+        <meta property="og:url" content={`${SITE_URL}/`} />
+        <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>
+      </Helmet>
       <section className="hero">
         <div className="hero-content container">
           <h1>Find Trusted Professionals Near You</h1>
@@ -103,7 +129,7 @@ export default function Home() {
                 <Link to={`/professionals/${pro.public_id}`} key={pro.public_id} className="pro-card">
                   <div className="pro-card-header">
                     <div className="avatar">
-                      {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt="" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
+                      {(pro.user?.avatar || pro.user?.avatar_url) ? <img src={pro.user.avatar || pro.user.avatar_url} alt={`${pro.user?.first_name} ${pro.user?.last_name} — ${pro.headline}`} loading="lazy" /> : <span>{pro.user?.first_name?.[0]}{pro.user?.last_name?.[0]}</span>}
                     </div>
                     <div>
                       <h3>{pro.user?.first_name} {pro.user?.last_name}</h3>
