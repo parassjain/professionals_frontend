@@ -23,6 +23,9 @@ export const getCurrentUser = () =>
 export const verifyEmail = (key) =>
   api.post('/auth/registration/verify-email/', { key });
 
+export const resendVerificationEmail = (email) =>
+  api.post('/auth/registration/resend-email/', { email });
+
 export const getSiteStats = () =>
   api.get('/users/stats/');
 

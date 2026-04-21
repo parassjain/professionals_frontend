@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
+import { resendVerificationEmail } from '../api/endpoints';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
@@ -11,18 +12,37 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
+  const [emailUnverified, setEmailUnverified] = useState(false);
+  const [resendStatus, setResendStatus] = useState(''); // '' | 'sending' | 'sent' | 'error'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setEmailUnverified(false);
+    setResendStatus('');
     setLoading(true);
     try {
       await login(form.email, form.password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.non_field_errors?.[0] || err.response?.data?.detail || 'Login failed. Please check your credentials.');
+      const msg = err.response?.data?.non_field_errors?.[0] || err.response?.data?.detail || '';
+      if (msg.toLowerCase().includes('e-mail is not verified') || msg.toLowerCase().includes('email is not verified')) {
+        setEmailUnverified(true);
+      } else {
+        setError(msg || 'Login failed. Please check your credentials.');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setResendStatus('sending');
+    try {
+      await resendVerificationEmail(form.email);
+      setResendStatus('sent');
+    } catch {
+      setResendStatus('error');
     }
   };
 
