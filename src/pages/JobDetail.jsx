@@ -30,7 +30,7 @@ export default function JobDetail() {
   if (loading) return <LoadingSpinner />;
   if (!job) return <div className="section container"><p>Job not found.</p></div>;
 
-  const isOwner = user?.id === job.posted_by?.id;
+  const isOwner = user?.public_id === job.posted_by?.public_id;
 
   return (
     <div className="section">
@@ -63,7 +63,7 @@ export default function JobDetail() {
 
           <div className="job-detail-poster">
             <h3>Posted by</h3>
-            <Link to={`/users/${job.posted_by?.id}`} className="poster-link">
+            <Link to={`/users/${job.posted_by?.public_id}`} className="poster-link">
               <User size={16} /> {job.posted_by?.first_name} {job.posted_by?.last_name}
             </Link>
           </div>
