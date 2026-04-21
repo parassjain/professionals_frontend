@@ -46,7 +46,6 @@ export default function UserPublicDetail() {
   if (loading) return <LoadingSpinner />;
   if (!profile) return <div className="section container"><p>User not found.</p></div>;
 
-  const hasVerifiedContact = profile.is_email_verified || profile.is_phone_verified;
 
   return (
     <div className="section">
@@ -125,8 +124,6 @@ export default function UserPublicDetail() {
                   <p className="text-muted" style={{ marginBottom: '10px' }}>Log in to view contact info.</p>
                   <Link to="/login" className="btn btn-outline btn-sm">Login</Link>
                 </div>
-              ) : !hasVerifiedContact ? (
-                <p className="text-muted">This user has not verified their contact info yet.</p>
               ) : (
                 <div>
                   <p className="text-muted" style={{ marginBottom: '10px' }}>
