@@ -13,15 +13,27 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 
-// Load .env for local runs (Vercel injects env vars directly)
+// Load .env for local runs (Vercel/CI injects env vars directly)
 try {
-  const { config } = await import('dotenv');
-  config({ path: resolve(root, '.env') });
+  const envPath = resolve(root, '.env');
+  const envContent = readFileSync(envPath, 'utf8');
+  for (const line of envContent.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eq = trimmed.indexOf('=');
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '');
+    if (!(key in process.env)) process.env[key] = val;
+  }
 } catch {
-  // dotenv not available or .env missing — env vars already set (e.g. Vercel)
+  // .env missing — env vars already set (e.g. Vercel/CI)
 }
 
-const SITE_URL = (process.env.VITE_SITE_URL || 'https://contacthub.in').replace(/\/$/, '');
+if (!process.env.VITE_SITE_URL) {
+  throw new Error('[seo] VITE_SITE_URL is not set. Add it to your .env file.');
+}
+const SITE_URL = process.env.VITE_SITE_URL.replace(/\/$/, '');
 const SITE_NAME = process.env.VITE_SITE_NAME || 'ContactHub';
 
 // ── robots.txt ──────────────────────────────────────────────────────────────
