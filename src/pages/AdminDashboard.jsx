@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
-  getAllCategories, createCategory, updateCategory, deleteCategory,
+  getAllCategories, getAllCategoriesAdmin, createCategory, updateCategory, deleteCategory,
   adminListProfessionals, adminVerifyProfessional, getCategories,
   getSiteStats, adminCreateProfessional, deleteProfessionalProfile,
 } from '../api/endpoints';
@@ -17,11 +17,12 @@ const tdStyle = { padding: '0.75rem 1rem', verticalAlign: 'middle' };
 
 /* ═══════════════════════════════════════════════════════════════
    CATEGORIES TAB
-═══════════════════════════════════════════════════════════════ */
-const EMPTY_CAT = { name: '', description: '', icon: null };
+══════════════════════════════════════════════════════════════ */
+const EMPTY_CAT = { name: '', description: '', icon: null, parent_id: '' };
 
 function CategoriesTab() {
   const [categories, setCategories] = useState([]);
+  const [supercategories, setSupercategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY_CAT);
   const [editingSlug, setEditingSlug] = useState(null);
@@ -30,13 +31,24 @@ function CategoriesTab() {
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-  const fetchCategories = () =>
-    getAllCategories().then((r) => setCategories(r.data)).finally(() => setLoading(false));
+  const fetchCategories = async () => {
+    try {
+      const r = await getAllCategories();
+      setCategories(r.data);
+      setSupercategories(r.data.filter(c => !c.parent));
+    } catch {
+      const r = await getAllCategories();
+      setCategories(r.data);
+      setSupercategories(r.data.filter(c => !c.parent));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => { fetchCategories(); }, []);
 
   const openAdd = () => { setForm(EMPTY_CAT); setEditingSlug(null); setError(''); setShowForm(true); };
-  const openEdit = (cat) => { setForm({ name: cat.name, description: cat.description, icon: null }); setEditingSlug(cat.slug); setError(''); setShowForm(true); };
+  const openEdit = (cat) => { setForm({ name: cat.name, description: cat.description, icon: null, parent_id: cat.parent || '' }); setEditingSlug(cat.slug); setError(''); setShowForm(true); };
   const closeForm = () => { setShowForm(false); setError(''); };
 
   const handleSubmit = async (e) => {
@@ -47,6 +59,7 @@ function CategoriesTab() {
       const fd = new FormData();
       fd.append('name', form.name.trim());
       fd.append('description', form.description.trim());
+      if (form.parent_id) fd.append('parent_id', form.parent_id);
       if (form.icon) fd.append('icon', form.icon);
       if (editingSlug) { await updateCategory(editingSlug, fd); } else { await createCategory(fd); }
       closeForm(); setLoading(true); await fetchCategories();
@@ -79,7 +92,19 @@ function CategoriesTab() {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label">Name *</label>
-              <input className="form-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Maid" />
+              <input className="form-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Cook" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Parent Category</label>
+              <select className="form-input" value={form.parent_id} onChange={(e) => setForm({ ...form, parent_id: e.target.value })}>
+                <option value="">None (top-level category)</option>
+                {supercategories.map((superCat) => (
+                  <option key={superCat.id} value={superCat.id}>{superCat.name}</option>
+                ))}
+              </select>
+              <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: '0.25rem' }}>
+                Leave empty to create a main category, or select one to create a subcategory.
+              </p>
             </div>
             <div className="form-group">
               <label className="form-label">Description</label>
@@ -104,9 +129,9 @@ function CategoriesTab() {
             <tr style={{ background: 'var(--gray-50)', borderBottom: '1px solid var(--gray-200)' }}>
               <th style={thStyle}>Icon</th>
               <th style={thStyle}>Name</th>
+              <th style={thStyle}>Parent</th>
               <th style={thStyle}>Slug</th>
               <th style={{ ...thStyle, textAlign: 'center' }}>Pros</th>
-              <th style={thStyle}>Description</th>
               <th style={{ ...thStyle, textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
@@ -118,26 +143,26 @@ function CategoriesTab() {
                     : <span style={{ color: 'var(--gray-400)', fontSize: '0.75rem' }}>—</span>}
                 </td>
                 <td style={{ ...tdStyle, fontWeight: 500 }}>{cat.name}</td>
+                <td style={{ ...tdStyle, color: 'var(--gray-600)', fontSize: '0.85rem' }}>
+                  {cat.parent ? cat.parent.name : <span style={{ color: 'var(--gray-400)' }}>—</span>}
+                </td>
                 <td style={{ ...tdStyle, color: 'var(--gray-500)', fontSize: '0.8rem', fontFamily: 'monospace' }}>{cat.slug}</td>
                 <td style={{ ...tdStyle, textAlign: 'center' }}>
-                  <span style={{ 
-                    display: 'inline-flex', 
-                    alignItems: 'center', 
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
                     justifyContent: 'center',
-                    minWidth: 28, 
-                    height: 24, 
+                    minWidth: 28,
+                    height: 24,
                     padding: '0 6px',
-                    background: cat.professional_count > 0 ? 'var(--primary-light)' : 'var(--gray-100)', 
-                    color: cat.professional_count > 0 ? 'var(--primary)' : 'var(--gray-500)', 
-                    borderRadius: 6, 
-                    fontSize: '0.8rem', 
-                    fontWeight: 600 
+                    background: cat.professional_count > 0 ? 'var(--primary-light)' : 'var(--gray-100)',
+                    color: cat.professional_count > 0 ? 'var(--primary)' : 'var(--gray-500)',
+                    borderRadius: 6,
+                    fontSize: '0.8rem',
+                    fontWeight: 600
                   }}>
                     {cat.professional_count || 0}
                   </span>
-                </td>
-                <td style={{ ...tdStyle, color: 'var(--gray-600)', fontSize: '0.875rem', maxWidth: 240 }}>
-                  {cat.description ? cat.description.slice(0, 70) + (cat.description.length > 70 ? '…' : '') : '—'}
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
                   {deleteConfirm === cat.slug ? (
@@ -156,7 +181,7 @@ function CategoriesTab() {
               </tr>
             ))}
             {categories.length === 0 && (
-              <tr><td colSpan={6} style={{ ...tdStyle, textAlign: 'center', color: 'var(--gray-400)' }}>No categories yet.</td></tr>
+              <tr><td colSpan={6} style={{ ...tdStyle, textAlign: 'center', color: 'var(--gray-400)' }}>No categories yet. Add your first category above.</td></tr>
             )}
           </tbody>
         </table>
