@@ -65,6 +65,9 @@ export const getPopularServices = () =>
 export const getAllCategoriesAdmin = () =>
   api.get('/categories/all_admin/');
 
+export const getSupercategories = () =>
+  api.get('/categories/supercategories/');
+
 export const getCategory = (slug) =>
   api.get(`/categories/${slug}/`);
 

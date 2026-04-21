@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
-  getAllCategories, getAllCategoriesAdmin, createCategory, updateCategory, deleteCategory,
+  getAllCategories, getAllCategoriesAdmin, getSupercategories, createCategory, updateCategory, deleteCategory,
   adminListProfessionals, adminVerifyProfessional, getCategories,
   getSiteStats, adminCreateProfessional, deleteProfessionalProfile,
 } from '../api/endpoints';
@@ -18,7 +18,7 @@ const tdStyle = { padding: '0.75rem 1rem', verticalAlign: 'middle' };
 /* ═══════════════════════════════════════════════════════════════
    CATEGORIES TAB
 ══════════════════════════════════════════════════════════════ */
-const EMPTY_CAT = { name: '', description: '', icon: null, parent_id: '' };
+const EMPTY_CAT = { name: '', description: '', icon: null, parent: '' };
 
 function CategoriesTab() {
   const [categories, setCategories] = useState([]);
@@ -33,14 +33,10 @@ function CategoriesTab() {
 
   const fetchCategories = async () => {
     try {
-      const r = await getAllCategoriesAdmin();
-      setCategories(r.data);
-      setSupercategories(r.data.filter(c => !c.parent));
+      const [allRes, superRes] = await Promise.all([getAllCategoriesAdmin(), getSupercategories()]);
+      setCategories(allRes.data);
+      setSupercategories(superRes.data);
     } catch {
-      const r = await getAllCategories();
-      setCategories(r.data);
-      setSupercategories(r.data.filter(c => !c.parent));
-    } finally {
       setLoading(false);
     }
   };
@@ -48,7 +44,7 @@ function CategoriesTab() {
   useEffect(() => { fetchCategories(); }, []);
 
   const openAdd = () => { setForm(EMPTY_CAT); setEditingSlug(null); setError(''); setShowForm(true); };
-  const openEdit = (cat) => { setForm({ name: cat.name, description: cat.description, icon: null, parent_id: cat.parent || '' }); setEditingSlug(cat.slug); setError(''); setShowForm(true); };
+  const openEdit = (cat) => { setForm({ name: cat.name, description: cat.description, icon: null, parent: cat.parent?.id || '' }); setEditingSlug(cat.slug); setError(''); setShowForm(true); };
   const closeForm = () => { setShowForm(false); setError(''); };
 
   const handleSubmit = async (e) => {
@@ -59,7 +55,7 @@ function CategoriesTab() {
       const fd = new FormData();
       fd.append('name', form.name.trim());
       fd.append('description', form.description.trim());
-      if (form.parent_id) fd.append('parent_id', form.parent_id);
+      if (form.parent) fd.append('parent', form.parent);
       if (form.icon) fd.append('icon', form.icon);
       if (editingSlug) { await updateCategory(editingSlug, fd); } else { await createCategory(fd); }
       closeForm(); setLoading(true); await fetchCategories();
@@ -96,7 +92,7 @@ function CategoriesTab() {
             </div>
             <div className="form-group">
               <label className="form-label">Parent Category</label>
-              <select className="form-input" value={form.parent_id} onChange={(e) => setForm({ ...form, parent_id: e.target.value })}>
+              <select className="form-input" value={form.parent} onChange={(e) => setForm({ ...form, parent: e.target.value })}>
                 <option value="">None (top-level category)</option>
                 {supercategories.map((superCat) => (
                   <option key={superCat.id} value={superCat.id}>{superCat.name}</option>
