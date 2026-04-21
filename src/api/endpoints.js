@@ -20,6 +20,9 @@ export const logout = () =>
 export const getCurrentUser = () =>
   api.get('/users/me/');
 
+export const verifyEmail = (key) =>
+  api.post('/auth/registration/verify-email/', { key });
+
 export const getSiteStats = () =>
   api.get('/users/stats/');
 

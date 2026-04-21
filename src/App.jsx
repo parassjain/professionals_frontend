@@ -20,6 +20,7 @@ import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import FAQ from './pages/FAQ';
 import UserPublicDetail from './pages/UserPublicDetail';
+import VerifyEmail from './pages/VerifyEmail';
 import './index.css';
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
                 />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/users/:public_id" element={<UserPublicDetail />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
               </Routes>
             </main>
             <Footer />

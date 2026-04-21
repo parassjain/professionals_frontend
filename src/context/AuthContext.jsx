@@ -53,10 +53,9 @@ export function AuthProvider({ children }) {
 
   const register = async (formData) => {
     const { data } = await apiRegister(formData);
-    localStorage.setItem('tokens', JSON.stringify({ access: data.access, refresh: data.refresh }));
-    const userRes = await getCurrentUser();
-    saveAuth(data, userRes.data);
-    return userRes.data;
+    // With mandatory email verification, no tokens are returned at registration.
+    // Caller should check data.detail for the "Verification e-mail sent." message.
+    return data;
   };
 
   const googleLogin = async (code) => {

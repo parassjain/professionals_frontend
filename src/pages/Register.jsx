@@ -12,13 +12,17 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
 
+  const [emailSent, setEmailSent] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     setLoading(true);
     try {
       await register(form);
-      navigate('/');
+      setRegisteredEmail(form.email);
+      setEmailSent(true);
     } catch (err) {
       const data = err.response?.data || {};
       if (typeof data === 'object') setErrors(data);
@@ -46,6 +50,27 @@ export default function Register() {
   });
 
   const set = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+
+  if (emailSent) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card" style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📧</div>
+          <h1>Check your email</h1>
+          <p className="text-muted" style={{ marginBottom: '0.5rem' }}>
+            We sent a verification link to
+          </p>
+          <p style={{ fontWeight: 600, marginBottom: '1.5rem' }}>{registeredEmail}</p>
+          <p className="text-muted" style={{ fontSize: '0.875rem' }}>
+            Click the link in the email to activate your account. Check your spam folder if you don't see it.
+          </p>
+          <p className="auth-footer" style={{ marginTop: '2rem' }}>
+            Already verified? <Link to="/login">Sign In</Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-page">
