@@ -126,19 +126,7 @@ export default function UserPublicDetail() {
                 </div>
               ) : (
                 <div>
-                  <p className="text-muted" style={{ marginBottom: '10px' }}>
-                    {profile.is_email_verified && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                        <Mail size={14} /> Email verified <CheckCircle size={13} color="#22c55e" />
-                      </span>
-                    )}
-                    {profile.is_phone_verified && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Phone size={14} /> Phone verified <CheckCircle size={13} color="#22c55e" />
-                      </span>
-                    )}
-                  </p>
-                  {contactError && <p style={{ color: '#ef4444', marginBottom: '8px' }}>{contactError}</p>}
+                    {contactError && <p style={{ color: '#ef4444', marginBottom: '8px' }}>{contactError}</p>}
                   <button
                     className="btn btn-primary btn-sm"
                     onClick={handleRevealContact}
