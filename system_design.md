@@ -6,7 +6,7 @@
 |---|---|
 | Framework | React 19 |
 | Build Tool | Vite 8 |
-| Routing | React Router DOM v7 (HashRouter) |
+| Routing | React Router DOM v7 (BrowserRouter) |
 | HTTP Client | Axios 1.15 |
 | Auth | @react-oauth/google 0.13 + JWT |
 | Icons | Lucide React |
@@ -57,7 +57,7 @@ src/
 
 ## Routing
 
-**Router:** `HashRouter` — all URLs are hash-based (`/#/path`) to work with Vercel static hosting.
+**Router:** `BrowserRouter` — SEO-friendly URLs (`/path`).
 
 | Route | Component | Auth |
 |---|---|---|

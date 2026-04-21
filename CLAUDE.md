@@ -24,7 +24,7 @@ Copy `.env.example` to `.env` before running locally.
 
 ## Architecture
 
-**Router:** Uses `HashRouter` (not `BrowserRouter`) — all routes are hash-based (`/#/path`). The Google OAuth callback route is `/#/auth/google/callback`.
+**Router:** Uses `BrowserRouter` for SEO-friendly URLs (e.g., `/dashboard`). The Google OAuth callback route is `/auth/google/callback`.
 
 **Auth:** `AuthContext` (`src/context/AuthContext.jsx`) is the single source of truth. It stores JWT tokens and the user object in `localStorage`. The axios client (`src/api/client.js`) automatically attaches the `Bearer` token on every request and silently refreshes the access token on 401 via the refresh token. On refresh failure it clears auth and redirects to `/login`.
 
