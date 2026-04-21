@@ -33,7 +33,7 @@ function CategoriesTab() {
 
   const fetchCategories = async () => {
     try {
-      const r = await getAllCategories();
+      const r = await getAllCategoriesAdmin();
       setCategories(r.data);
       setSupercategories(r.data.filter(c => !c.parent));
     } catch {
