@@ -105,18 +105,22 @@ export default function UserPublicDetail() {
                     <p style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Mail size={16} />
                       <a href={`mailto:${contact.email}`}>{contact.email}</a>
-                      <CheckCircle size={13} color="#22c55e" title="Verified" />
+                      {contact.email_verified
+                        ? <CheckCircle size={13} color="#22c55e" title="Verified" />
+                        : <XCircle size={13} color="#94a3b8" title="Not verified" />}
                     </p>
                   ) : null}
                   {contact.phone ? (
                     <p style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Phone size={16} />
                       <a href={`tel:${contact.phone}`}>{contact.phone}</a>
-                      <CheckCircle size={13} color="#22c55e" title="Verified" />
+                      {contact.phone_verified
+                        ? <CheckCircle size={13} color="#22c55e" title="Verified" />
+                        : <XCircle size={13} color="#94a3b8" title="Not verified" />}
                     </p>
                   ) : null}
                   {!contact.email && !contact.phone && (
-                    <p className="text-muted">This user has no verified contact info yet.</p>
+                    <p className="text-muted">No contact info available.</p>
                   )}
                 </div>
               ) : !isAuthenticated ? (
