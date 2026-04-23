@@ -68,6 +68,10 @@ export default function App() {
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/users/:public_id" element={<UserPublicDetail />} />
                 <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/legal" element={<Legal />} />
               </Routes>
             </main>
             <Footer />
