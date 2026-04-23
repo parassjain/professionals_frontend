@@ -21,6 +21,10 @@ import AdminDashboard from './pages/AdminDashboard';
 import FAQ from './pages/FAQ';
 import UserPublicDetail from './pages/UserPublicDetail';
 import VerifyEmail from './pages/VerifyEmail';
+import About from './pages/About';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
+import Legal from './pages/Legal';
 import './index.css';
 
 export default function App() {
