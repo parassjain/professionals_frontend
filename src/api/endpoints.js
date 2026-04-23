@@ -102,6 +102,9 @@ export const revealContact = (id) =>
 export const getMyProfessionalProfile = () =>
   api.get('/professionals/mine/');
 
+export const getProfessionalsMap = (params) =>
+  api.get('/professionals/map/', { params });
+
 export const adminListProfessionals = () =>
   api.get('/professionals/admin-list/');
 

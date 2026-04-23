@@ -3,9 +3,10 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getProfessionals, getCategories } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
-import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles, List, Map } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
+import MapView from '../components/MapView';
 
 export default function Professionals() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,6 +21,7 @@ export default function Professionals() {
     is_verified: searchParams.get('is_verified') || '',
     ordering: searchParams.get('ordering') || '',
   });
+  const [viewMode, setViewMode] = useState('list');
   const page = parseInt(searchParams.get('page') || '1');
 
   useEffect(() => {
@@ -98,36 +100,62 @@ export default function Professionals() {
                 {categories.map((c) => <option key={c.id} value={c.slug}>{c.name}</option>)}
               </select>
             </div>
-            <div className="filter-group">
-              <MapPin size={16} />
-              <input type="text" placeholder="City" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} />
-            </div>
-            <div className="filter-group">
-              <select value={filters.is_verified} onChange={(e) => setFilters({ ...filters, is_verified: e.target.value })}>
-                <option value="">All</option>
-                <option value="true">Verified Only</option>
-              </select>
-            </div>
-            <div className="filter-group">
-              <select value={filters.ordering} onChange={(e) => setFilters({ ...filters, ordering: e.target.value })}>
-                <option value="">Sort by</option>
-                <option value="-avg_rating">Highest Rated</option>
-                <option value="-created_at">Newest</option>
-                <option value="created_at">Oldest</option>
-              </select>
+            {viewMode === 'list' && (
+              <>
+                <div className="filter-group">
+                  <MapPin size={16} />
+                  <input type="text" placeholder="City" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} />
+                </div>
+                <div className="filter-group">
+                  <select value={filters.is_verified} onChange={(e) => setFilters({ ...filters, is_verified: e.target.value })}>
+                    <option value="">All</option>
+                    <option value="true">Verified Only</option>
+                  </select>
+                </div>
+                <div className="filter-group">
+                  <select value={filters.ordering} onChange={(e) => setFilters({ ...filters, ordering: e.target.value })}>
+                    <option value="">Sort by</option>
+                    <option value="-avg_rating">Highest Rated</option>
+                    <option value="-created_at">Newest</option>
+                    <option value="created_at">Oldest</option>
+                  </select>
+                </div>
+              </>
+            )}
+            <div className="view-toggle" style={{ marginLeft: 'auto', display: 'flex', gap: '0.25rem' }}>
+              <button
+                type="button"
+                className={`btn btn-sm ${viewMode === 'list' ? 'btn-primary' : 'btn-outline'}`}
+                onClick={() => setViewMode('list')}
+                title="List view"
+              >
+                <List size={15} /> List
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${viewMode === 'map' ? 'btn-primary' : 'btn-outline'}`}
+                onClick={() => setViewMode('map')}
+                title="Map view"
+              >
+                <Map size={15} /> Map
+              </button>
             </div>
           </div>
         </form>
 
-        {loading ? (
+        {viewMode === 'map' && (
+          <MapView category={filters.category} />
+        )}
+
+        {viewMode === 'list' && loading ? (
           <LoadingSpinner />
-        ) : professionals.length === 0 ? (
+        ) : viewMode === 'list' && professionals.length === 0 ? (
           <div className="empty-state">
             <Search size={48} />
             <p>No professionals found matching your criteria.</p>
             <Link to="/professionals" className="btn btn-outline">Clear Filters</Link>
           </div>
-        ) : (
+        ) : viewMode === 'list' ? (
           <>
             <div className="card-grid">
               {professionals.map((pro) => (
@@ -167,7 +195,7 @@ export default function Professionals() {
               </div>
             )}
           </>
-        )}
+        ) : null}
       </div>
     </div>
   );
