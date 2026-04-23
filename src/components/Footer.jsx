@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { submitFeedback } from '../api/endpoints';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Linkedin } from 'lucide-react';
 
 export default function Footer() {
   const { user } = useAuth();
