@@ -31,6 +31,10 @@ Find a specific type: https://contacthub.in/professionals?search=<profession>
 - /jobs/:id — individual job posting details
 - /categories — all service categories
 - /faq — frequently asked questions
+- /about — about the platform, mission, and values
+- /privacy — privacy policy
+- /terms — terms and conditions
+- /legal — legal overview hub
 
 ## How ContactHub works
 
