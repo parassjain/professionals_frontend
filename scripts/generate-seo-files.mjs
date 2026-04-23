@@ -110,6 +110,10 @@ Find a specific type: ${SITE_URL}/professionals?search=<profession>
 - /jobs/:id — individual job posting details
 - /categories — all service categories
 - /faq — frequently asked questions
+- /about — about the platform, mission, and values
+- /privacy — privacy policy
+- /terms — terms and conditions
+- /legal — legal overview hub
 
 ## How ${SITE_NAME} works
 
@@ -162,6 +166,26 @@ writeFileSync(
     <loc>${SITE_URL}/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/legal</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/privacy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/terms</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>
 `,

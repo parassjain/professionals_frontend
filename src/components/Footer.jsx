@@ -46,6 +46,17 @@ export default function Footer() {
             <div>
               <div className="footer-brand">Contact Hub</div>
               <p className="footer-desc">Find trusted professionals for any service you need. Connect with verified experts in your area.</p>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+                <a
+                  href="http://linkedin.com/company/contact-hub"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Contact Hub on LinkedIn"
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'inherit', opacity: 0.75 }}
+                >
+                  <Linkedin size={18} /> LinkedIn
+                </a>
+              </div>
             </div>
             <div>
               <h4>Quick Links</h4>
@@ -59,6 +70,13 @@ export default function Footer() {
               <Link to="/login">Login</Link>
               <Link to="/register">Sign Up</Link>
               <Link to="/profile">My Profile</Link>
+              <Link to="/about">About Us</Link>
+            </div>
+            <div>
+              <h4>Legal</h4>
+              <Link to="/legal">Legal Overview</Link>
+              <Link to="/terms">Terms &amp; Conditions</Link>
+              <Link to="/privacy">Privacy Policy</Link>
             </div>
             <div>
               <h4>Support</h4>
@@ -70,6 +88,13 @@ export default function Footer() {
           </div>
           <div className="footer-bottom">
             <p>&copy; {new Date().getFullYear()} Contact Hub. All rights reserved.</p>
+            <p style={{ marginTop: '0.25rem', fontSize: '0.8rem', opacity: 0.6 }}>
+              <Link to="/terms" style={{ color: 'inherit' }}>Terms</Link>
+              {' · '}
+              <Link to="/privacy" style={{ color: 'inherit' }}>Privacy</Link>
+              {' · '}
+              <Link to="/legal" style={{ color: 'inherit' }}>Legal</Link>
+            </p>
           </div>
         </div>
       </footer>
