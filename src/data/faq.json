@@ -41,7 +41,7 @@
       },
       {
         "question": "How do I post a job?",
-        "answer": "Only professionals can post jobs on the Job Board. If you're a professional, go to Jobs and click 'Post a Job' to list available work."
+        "answer": "go to Jobs and click 'Post a Job' to list available work for professionals."
       },
       {
         "question": "How do I leave a review for a professional?",
@@ -67,10 +67,6 @@
       {
         "question": "How do clients contact me?",
         "answer": "Clients can view your profile and click 'Contact' to see your phone number. You'll see a record of who has viewed your contact information."
-      },
-      {
-        "question": "How do I post a job?",
-        "answer": "Go to the Jobs section and click 'Post a Job'. Fill in the job title, description, category, and location. You can set the job as open or closed."
       },
       {
         "question": "How do I manage my availability?",
