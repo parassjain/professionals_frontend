@@ -69,7 +69,7 @@ export default function Footer() {
             <div>
               <h4>Quick Links</h4>
               <Link to="/professionals">Find Professionals</Link>
-              <Link to="/jobs">Browse Jobs</Link>
+              {user?.is_professional && <Link to="/jobs">Browse Jobs</Link>}
               <Link to="/categories">Categories</Link>
               <Link to="/faq">FAQ</Link>
             </div>
@@ -96,13 +96,6 @@ export default function Footer() {
           </div>
           <div className="footer-bottom">
             <p>&copy; {new Date().getFullYear()} Contact Hub. All rights reserved.</p>
-            <p style={{ marginTop: '0.25rem', fontSize: '0.8rem', opacity: 0.6 }}>
-              <Link to="/terms" style={{ color: 'inherit' }}>Terms</Link>
-              {' · '}
-              <Link to="/privacy" style={{ color: 'inherit' }}>Privacy</Link>
-              {' · '}
-              <Link to="/legal" style={{ color: 'inherit' }}>Legal</Link>
-            </p>
           </div>
         </div>
       </footer>

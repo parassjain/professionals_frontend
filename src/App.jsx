@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProfessionalRoute from './components/ProfessionalRoute';
 import AdminRoute from './components/AdminRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -43,7 +44,7 @@ export default function App() {
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/professionals" element={<Professionals />} />
                 <Route path="/professionals/:id" element={<ProfessionalDetail />} />
-                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/jobs" element={<ProfessionalRoute><Jobs /></ProfessionalRoute>} />
                 <Route path="/jobs/:id" element={<JobDetail />} />
                 <Route
                   path="/jobs/create"
