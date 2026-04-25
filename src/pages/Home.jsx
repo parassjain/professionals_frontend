@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
+import { useAuth } from '../context/AuthContext';
 import { Search, Shield, Star, Users, Briefcase, ArrowRight, Sparkles } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import CategoryIcon from '../components/CategoryIcon';
 
 export default function Home() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [supercategories, setSupercategories] = useState([]);
   const [topPros, setTopPros] = useState([]);
   const [stats, setStats] = useState(null);
@@ -35,6 +38,16 @@ export default function Home() {
     },
   };
 
+  const handleJoinProfessional = () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/become-professional' } });
+    } else if (user?.is_professional) {
+      navigate('/profile');
+    } else {
+      navigate('/become-professional');
+    }
+  };
+
   return (
     <div>
       <Helmet>
@@ -54,9 +67,9 @@ export default function Home() {
             <Link to="/professionals" className="btn btn-primary btn-lg">
               <Search size={20} /> Find a Professional
             </Link>
-            <Link to="/register" className="btn btn-outline btn-lg">
+            <button type="button" onClick={handleJoinProfessional} className="btn btn-outline btn-lg">
               Join as a Professional
-            </Link>
+            </button>
           </div>
         </div>
       </section>
