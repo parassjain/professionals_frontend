@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { getProfessionals, getCategories } from '../api/endpoints';
+import { getProfessionals, getSupercategories, getAllCategories } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
 import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles, List, Map } from 'lucide-react';
 import StarRating from '../components/StarRating';
@@ -25,7 +25,13 @@ export default function Professionals() {
   const page = parseInt(searchParams.get('page') || '1');
 
   useEffect(() => {
-    getCategories().then((r) => setCategories(r.data)).catch(() => {});
+    Promise.all([getSupercategories(), getAllCategories()])
+      .then(([supercats, subcats]) => {
+        const superData = supercats.data.map(c => ({ ...c, is_sub: false }));
+        const subData = subcats.data.map(c => ({ ...c, is_sub: true }));
+        setCategories([...superData, ...subData]);
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
