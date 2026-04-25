@@ -4,15 +4,15 @@
     "questions": [
       {
         "question": "How do I create an account?",
-        "answer": "Click on the 'Sign Up' button in the top right corner. You can sign up using your email or through your Google account for faster registration."
+        "answer": "Click on the 'Sign Up' button in the top right corner. You can sign up using your email and password, or through your Google account for faster registration."
       },
       {
         "question": "Is it free to use the platform?",
-        "answer": "Yes, creating an account and browsing professionals is completely free. There's no commission or fees for connecting with professionals."
+        "answer": "Yes, creating an account, browsing professionals, and posting jobs is completely free. There's no commission or fees for connecting with professionals."
       },
       {
         "question": "How do I find a professional?",
-        "answer": "Use our search feature to browse by category, location, or service type. You can also filter by ratings and city to find the right match."
+        "answer": "Use our search feature to browse by category, location, or service type. You can also filter by ratings, city, and verified status to find the right match."
       },
       {
         "question": "Can I offer services on this platform?",
@@ -25,11 +25,11 @@
     "questions": [
       {
         "question": "How do I contact a professional?",
-        "answer": "Navigate to the professional's profile and click 'Contact'. You'll see their phone number so you can call them directly."
+        "answer": "Navigate to the professional's profile and click 'Contact'. You'll see their phone number so you can call them directly. Note that there's a daily limit of 5 contact reveals per day."
       },
       {
         "question": "How do reviews work?",
-        "answer": "After completing a service, you can leave a review for the professional. Your honest feedback helps other customers make informed decisions."
+        "answer": "After completing a service, you can leave a review for the professional. Rate your experience from 1-5 stars and add comments. Your honest feedback helps other customers make informed decisions. You can only leave one review per professional."
       },
       {
         "question": "Can I negotiate pricing with professionals?",
@@ -41,11 +41,11 @@
       },
       {
         "question": "How do I post a job?",
-        "answer": "go to Jobs and click 'Post a Job' to list available work for professionals."
+        "answer": "Go to Jobs and click 'Post a Job' to list available work for professionals. Specify the category, title, description, city, and budget range."
       },
       {
         "question": "How do I leave a review for a professional?",
-        "answer": "After working with a professional, go to their profile and click 'Leave a Review'. Rate your experience from 1-5 stars and add comments."
+        "answer": "After working with a professional, go to their profile and click 'Leave a Review'. Rate your experience from 1-5 stars and add comments. You can choose to post anonymously."
       }
     ]
   },
@@ -54,7 +54,7 @@
     "questions": [
       {
         "question": "How do I become a verified professional?",
-        "answer": "Complete your profile with all required information, add your services and photos, and submit for verification. Our team will review your profile."
+        "answer": "Complete your profile with all required information, add your services and photos, and submit for verification. Our team will review your profile and add a 'Verified' badge once approved."
       },
       {
         "question": "Is it free to list my services?",
@@ -66,11 +66,15 @@
       },
       {
         "question": "How do clients contact me?",
-        "answer": "Clients can view your profile and click 'Contact' to see your phone number. You'll see a record of who has viewed your contact information."
+        "answer": "Clients can view your profile and click 'Contact' to see your phone number. You'll see a record of who has viewed your contact information and when."
       },
       {
-        "question": "How do I manage my availability?",
-        "answer": "Update your profile with your availability information. You can add this in your professional profile settings."
+        "question": "How do I manage my portfolio?",
+        "answer": "You can upload up to 10 portfolio images to showcase your work. Go to your profile and use the portfolio upload feature. Images are validated for quality."
+      },
+      {
+        "question": "How do I respond to job postings?",
+        "answer": "Browse open jobs in your category or city. Contact the job poster directly using the information provided to discuss the job details."
       },
       {
         "question": "Can I offer discounts to attract clients?",
@@ -83,11 +87,15 @@
     "questions": [
       {
         "question": "How are professionals verified?",
-        "answer": "We verify identity documents and professional credentials. Look for the 'Verified' badge on profiles."
+        "answer": "We verify identity documents and professional credentials. Look for the 'Verified' badge on profiles. Note that not all professionals are verified."
       },
       {
         "question": "Is my personal information safe?",
-        "answer": "We use industry-standard security to protect your data. Professionals only see your contact information when you initiate contact."
+        "answer": "We use industry-standard security to protect your data. Your phone number is masked to other users until you choose to reveal it or contact a professional."
+      },
+      {
+        "question": "How does phone verification work?",
+        "answer": "Add your phone number in profile settings and verify it using a one-time password (OTP). The OTP expires after 10 minutes. Your phone is masked to other users."
       },
       {
         "question": "What should I do if I feel unsafe?",
@@ -100,15 +108,19 @@
     "questions": [
       {
         "question": "How do I update my profile picture?",
-        "answer": "Go to your profile settings and click on the avatar/photo area to upload a new image."
+        "answer": "Go to your profile settings and click on the avatar/photo area to upload a new image. You can also use a social media avatar URL."
       },
       {
         "question": "How do I verify my phone number?",
-        "answer": "Add your phone number in profile settings. It will be masked to other users until you choose to reveal it."
+        "answer": "Add your phone number in profile settings. Request an OTP verification code. Enter the code within 10 minutes to verify. Your phone number will be masked to other users until you choose to reveal it when contacting professionals."
       },
       {
         "question": "How do I become a professional?",
-        "answer": "Go to your profile settings and click 'Become a Professional'. You'll need to complete your profile with services you offer and set your location."
+        "answer": "Go to your profile settings and click 'Become a Professional'. You'll need to complete your profile with services you offer, set your headline, description, years of experience, and location."
+      },
+      {
+        "question": "Can I add social media links?",
+        "answer": "Yes, you can add links to your Facebook, LinkedIn, Twitter, GitHub, Instagram, YouTube, or website in your profile settings."
       }
     ]
   },
@@ -117,7 +129,7 @@
     "questions": [
       {
         "question": "Why can't I log into my account?",
-        "answer": "Check that you're using the correct email and password. If you forgot your password, use the 'Forgot Password' link to reset it."
+        "answer": "Check that you're using the correct email and password. If you forgot your password, use the 'Forgot Password' link to reset it. If using Google login, ensure you're using the same email."
       },
       {
         "question": "The page isn't loading properly",
@@ -125,7 +137,11 @@
       },
       {
         "question": "I'm not receiving email notifications",
-        "answer": "Check your spam folder and ensure notifications are enabled in your account settings."
+        "answer": "Check your spam folder and ensure notifications are enabled in your account settings. Also check that your email is verified."
+      },
+      {
+        "question": "Why was my contact reveal blocked?",
+        "answer": "There's a daily limit of 5 professional contacts you can reveal per day. Try again tomorrow or contact professionals you've already revealed."
       }
     ]
   },
@@ -134,11 +150,11 @@
     "questions": [
       {
         "question": "What data do you collect?",
-        "answer": "We collect information you provide during registration, profile setup, and platform usage. This includes name, contact details, and service history."
+        "answer": "We collect information you provide during registration, profile setup, and platform usage. This includes name, email, phone number, city, profile photos, service history, and job postings."
       },
       {
         "question": "How is my data used?",
-        "answer": "Your data helps us provide and improve our services, match you with appropriate professionals, and communicate important updates."
+        "answer": "Your data helps us provide and improve our services, match you with appropriate professionals, communicate important updates, and track contact reveals for safety."
       },
       {
         "question": "Can I delete my account?",
@@ -147,6 +163,10 @@
       {
         "question": "Do you share my data with third parties?",
         "answer": "We only share data with professionals you explicitly contact. We never sell your data to advertisers."
+      },
+      {
+        "question": "How is my phone number protected?",
+        "answer": "Your phone number is masked to other users (e.g., 987****23). Professionals only see your full phone number when you contact them."
       }
     ]
   },
