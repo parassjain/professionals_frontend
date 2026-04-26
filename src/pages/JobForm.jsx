@@ -41,7 +41,7 @@ export default function JobForm() {
   }, [id, isEdit, navigate]);
 
   const handleLocationChange = ({ lat, lng }) => {
-    setForm((f) => ({ ...f, latitude: Number(lat.toFixed(6)), longitude: Number(lng.toFixed(6)) }));
+    setForm((f) => ({ ...f, latitude: lat, longitude: lng }));
   };
 
   const handleSubmit = async (e) => {
