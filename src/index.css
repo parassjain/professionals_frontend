@@ -1635,7 +1635,7 @@ img { max-width: 100%; height: auto; }
     top: 72px;
     left: 0;
     right: 0;
-    background: white;
+    background: var(--bg-card);
     padding: 1rem;
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-lg);
