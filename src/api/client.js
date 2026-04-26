@@ -98,7 +98,9 @@ api.interceptors.response.use(
         { withCredentials: true }
       );
       console.log('Refresh success! New access:', data.access?.slice(0, 20) + '...');
-      localStorage.setItem('tokens', JSON.stringify({ ...tokens, access: data.access }));
+      const updatedTokens = { ...tokens, access: data.access };
+      if (data.refresh) updatedTokens.refresh = data.refresh;
+      localStorage.setItem('tokens', JSON.stringify(updatedTokens));
       isRefreshing = false;
       onTokenRefreshed(data.access);
       original.headers.Authorization = `Bearer ${data.access}`;
