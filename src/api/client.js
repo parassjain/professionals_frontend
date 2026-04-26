@@ -23,6 +23,18 @@ const api = axios.create({
   withCredentials: true,
 });
 
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+const subscribeTokenRefresh = (cb) => {
+  refreshSubscribers.push(cb);
+};
+
+const onTokenRefreshed = (accessToken) => {
+  refreshSubscribers.forEach((cb) => cb(accessToken));
+  refreshSubscribers = [];
+};
+
 api.interceptors.request.use((config) => {
   const tokens = JSON.parse(localStorage.getItem('tokens') || 'null');
   if (tokens?.access) {
@@ -39,43 +51,66 @@ api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
-      original._retry = true;
-      const tokens = JSON.parse(localStorage.getItem('tokens') || 'null');
-      if (tokens?.refresh) {
-        try {
-          const { data } = await axios.post(
-            `${api.defaults.baseURL}/auth/token/refresh/`,
-            { refresh: tokens.refresh },
-            { withCredentials: true }
-          );
-          localStorage.setItem('tokens', JSON.stringify({ ...tokens, access: data.access }));
-          original.headers.Authorization = `Bearer ${data.access}`;
-          const csrfToken = getCSRFToken();
-          if (csrfToken) {
-            original.headers['X-CSRFToken'] = csrfToken;
-          }
-          return api(original);
-        } catch (refreshError) {
-          // Only log out on a genuine auth rejection (401/403).
-          // Network errors, 502/503 during a server restart → keep tokens,
-          // let the user retry rather than forcing a login.
-          const status = refreshError.response?.status;
-          if (status === 401 || status === 403) {
-            localStorage.removeItem('tokens');
-            localStorage.removeItem('user');
-            if (!window.__authErrorShown) {
-              window.__authErrorShown = true;
-              alert('Your session has expired. Please log in again.');
-              window.__authErrorShown = false;
-            }
-            window.location.href = '/login';
-          }
-          // For network/5xx errors: reject so the original caller can handle it
+    if (error.response?.status !== 401) {
+      return Promise.reject(error);
+    }
+
+    if (original._retry) {
+      return Promise.reject(error);
+    }
+
+    const tokens = JSON.parse(localStorage.getItem('tokens') || 'null');
+    if (!tokens?.refresh) {
+      localStorage.removeItem('tokens');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+      return Promise.reject(error);
+    }
+
+    original._retry = true;
+
+    if (!isRefreshing) {
+      isRefreshing = true;
+      try {
+        const { data } = await axios.post(
+          `${api.defaults.baseURL}/auth/token/refresh/`,
+          { refresh: tokens.refresh },
+          { withCredentials: true }
+        );
+        const newTokens = { ...tokens, access: data.access };
+        localStorage.setItem('tokens', JSON.stringify(newTokens));
+        isRefreshing = false;
+        onTokenRefreshed(data.access);
+        original.headers.Authorization = `Bearer ${data.access}`;
+        const csrfToken = getCSRFToken();
+        if (csrfToken) {
+          original.headers['X-CSRFToken'] = csrfToken;
         }
+        return api(original);
+      } catch {
+        isRefreshing = false;
+        localStorage.removeItem('tokens');
+        localStorage.removeItem('user');
+        if (!window.__authErrorShown) {
+          window.__authErrorShown = true;
+          alert('Your session has expired. Please log in again.');
+          window.__authErrorShown = false;
+        }
+        window.location.href = '/login';
+        return Promise.reject(error);
       }
     }
-    return Promise.reject(error);
+
+    return new Promise((resolve) => {
+      subscribeTokenRefresh((accessToken) => {
+        original.headers.Authorization = `Bearer ${accessToken}`;
+        const csrfToken = getCSRFToken();
+        if (csrfToken) {
+          original.headers['X-CSRFToken'] = csrfToken;
+        }
+        resolve(api(original));
+      });
+    });
   }
 );
 
