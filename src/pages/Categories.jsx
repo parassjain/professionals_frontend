@@ -67,8 +67,8 @@ export default function Categories() {
 
         {supercategories.map((superCat) => (
           <div key={superCat.id} className="mb-4">
-            <div className="mb-3">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="mb-3 text-center">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'center' }}>
                 <div style={{ 
                   width: 40, 
                   height: 40, 
@@ -82,7 +82,7 @@ export default function Categories() {
                   <CategoryIcon icon={superCat.icon} slug={superCat.slug} name={superCat.name} size={20} />
                 </div>
                 <div>
-                  <h2 className="section-title text-left" style={{ marginBottom: 0 }}>{superCat.name}</h2>
+                  <h2 className="section-title" style={{ marginBottom: 0 }}>{superCat.name}</h2>
                   {superCat.description && <p className="text-muted mt-1">{superCat.description}</p>}
                 </div>
               </div>
