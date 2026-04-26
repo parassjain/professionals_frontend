@@ -56,16 +56,22 @@ api.interceptors.response.use(
             original.headers['X-CSRFToken'] = csrfToken;
           }
           return api(original);
-        } catch {
-          localStorage.removeItem('tokens');
-          localStorage.removeItem('user');
-          if (!window.__authErrorShown) {
-            window.__authErrorShown = true;
-            window.addEventListener('beforeunload', () => {});
-            alert('Your session has expired. Please log in again.');
-            window.__authErrorShown = false;
+        } catch (refreshError) {
+          // Only log out on a genuine auth rejection (401/403).
+          // Network errors, 502/503 during a server restart → keep tokens,
+          // let the user retry rather than forcing a login.
+          const status = refreshError.response?.status;
+          if (status === 401 || status === 403) {
+            localStorage.removeItem('tokens');
+            localStorage.removeItem('user');
+            if (!window.__authErrorShown) {
+              window.__authErrorShown = true;
+              alert('Your session has expired. Please log in again.');
+              window.__authErrorShown = false;
+            }
+            window.location.href = '/login';
           }
-          window.location.href = '/login';
+          // For network/5xx errors: reject so the original caller can handle it
         }
       }
     }
