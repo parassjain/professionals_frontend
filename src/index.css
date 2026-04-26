@@ -85,7 +85,7 @@ img { max-width: 100%; height: auto; }
 .container-md { max-width: 800px; }
 
 .section { padding: 4rem 0; }
-.section-alt { background: white; }
+.section-alt { background: var(--bg-card); }
 
 .text-center { text-align: center; }
 .text-left { text-align: left; }
@@ -264,21 +264,22 @@ img { max-width: 100%; height: auto; }
 
 .btn-primary { 
   background: var(--gradient-accent); 
-  color: white; 
+  color: #020617; 
+  font-weight: 600;
 }
 .btn-primary:hover { 
-  background: var(--primary-dark); 
-  color: white; 
+  background: #7DD3FC; 
+  color: #020617; 
   box-shadow: var(--shadow-primary);
 }
 
-.btn-secondary { background: var(--gray-100); color: var(--text-primary); }
-.btn-secondary:hover { background: var(--gray-200); }
+.btn-secondary { background: var(--gray-700); color: var(--text-primary); }
+.btn-secondary:hover { background: var(--gray-600); }
 
 .btn-outline { 
-  background: white; 
+  background: transparent; 
   color: var(--text-primary); 
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--gray-600);
 }
 .btn-outline:hover { 
   border-color: var(--primary); 
@@ -286,8 +287,8 @@ img { max-width: 100%; height: auto; }
   background: var(--primary-light);
 }
 
-.btn-danger { background: var(--danger); color: white; }
-.btn-danger:hover { background: #dc2626; color: white; }
+.btn-danger { background: var(--danger); color: #020617; }
+.btn-danger:hover { background: #FCA5A5; color: #020617; }
 
 .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.8rem; }
 .btn-lg { padding: 0.9rem 2rem; font-size: 1rem; }
