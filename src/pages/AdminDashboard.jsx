@@ -215,8 +215,8 @@ function ProfessionalsTab() {
   const fetchAll = async () => {
     try {
       const [proRes, catRes] = await Promise.all([adminListProfessionals(), getAllCategoriesAdmin()]);
-      const proData = Array.isArray(proRes) ? proRes : (proRes?.results || proRes?.data || []);
-      const catData = Array.isArray(catRes) ? catRes : (catRes?.results || catRes?.data || []);
+      const proData = Array.isArray(proRes?.data) ? proRes.data : (proRes?.data?.results || []);
+      const catData = Array.isArray(catRes?.data) ? catRes.data : (catRes?.data?.results || catRes?.data?.data || []);
       setProfessionals(proData);
       setCategories(catData);
     } catch (err) {
