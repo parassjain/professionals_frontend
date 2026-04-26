@@ -651,7 +651,7 @@ img { max-width: 100%; height: auto; }
   bottom: 0;
   right: 0;
   background: var(--primary);
-  color: white;
+  color: #020617;
   border-radius: 50%;
   width: 28px;
   height: 28px;
@@ -659,7 +659,7 @@ img { max-width: 100%; height: auto; }
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 2px solid white;
+  border: 2px solid var(--bg-card);
 }
 
 /* Tags & Badges */
