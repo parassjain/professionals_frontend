@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
+import { getCategories, getPopularProfessionals, getSiteStats } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
 import { useAuth } from '../context/AuthContext';
 import { Search, Shield, Star, Users, Briefcase, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
@@ -22,12 +22,12 @@ export default function Home() {
     setLoading(true);
     Promise.all([
       getCategories().catch(() => ({ data: [] })),
-      getProfessionals({ ordering: '-avg_rating', page_size: 4 }).catch(() => ({ data: { results: [] } })),
+      getPopularProfessionals().catch(() => ({ data: [] })),
       getSiteStats().catch(() => ({ data: null }))
     ])
       .then(([catsRes, prosRes, statsRes]) => {
         setSupercategories(catsRes.data.slice(0, 4));
-        setTopPros(prosRes.data.results || prosRes.data);
+        setTopPros(prosRes.data);
         setStats(statsRes.data);
       })
       .catch(() => setError('Failed to load data.'))

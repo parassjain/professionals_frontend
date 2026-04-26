@@ -84,6 +84,9 @@ export const deleteCategory = (slug) =>
 export const getProfessionals = (params) =>
   api.get('/professionals/', { params });
 
+export const getPopularProfessionals = () =>
+  api.get('/professionals/popular/');
+
 export const getProfessional = (id) =>
   api.get(`/professionals/${id}/`);
 
