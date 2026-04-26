@@ -87,7 +87,7 @@ export default function Categories() {
                 </div>
               </div>
             </div>
-            <div className="card-grid-8">
+            <div className="card-grid-8" style={{ maxWidth: '900px', margin: '0 auto' }}>
               {superCat.subcategories?.map((cat) => (
                 <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
                   <div className="category-card-icon">
