@@ -35,10 +35,14 @@ function CategoriesTab() {
     setLoading(true);
     try {
       const [allRes, superRes] = await Promise.all([getAllCategories(), getSupercategories()]);
-      setCategories(allRes.data);
-      setSupercategories(superRes.data);
+      const allData = Array.isArray(allRes) ? allRes : (allRes?.data || allRes?.results || []);
+      const superData = Array.isArray(superRes) ? superRes : (superRes?.data || superRes?.results || []);
+      setCategories(allData);
+      setSupercategories(superData);
     } catch (err) {
       console.error('Failed to fetch categories:', err);
+      setCategories([]);
+      setSupercategories([]);
     } finally {
       setLoading(false);
     }
@@ -97,7 +101,7 @@ function CategoriesTab() {
               <label className="form-label">Parent Category</label>
               <select className="form-input" value={form.parent} onChange={(e) => setForm({ ...form, parent: e.target.value })}>
                 <option value="">None (top-level category)</option>
-                {supercategories.map((superCat) => (
+                {(supercategories || []).map((superCat) => (
                   <option key={superCat.id} value={superCat.id}>{superCat.name}</option>
                 ))}
               </select>
@@ -135,7 +139,7 @@ function CategoriesTab() {
             </tr>
           </thead>
           <tbody>
-            {categories.map((cat) => (
+            {(categories || []).map((cat) => (
               <tr key={cat.slug} style={{ borderBottom: '1px solid var(--gray-100)' }}>
                 <td style={tdStyle}>
                   {cat.icon ? <img src={cat.icon} alt="" style={{ height: 36, width: 36, objectFit: 'cover', borderRadius: 6 }} />
@@ -211,7 +215,7 @@ function ProfessionalsTab() {
   const fetchAll = async () => {
     try {
       const [proRes, catRes] = await Promise.all([adminListProfessionals(), getCategories()]);
-      const proData = proRes?.results || proRes?.data || proRes || [];
+      const proData = Array.isArray(proRes) ? proRes : (proRes?.results || proRes?.data || []);
       const catData = Array.isArray(catRes) ? catRes : (catRes?.results || catRes?.data || []);
       setProfessionals(proData);
       setCategories(catData);
@@ -333,7 +337,7 @@ function ProfessionalsTab() {
             <div className="form-group" style={{ marginTop: '0.75rem' }}>
               <label className="form-label">Services / Categories</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.4rem' }}>
-                {categories.map((cat) => (
+                {(categories || []).map((cat) => (
                   <label key={cat.id} style={{
                     display: 'flex', alignItems: 'center', gap: '0.35rem',
                     padding: '0.3rem 0.75rem', borderRadius: 20, cursor: 'pointer',
