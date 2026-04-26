@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Wrench, Hammer, Zap, Droplets, Scissors, Laptop, Code, Globe,
   Heart, Baby, Dog, Car, Home, Truck, Package, Users,
@@ -110,10 +111,12 @@ function getIconComponent(slugOrName) {
 }
 
 export default function CategoryIcon({ icon, slug, name, size = 56, className = '' }) {
+  const iconComponent = useMemo(() => getIconComponent(slug || name), [slug, name]);
+  
   if (icon) {
     return <img src={icon} alt={name || slug} className={className} style={{ width: size, height: size }} />;
   }
   
-  const IconComponent = getIconComponent(slug || name);
-  return <IconComponent size={size} className={className} />;
+  const Icon = iconComponent;
+  return <Icon size={size} className={className} />;
 }

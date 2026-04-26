@@ -59,7 +59,32 @@ export default function Home() {
     }
   };
 
-return (
+  if (loading) {
+    return (
+      <div>
+        <Helmet>
+          <title>{`${SITE_NAME} — Find Trusted Local Professionals in India`}</title>
+        </Helmet>
+        <div className="section"><LoadingSpinner /></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Helmet>
+          <title>{`${SITE_NAME} — Find Trusted Local Professionals in India`}</title>
+        </Helmet>
+        <div className="section container">
+          <div className="alert alert-error">{error}</div>
+          <button className="btn btn-primary" onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
     <div>
       <Helmet>
         <title>{`${SITE_NAME} — Find Trusted Local Professionals in India`}</title>
@@ -70,44 +95,36 @@ return (
         <meta property="og:url" content={`${SITE_URL}/`} />
         <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>
       </Helmet>
-      {loading && <div className="section"><LoadingSpinner /></div>}
-      {!loading && error && (
-        <div className="section container">
-          <div className="alert alert-error">{error}</div>
-          <button className="btn btn-primary" onClick={() => window.location.reload()}>Retry</button>
-        </div>
-      )}
-      {!loading && !error && (
-        <>
-          <section className="stats-section">
-            <div className="container">
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <Users size={28} />
-                  <h3>{stats ? stats.total_users.toLocaleString() : '—'}</h3>
-                  <p>Registered Users</p>
-                </div>
-                <div className="stat-card">
-                  <Shield size={28} />
-                  <h3>{stats ? stats.total_professionals.toLocaleString() : '—'}</h3>
-                  <p>Active Professionals</p>
-                </div>
-                <div className="stat-card">
-                  <Star size={28} />
-                  <h3>{stats ? stats.total_reviews.toLocaleString() : '—'}</h3>
-                  <p>Reviews Posted</p>
-                </div>
-                <div className="stat-card">
-                  <Briefcase size={28} />
-                  <h3>{stats ? stats.total_jobs.toLocaleString() : '—'}</h3>
-                  <p>Jobs Posted</p>
-                </div>
-              </div>
-            </div>
-          </section>
 
-          {supercategories.length > 0 && (
-        <section className="section">
+      <div className="stats-section">
+        <div className="container">
+          <div className="stats-grid">
+            <div className="stat-card">
+              <Users size={28} />
+              <h3>{stats ? stats.total_users.toLocaleString() : '—'}</h3>
+              <p>Registered Users</p>
+            </div>
+            <div className="stat-card">
+              <Shield size={28} />
+              <h3>{stats ? stats.total_professionals.toLocaleString() : '—'}</h3>
+              <p>Active Professionals</p>
+            </div>
+            <div className="stat-card">
+              <Star size={28} />
+              <h3>{stats ? stats.total_reviews.toLocaleString() : '—'}</h3>
+              <p>Reviews Posted</p>
+            </div>
+            <div className="stat-card">
+              <Briefcase size={28} />
+              <h3>{stats ? stats.total_jobs.toLocaleString() : '—'}</h3>
+              <p>Jobs Posted</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {supercategories.length > 0 && (
+        <div className="section">
           <div className="container">
             <div className="text-center mb-4">
               <h2 className="section-title">Browse by Category</h2>
@@ -132,11 +149,11 @@ return (
               </Link>
             </div>
           </div>
-        </section>
+        </div>
       )}
 
       {topPros.length > 0 && (
-        <section className="section section-alt">
+        <div className="section section-alt">
           <div className="container">
             <div className="text-center mb-4">
               <h2 className="section-title">Top Rated Professionals</h2>
@@ -173,10 +190,8 @@ return (
               </Link>
             </div>
           </div>
-        </section>
-        </>
+        </div>
       )}
     </div>
   );
-}
 }

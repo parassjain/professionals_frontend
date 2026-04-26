@@ -17,7 +17,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-const BANGALORE = { lat: 12.9716, lng: 77.5946 };
+const FALLBACK_LOCATION = { lat: 12.9716, lng: 77.5946 };
 const DEFAULT_ZOOM = 13;
 
 function makeIcon(active) {
@@ -107,12 +107,12 @@ export default function MapView({ category }) {
             if (data.length > 0) {
               setFlyTarget({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), zoom: DEFAULT_ZOOM });
             } else {
-              setFlyTarget({ ...BANGALORE, zoom: DEFAULT_ZOOM });
+              setFlyTarget({ ...FALLBACK_LOCATION, zoom: DEFAULT_ZOOM });
             }
           })
-          .catch(() => setFlyTarget({ ...BANGALORE, zoom: DEFAULT_ZOOM }));
+          .catch(() => setFlyTarget({ ...FALLBACK_LOCATION, zoom: DEFAULT_ZOOM }));
       } else {
-        setFlyTarget({ ...BANGALORE, zoom: DEFAULT_ZOOM });
+        setFlyTarget({ ...FALLBACK_LOCATION, zoom: DEFAULT_ZOOM });
       }
     };
 
@@ -199,7 +199,7 @@ export default function MapView({ category }) {
       {/* Map */}
       <div className="map-container-wrapper">
         <MapContainer
-          center={[BANGALORE.lat, BANGALORE.lng]}
+          center={[FALLBACK_LOCATION.lat, FALLBACK_LOCATION.lng]}
           zoom={DEFAULT_ZOOM}
           className="leaflet-map"
           ref={mapRef}

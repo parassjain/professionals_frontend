@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
     } else {
       setLoading(false);
     }
-  }, []);// eslint-disable-line react-hooks/exhaustive-deps
+  }, [tokens, fetchUser]);
 
   const login = async (email, password) => {
     const { data } = await apiLogin(email, password);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getProfessionals, getAllCategories } from '../api/endpoints';
@@ -6,7 +6,6 @@ import { SITE_URL, SITE_NAME } from '../config/site';
 import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles, List, Map, AlertCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
-import MapView from '../components/MapView';
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -16,6 +15,8 @@ const useDebounce = (value, delay) => {
   }, [value, delay]);
   return debouncedValue;
 };
+
+const LazyMapView = lazy(() => import('../components/MapView'));
 
 export default function Professionals() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -158,7 +159,9 @@ export default function Professionals() {
         </form>
 
         {viewMode === 'map' && (
-          <MapView category={filters.category} />
+          <Suspense fallback={<LoadingSpinner />}>
+            <LazyMapView category={filters.category} />
+          </Suspense>
         )}
 
         {viewMode === 'list' && loading ? (
