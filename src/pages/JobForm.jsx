@@ -53,7 +53,11 @@ export default function JobForm() {
     setError('');
     setLoading(true);
     try {
-      const payload = { ...form };
+      const payload = {
+        ...form,
+        latitude: Math.round(form.latitude * 1000000) / 1000000,
+        longitude: Math.round(form.longitude * 1000000) / 1000000,
+      };
       if (isEdit) {
         await updateJob(id, payload);
       } else {
