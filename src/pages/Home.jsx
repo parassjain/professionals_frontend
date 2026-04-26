@@ -4,9 +4,10 @@ import { Helmet } from 'react-helmet-async';
 import { getCategories, getProfessionals, getSiteStats } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
 import { useAuth } from '../context/AuthContext';
-import { Search, Shield, Star, Users, Briefcase, ArrowRight, Sparkles } from 'lucide-react';
+import { Search, Shield, Star, Users, Briefcase, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import CategoryIcon from '../components/CategoryIcon';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -14,13 +15,23 @@ export default function Home() {
   const [supercategories, setSupercategories] = useState([]);
   const [topPros, setTopPros] = useState([]);
   const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    getCategories()
-      .then((r) => setSupercategories(r.data.slice(0, 4)))
-      .catch(() => {});
-    getProfessionals({ ordering: '-avg_rating', page_size: 4 }).then((r) => setTopPros(r.data.results || r.data)).catch(() => {});
-    getSiteStats().then((r) => setStats(r.data)).catch(() => {});
+    setLoading(true);
+    Promise.all([
+      getCategories().catch(() => ({ data: [] })),
+      getProfessionals({ ordering: '-avg_rating', page_size: 4 }).catch(() => ({ data: { results: [] } })),
+      getSiteStats().catch(() => ({ data: null }))
+    ])
+      .then(([catsRes, prosRes, statsRes]) => {
+        setSupercategories(catsRes.data.slice(0, 4));
+        setTopPros(prosRes.data.results || prosRes.data);
+        setStats(statsRes.data);
+      })
+      .catch(() => setError('Failed to load data.'))
+      .finally(() => setLoading(false));
   }, []);
 
   const orgSchema = {
@@ -48,7 +59,7 @@ export default function Home() {
     }
   };
 
-  return (
+return (
     <div>
       <Helmet>
         <title>{`${SITE_NAME} — Find Trusted Local Professionals in India`}</title>
@@ -59,49 +70,43 @@ export default function Home() {
         <meta property="og:url" content={`${SITE_URL}/`} />
         <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>
       </Helmet>
-      <section className="hero">
-        <div className="hero-content container">
-          <h1>Find Trusted Professionals Near You</h1>
-          <p>Connect with verified experts for any service — from plumbing and electrical to tutoring and design. Your next professional is just a click away.</p>
-          <div className="hero-actions">
-            <Link to="/professionals" className="btn btn-primary btn-lg">
-              <Search size={20} /> Find a Professional
-            </Link>
-            <button type="button" onClick={handleJoinProfessional} className="btn btn-outline btn-lg">
-              Join as a Professional
-            </button>
-          </div>
+      {loading && <div className="section"><LoadingSpinner /></div>}
+      {!loading && error && (
+        <div className="section container">
+          <div className="alert alert-error">{error}</div>
+          <button className="btn btn-primary" onClick={() => window.location.reload()}>Retry</button>
         </div>
-      </section>
+      )}
+      {!loading && !error && (
+        <>
+          <section className="stats-section">
+            <div className="container">
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <Users size={28} />
+                  <h3>{stats ? stats.total_users.toLocaleString() : '—'}</h3>
+                  <p>Registered Users</p>
+                </div>
+                <div className="stat-card">
+                  <Shield size={28} />
+                  <h3>{stats ? stats.total_professionals.toLocaleString() : '—'}</h3>
+                  <p>Active Professionals</p>
+                </div>
+                <div className="stat-card">
+                  <Star size={28} />
+                  <h3>{stats ? stats.total_reviews.toLocaleString() : '—'}</h3>
+                  <p>Reviews Posted</p>
+                </div>
+                <div className="stat-card">
+                  <Briefcase size={28} />
+                  <h3>{stats ? stats.total_jobs.toLocaleString() : '—'}</h3>
+                  <p>Jobs Posted</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
-      <section className="stats-section">
-        <div className="container">
-          <div className="stats-grid">
-            <div className="stat-card">
-              <Users size={28} />
-              <h3>{stats ? stats.total_users.toLocaleString() : '—'}</h3>
-              <p>Registered Users</p>
-            </div>
-            <div className="stat-card">
-              <Shield size={28} />
-              <h3>{stats ? stats.total_professionals.toLocaleString() : '—'}</h3>
-              <p>Active Professionals</p>
-            </div>
-            <div className="stat-card">
-              <Star size={28} />
-              <h3>{stats ? stats.total_reviews.toLocaleString() : '—'}</h3>
-              <p>Reviews Posted</p>
-            </div>
-            <div className="stat-card">
-              <Briefcase size={28} />
-              <h3>{stats ? stats.total_jobs.toLocaleString() : '—'}</h3>
-              <p>Jobs Posted</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {supercategories.length > 0 && (
+          {supercategories.length > 0 && (
         <section className="section">
           <div className="container">
             <div className="text-center mb-4">
@@ -169,7 +174,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </>
       )}
     </div>
   );
+}
 }

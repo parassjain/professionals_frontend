@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { getJob, deleteJob } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Calendar, DollarSign, Tag, User, Trash2, Edit } from 'lucide-react';
+import { MapPin, Calendar, DollarSign, Tag, User, Trash2, Edit, AlertCircle } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function JobDetail() {
@@ -13,11 +13,12 @@ export default function JobDetail() {
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     getJob(id)
       .then((r) => setJob(r.data))
-      .catch(() => {})
+      .catch(() => setError('Failed to load job.'))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -26,11 +27,14 @@ export default function JobDetail() {
     try {
       await deleteJob(id);
       navigate('/jobs');
-    } catch { /* ignore */ }
+    } catch (err) {
+      setError('Failed to delete job.');
+    }
   };
 
   if (loading) return <LoadingSpinner />;
   if (!job) return <div className="section container"><p>Job not found.</p></div>;
+  if (error) return <div className="section container"><div className="alert alert-error">{error}</div></div>;
 
   const isOwner = user?.public_id === job.posted_by?.public_id;
   const categoryName = job.category?.name || 'Service';

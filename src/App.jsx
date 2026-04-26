@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -36,45 +37,47 @@ export default function App() {
           <div className="app-layout">
             <Navbar />
             <main className="main-content">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/auth/google/callback" element={<GoogleCallback />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/professionals" element={<Professionals />} />
-                <Route path="/professionals/:id" element={<ProfessionalDetail />} />
-                <Route path="/jobs" element={<ProfessionalRoute><Jobs /></ProfessionalRoute>} />
-                <Route path="/jobs/:id" element={<JobDetail />} />
-                <Route
-                  path="/jobs/create"
-                  element={<ProtectedRoute><JobForm /></ProtectedRoute>}
-                />
-                <Route
-                  path="/jobs/:id/edit"
-                  element={<ProtectedRoute><JobForm /></ProtectedRoute>}
-                />
-                <Route
-                  path="/profile"
-                  element={<ProtectedRoute><Profile /></ProtectedRoute>}
-                />
-                <Route
-                  path="/become-professional"
-                  element={<ProtectedRoute><BecomeProfessional /></ProtectedRoute>}
-                />
-                <Route
-                  path="/admin"
-                  element={<AdminRoute><AdminDashboard /></AdminRoute>}
-                />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/users/:public_id" element={<UserPublicDetail />} />
-                <Route path="/verify-email" element={<VerifyEmail />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/legal" element={<Legal />} />
-              </Routes>
-            </main>
+                <ErrorBoundary>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/auth/google/callback" element={<GoogleCallback />} />
+                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/professionals" element={<Professionals />} />
+                    <Route path="/professionals/:id" element={<ProfessionalDetail />} />
+                    <Route path="/jobs" element={<ProfessionalRoute><Jobs /></ProfessionalRoute>} />
+                    <Route path="/jobs/:id" element={<JobDetail />} />
+                    <Route
+                      path="/jobs/create"
+                      element={<ProtectedRoute><JobForm /></ProtectedRoute>}
+                    />
+                    <Route
+                      path="/jobs/:id/edit"
+                      element={<ProtectedRoute><JobForm /></ProtectedRoute>}
+                    />
+                    <Route
+                      path="/profile"
+                      element={<ProtectedRoute><Profile /></ProtectedRoute>}
+                    />
+                    <Route
+                      path="/become-professional"
+                      element={<ProtectedRoute><BecomeProfessional /></ProtectedRoute>}
+                    />
+                    <Route
+                      path="/admin"
+                      element={<AdminRoute><AdminDashboard /></AdminRoute>}
+                    />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/users/:public_id" element={<UserPublicDetail />} />
+                    <Route path="/verify-email" element={<VerifyEmail />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/legal" element={<Legal />} />
+                  </Routes>
+                </ErrorBoundary>
+              </main>
             <Footer />
           </div>
         </AuthProvider>

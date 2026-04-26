@@ -3,10 +3,19 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getProfessionals, getAllCategories } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
-import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles, List, Map } from 'lucide-react';
+import { Search, MapPin, Filter, ChevronLeft, ChevronRight, Sparkles, List, Map, AlertCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
 import MapView from '../components/MapView';
+
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+};
 
 export default function Professionals() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,18 +31,21 @@ export default function Professionals() {
     ordering: searchParams.get('ordering') || '',
   });
   const [viewMode, setViewMode] = useState('list');
+  const [error, setError] = useState('');
   const page = parseInt(searchParams.get('page') || '1');
+  const debouncedSearch = useDebounce(search, 300);
 
   useEffect(() => {
     getAllCategories()
       .then((r) => setCategories(r.data))
-      .catch(() => {});
+      .catch((err) => setError('Failed to load categories.'));
   }, []);
 
   useEffect(() => {
     setLoading(true);
+    setError('');
     const params = { page };
-    if (search) params.search = search;
+    if (debouncedSearch) params.search = debouncedSearch;
     if (filters.category) params.category = filters.category;
     if (filters.city) params.city = filters.city;
     if (filters.is_verified) params.is_verified = filters.is_verified;
@@ -45,9 +57,9 @@ export default function Professionals() {
         setProfessionals(data.results || data);
         setTotalPages(data.count ? Math.ceil(data.count / 20) : 1);
       })
-      .catch(() => {})
+      .catch(() => setError('Failed to load professionals.'))
       .finally(() => setLoading(false));
-  }, [page, search, filters]);
+  }, [page, debouncedSearch, filters]);
 
   const applySearch = (e) => {
     e.preventDefault();

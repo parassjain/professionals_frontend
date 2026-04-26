@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getProfessional, getMyJobs, getMyGivenReviews, getMyReceivedReviews, getMyProfessionalProfile, addPortfolioImage, deletePortfolioImage, addSocialLink, deleteSocialLink } from '../api/endpoints';
-import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Code, Globe } from 'lucide-react';
+import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getMyJobs, getMyGivenReviews, getMyReceivedReviews, getMyProfessionalProfile, addPortfolioImage, deletePortfolioImage, addSocialLink, deleteSocialLink } from '../api/endpoints';
+import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Code, Globe, AlertCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
+
+const MAX_IMAGE_SIZE_MB = 2;
+const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+const MAX_PORTFOLIO_IMAGES = 10;
+const REVIEWS_PAGE_SIZE = 5;
 
 export default function Profile() {
   const { user, fetchUser, loading: authLoading } = useAuth();
@@ -15,6 +20,7 @@ export default function Profile() {
   const [myJobs, setMyJobs] = useState([]);
   const [myReviews, setMyReviews] = useState([]);
   const [receivedReviews, setReceivedReviews] = useState([]);
+  const [reviewsPage, setReviewsPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [portfolioImages, setPortfolioImages] = useState([]);
@@ -22,11 +28,10 @@ export default function Profile() {
   const [socialLinks, setSocialLinks] = useState([]);
   const [socialForm, setSocialForm] = useState({ platform: '', url: '' });
   const [socialError, setSocialError] = useState('');
+  const userRef = useRef(user);
 
   const PLATFORMS = ['facebook', 'linkedin', 'twitter', 'github', 'instagram', 'youtube', 'website'];
   const PLATFORM_LABELS = { facebook: 'Facebook', linkedin: 'LinkedIn', twitter: 'Twitter / X', github: 'GitHub', instagram: 'Instagram', youtube: 'YouTube', website: 'Website' };
-  const MAX_IMAGE_SIZE_MB = 2;
-  const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
   const validateImage = (file) => {
     if (!file) return null;
@@ -44,14 +49,18 @@ export default function Profile() {
   const availablePlatforms = PLATFORMS.filter((p) => !socialLinks.some((l) => l.platform === p));
 
   useEffect(() => {
-    if (!user) return;
+    userRef.current = user;
+  }, [user]);
+
+  useEffect(() => {
+    if (!user || !userRef.current) return;
     setForm({ first_name: user.first_name, last_name: user.last_name, phone: user.phone || '', city: user.city || '' });
     setSocialLinks(user.social_links || []);
 
     const fetches = [
       getMyJobs().catch(() => ({ data: { results: [] } })),
-      getMyGivenReviews().catch(() => ({ data: { results: [] } })),
-      getMyReceivedReviews().catch(() => ({ data: { results: [] } })),
+      getMyGivenReviews({ page: reviewsPage }).catch(() => ({ data: { results: [] } })),
+      getMyReceivedReviews({ page: reviewsPage }).catch(() => ({ data: { results: [] } })),
     ];
 
     if (user.is_professional) {
@@ -71,8 +80,9 @@ export default function Profile() {
         }
         return null;
       })
+      .catch(() => setError('Failed to load profile data.'))
       .finally(() => setLoading(false));
-  }, [user]);
+  }, [user, reviewsPage]);
 
   const handleAddSocialLink = async (e) => {
     e.preventDefault();
@@ -94,7 +104,9 @@ export default function Profile() {
     try {
       await deleteSocialLink(id);
       setSocialLinks((prev) => prev.filter((l) => l.id !== id));
-    } catch { /* ignore */ }
+    } catch (err) {
+      setError('Failed to delete link.');
+    }
   };
 
   const handleSave = async (e) => {
@@ -142,7 +154,9 @@ export default function Profile() {
         const res = await addPortfolioImage(proProfile.public_id, fd);
         setPortfolioImages((prev) => [...prev, res.data]);
       }
-    } catch { /* ignore */ } finally {
+    } catch (err) {
+      setError('Failed to upload image.');
+    } finally {
       setPortfolioUploading(false);
       e.target.value = '';
     }
@@ -153,7 +167,9 @@ export default function Profile() {
     try {
       await deletePortfolioImage(proProfile.public_id, imgId);
       setPortfolioImages((prev) => prev.filter((img) => img.id !== imgId));
-    } catch { /* ignore */ }
+    } catch (err) {
+      setError('Failed to delete image.');
+    }
   };
 
   if (authLoading || loading) return <LoadingSpinner />;
@@ -289,7 +305,9 @@ export default function Profile() {
                       try {
                         await updateProfessionalProfile(proProfile.public_id, { is_active: !proProfile.is_active });
                         setProProfile({ ...proProfile, is_active: !proProfile.is_active });
-                      } catch { /* ignore */ }
+                      } catch (err) {
+                        setError('Failed to update listing status.');
+                      }
                     }}
                   >
                     {proProfile.is_active ? 'Disable Listing' : 'Enable Listing'}

@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getProfessional, getReviews, createReview, updateReview, revealContact } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Code, Globe, Link2 } from 'lucide-react';
+import { MapPin, Clock, Shield, Star, CheckCircle, XCircle, Code, Globe, Link2, AlertCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import StarInput from '../components/StarInput';
 import LoadingSpinner from '../components/LoadingSpinner';
+
+const MAX_IMAGE_SIZE_MB = 2;
+const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+const CONTACT_REVEAL_COOLDOWN_MS = 30000;
 
 export default function ProfessionalDetail() {
   const { id } = useParams();
@@ -15,6 +19,7 @@ export default function ProfessionalDetail() {
   const [pro, setPro] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '', is_anonymous: false });
   const [reviewError, setReviewError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -26,8 +31,7 @@ export default function ProfessionalDetail() {
   const [contactInfo, setContactInfo] = useState(null);
   const [contactLoading, setContactLoading] = useState(false);
   const [contactError, setContactError] = useState('');
-  const MAX_IMAGE_SIZE_MB = 2;
-  const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+  const contactRevealTime = useRef(0);
 
   const validateImage = (file) => {
     if (!file) return null;
@@ -37,17 +41,17 @@ export default function ProfessionalDetail() {
   };
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([
       getProfessional(id),
-      getReviews({ reviewed_user: null }) // we'll filter after getting pro
+      getReviews({ reviewed_user: null })
     ])
       .then(([proRes]) => {
         setPro(proRes.data);
-        // Fetch reviews for this professional's user
         return getReviews({ reviewed_user: proRes.data.user.public_id });
       })
       .then((revRes) => setReviews(revRes.data.results || revRes.data))
-      .catch(() => {})
+      .catch(() => setError('Failed to load professional.'))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -102,6 +106,12 @@ export default function ProfessionalDetail() {
   };
 
   const handleRevealContact = async () => {
+    const now = Date.now();
+    if (now - contactRevealTime.current < CONTACT_REVEAL_COOLDOWN_MS) {
+      setContactError(`Please wait ${Math.ceil((CONTACT_REVEAL_COOLDOWN_MS - (now - contactRevealTime.current)) / 1000)} seconds before revealing again.`);
+      return;
+    }
+    contactRevealTime.current = now;
     setContactLoading(true);
     setContactError('');
     try {

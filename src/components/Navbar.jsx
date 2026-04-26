@@ -30,12 +30,12 @@ export default function Navbar() {
       <div className="container navbar-inner">
         <Link to="/" className="navbar-brand">Contact Hub</Link>
 
-        <button className="mobile-menu-btn" onClick={() => setOpen(!open)}>
+        <button className="mobile-menu-btn" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'}>
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         <div className={`navbar-links ${open ? 'open' : ''}`}>
-          <Link to="/professionals" onClick={() => setOpen(false)}>
+          <Link to="/professionals" onClick={() => setOpen(false)} aria-label="Find professionals">
             <Search size={16} /> Find Pros
           </Link>
           {user?.is_professional && (
