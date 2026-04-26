@@ -297,9 +297,9 @@ img { max-width: 100%; height: auto; }
 .btn-google {
   width: 100%;
   justify-content: center;
-  background: white;
-  color: var(--gray-700);
-  border: 1.5px solid var(--border);
+  background: var(--gray-800);
+  color: var(--text-primary);
+  border: 1.5px solid var(--gray-600);
   padding: 0.8rem 1.2rem;
   font-size: 0.95rem;
   font-weight: 500;
@@ -386,23 +386,23 @@ img { max-width: 100%; height: auto; }
 }
 
 .hero .btn-primary { 
-  background: #0369A1; 
-  color: white; 
+  background: var(--primary); 
+  color: #020617; 
 }
 .hero .btn-primary:hover { 
-  background: #0284C7; 
-  color: white; 
+  background: var(--primary-hover); 
+  color: #020617; 
   box-shadow: var(--shadow-lg);
 }
 
 .hero .btn-outline { 
-  border-color: rgba(255,255,255,0.5); 
-  color: white; 
-  background: rgba(255,255,255,0.1);
+  border-color: var(--gray-600); 
+  color: var(--text-primary); 
+  background: transparent;
 }
 .hero .btn-outline:hover { 
-  background: rgba(255,255,255,0.2); 
-  border-color: white;
+  background: var(--gray-700); 
+  border-color: var(--primary);
 }
 
 /* Stats */
