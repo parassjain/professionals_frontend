@@ -373,18 +373,18 @@ function ProfessionalsTab() {
             {professionals.map((pro) => (
               <tr key={pro.public_id} style={{ borderBottom: '1px solid var(--gray-100)' }}>
                 <td style={{ ...tdStyle, fontWeight: 500 }}>
-                  {pro.user.first_name} {pro.user.last_name}
+                  {pro.user?.first_name} {pro.user?.last_name}
                 </td>
-                <td style={{ ...tdStyle, fontSize: '0.85rem', color: 'var(--gray-600)' }}>{pro.user.email ?? '—'}</td>
+                <td style={{ ...tdStyle, fontSize: '0.85rem', color: 'var(--gray-600)' }}>{pro.user?.email ?? '—'}</td>
                 <td style={{ ...tdStyle, fontSize: '0.875rem', maxWidth: 200 }}>
-                  {pro.headline.slice(0, 50)}{pro.headline.length > 50 ? '…' : ''}
+                  {pro.headline?.slice(0, 50)}{pro.headline?.length > 50 ? '…' : ''}
                 </td>
                 <td style={{ ...tdStyle, fontSize: '0.8rem' }}>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
-                    {pro.services.map((s) => (
+                    {(pro.services || []).map((s) => (
                       <span key={s.id} style={{ background: 'var(--primary-light)', color: 'var(--primary-dark)', padding: '0.15rem 0.5rem', borderRadius: 12, fontSize: '0.75rem' }}>{s.name}</span>
                     ))}
-                    {pro.services.length === 0 && <span style={{ color: 'var(--gray-400)' }}>—</span>}
+                    {(!pro.services || pro.services.length === 0) && <span style={{ color: 'var(--gray-400)' }}>—</span>}
                   </div>
                 </td>
                 <td style={tdStyle}>
