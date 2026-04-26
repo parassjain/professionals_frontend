@@ -46,12 +46,14 @@ export default function JobForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (form.latitude === null || form.longitude === null) {
+      setError('Please select a location on the map');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
       const payload = { ...form };
-      if (payload.latitude === null) delete payload.latitude;
-      if (payload.longitude === null) delete payload.longitude;
       if (isEdit) {
         await updateJob(id, payload);
       } else {
@@ -109,7 +111,7 @@ export default function JobForm() {
             </div>
           )}
           <div className="form-group">
-            <label>Job Location <span className="text-muted">(optional — pin on map)</span></label>
+            <label>Job Location <span className="text-muted">(click to pin on map)</span></label>
             <Suspense fallback={<div style={{ height: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LoadingSpinner /></div>}>
               <LocationPicker
                 value={form.latitude !== null ? { lat: form.latitude, lng: form.longitude } : null}
@@ -117,6 +119,7 @@ export default function JobForm() {
                 flyTo={flyTo}
               />
             </Suspense>
+            {form.latitude === null && <p style={{ color: 'var(--red)', fontSize: '0.8rem', marginTop: '0.25rem)' }}>Please select a location</p>}
           </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
             {loading ? 'Saving...' : isEdit ? 'Update Job' : 'Post Job'}
