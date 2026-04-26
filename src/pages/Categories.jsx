@@ -55,7 +55,7 @@ export default function Categories() {
               {popularServices.map((cat) => (
                 <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
                   <div className="category-card-icon">
-                    <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} size={28} />
+                    <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} size={22} />
                   </div>
                   <h3>{cat.name}</h3>
                   <p className="text-muted">{cat.contact_count} contacts</p>
@@ -70,16 +70,16 @@ export default function Categories() {
             <div className="mb-3">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div style={{ 
-                  width: 48, 
-                  height: 48, 
-                  borderRadius: 12, 
+                  width: 40, 
+                  height: 40, 
+                  borderRadius: 10, 
                   background: 'var(--primary-light)', 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
                   color: 'var(--primary)'
                 }}>
-                  <CategoryIcon icon={superCat.icon} slug={superCat.slug} name={superCat.name} size={24} />
+                  <CategoryIcon icon={superCat.icon} slug={superCat.slug} name={superCat.name} size={20} />
                 </div>
                 <div>
                   <h2 className="section-title text-left" style={{ marginBottom: 0 }}>{superCat.name}</h2>
@@ -91,7 +91,7 @@ export default function Categories() {
               {superCat.subcategories?.map((cat) => (
                 <Link to={`/professionals?category=${cat.slug}`} key={cat.id} className="category-card">
                   <div className="category-card-icon">
-                    <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} size={28} />
+                    <CategoryIcon icon={cat.icon} slug={cat.slug} name={cat.name} size={22} />
                   </div>
                   <h3>{cat.name}</h3>
                   {cat.description && <p>{cat.description}</p>}
