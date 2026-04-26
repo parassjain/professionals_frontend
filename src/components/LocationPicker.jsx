@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -35,8 +35,38 @@ function FlyTo({ target }) {
   return null;
 }
 
+async function reverseGeocode(lat, lng) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
+      { headers: { 'User-Agent': 'ContactHub/1.0' } }
+    );
+    const data = await res.json();
+    const addr = data.address;
+    return addr.city || addr.town || addr.village || addr.county || addr.state || '';
+  } catch {
+    return '';
+  }
+}
+
 export default function LocationPicker({ value, onChange, flyTo }) {
   const mapRef = useRef(null);
+  const [city, setCity] = useState('');
+  const prevLoc = useRef(null);
+
+  useEffect(() => {
+    const locKey = value ? `${value.lat},${value.lng}` : null;
+    if (locKey && locKey !== prevLoc.current) {
+      prevLoc.current = locKey;
+      setCity('');
+      reverseGeocode(value.lat, value.lng).then((c) => {
+        if (c) {
+          setCity(c);
+          onChange({ lat: value.lat, lng: value.lng, city: c });
+        }
+      });
+    }
+  }, [value?.lat, value?.lng, onChange]);
 
   const handleLocate = () => {
     if (!navigator.geolocation) return;
@@ -73,7 +103,19 @@ export default function LocationPicker({ value, onChange, flyTo }) {
               eventHandlers={{
                 dragend(e) {
                   const ll = e.target.getLatLng();
-                  onChange({ lat: ll.lat, lng: ll.lng });
+                  const locKey = `${ll.lat},${ll.lng}`;
+                  if (locKey !== prevLoc.current) {
+                    prevLoc.current = locKey;
+                    setCity('');
+                    reverseGeocode(ll.lat, ll.lng).then((c) => {
+                      if (c) {
+                        setCity(c);
+                        onChange({ lat: ll.lat, lng: ll.lng, city: c });
+                      } else {
+                        onChange({ lat: ll.lat, lng: ll.lng });
+                      }
+                    });
+                  }
                 },
               }}
             />
@@ -84,7 +126,7 @@ export default function LocationPicker({ value, onChange, flyTo }) {
         <span className="text-muted text-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
           <MapPin size={13} />
           {value
-            ? `${value.lat.toFixed(5)}, ${value.lng.toFixed(5)}`
+            ? `${value.lat.toFixed(5)}, ${value.lng.toFixed(5)}${city ? ` — ${city}` : ''}`
             : 'Click on the map to set job location'}
         </span>
         <button type="button" className="btn btn-sm btn-outline" onClick={handleLocate} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>

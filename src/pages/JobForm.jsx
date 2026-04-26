@@ -12,7 +12,7 @@ export default function JobForm() {
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
     category: '', title: '', description: '', city: '', budget_range: '', status: 'open',
-    latitude: null, longitude: null,
+    latitude: null, longitude: null, city_detected: false,
   });
   const [flyTo, setFlyTo] = useState(null);
   const [error, setError] = useState('');
@@ -40,8 +40,8 @@ export default function JobForm() {
     }
   }, [id, isEdit, navigate]);
 
-  const handleLocationChange = ({ lat, lng }) => {
-    setForm((f) => ({ ...f, latitude: lat, longitude: lng }));
+  const handleLocationChange = ({ lat, lng, city }) => {
+    setForm((f) => ({ ...f, latitude: lat, longitude: lng, city: city || '' }));
   };
 
   const handleSubmit = async (e) => {
@@ -92,10 +92,6 @@ export default function JobForm() {
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required placeholder="Describe the work needed..." rows={5} />
           </div>
           <div className="form-row">
-            <div className="form-group">
-              <label>City *</label>
-              <input type="text" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required placeholder="City" />
-            </div>
             <div className="form-group">
               <label>Budget Range</label>
               <input type="text" value={form.budget_range} onChange={(e) => setForm({ ...form, budget_range: e.target.value })} placeholder="e.g. $100-$500" />
