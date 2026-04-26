@@ -1,13 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createJob, updateJob, getJob, getCategories } from '../api/endpoints';
+import LoadingSpinner from '../components/LoadingSpinner';
+
+const LocationPicker = lazy(() => import('../components/LocationPicker'));
 
 export default function JobForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEdit = !!id;
   const [categories, setCategories] = useState([]);
-  const [form, setForm] = useState({ category: '', title: '', description: '', city: '', budget_range: '', status: 'open' });
+  const [form, setForm] = useState({
+    category: '', title: '', description: '', city: '', budget_range: '', status: 'open',
+    latitude: null, longitude: null,
+  });
+  const [flyTo, setFlyTo] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,6 +23,8 @@ export default function JobForm() {
     if (isEdit) {
       getJob(id).then((r) => {
         const j = r.data;
+        const lat = j.latitude ? parseFloat(j.latitude) : null;
+        const lng = j.longitude ? parseFloat(j.longitude) : null;
         setForm({
           category: j.category?.id || '',
           title: j.title,
@@ -23,22 +32,32 @@ export default function JobForm() {
           city: j.city,
           budget_range: j.budget_range || '',
           status: j.status,
+          latitude: lat,
+          longitude: lng,
         });
+        if (lat && lng) setFlyTo({ lat, lng });
       }).catch(() => navigate('/jobs'));
     }
   }, [id, isEdit, navigate]);
+
+  const handleLocationChange = ({ lat, lng }) => {
+    setForm((f) => ({ ...f, latitude: lat, longitude: lng }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
+      const payload = { ...form };
+      if (payload.latitude === null) delete payload.latitude;
+      if (payload.longitude === null) delete payload.longitude;
       if (isEdit) {
-        await updateJob(id, form);
+        await updateJob(id, payload);
       } else {
-        await createJob(form);
+        await createJob(payload);
       }
-      navigate('/jobs');
+      navigate('/profile');
     } catch (err) {
       const data = err.response?.data;
       setError(typeof data === 'string' ? data : data?.detail || JSON.stringify(data) || 'Failed to save job.');
@@ -89,6 +108,16 @@ export default function JobForm() {
               </select>
             </div>
           )}
+          <div className="form-group">
+            <label>Job Location <span className="text-muted">(optional — pin on map)</span></label>
+            <Suspense fallback={<div style={{ height: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LoadingSpinner /></div>}>
+              <LocationPicker
+                value={form.latitude !== null ? { lat: form.latitude, lng: form.longitude } : null}
+                onChange={handleLocationChange}
+                flyTo={flyTo}
+              />
+            </Suspense>
+          </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
             {loading ? 'Saving...' : isEdit ? 'Update Job' : 'Post Job'}
           </button>

@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getJobs, getSupercategories, getAllCategories } from '../api/endpoints';
 import { SITE_URL, SITE_NAME } from '../config/site';
-import { Search, MapPin, Filter, Briefcase, ChevronLeft, ChevronRight, DollarSign } from 'lucide-react';
+import { Search, MapPin, Filter, Briefcase, ChevronLeft, ChevronRight, DollarSign, List, Map } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
+
+const LazyJobMapView = lazy(() => import('../components/JobMapView'));
 
 export default function Jobs() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,6 +14,7 @@ export default function Jobs() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+  const [viewMode, setViewMode] = useState('list');
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || '',
@@ -31,6 +34,7 @@ export default function Jobs() {
   }, []);
 
   useEffect(() => {
+    if (viewMode !== 'list') return;
     setLoading(true);
     const params = { page };
     if (search) params.search = search;
@@ -46,7 +50,7 @@ export default function Jobs() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [page, search, filters]);
+  }, [page, search, filters, viewMode]);
 
   const applySearch = (e) => {
     e.preventDefault();
@@ -113,53 +117,79 @@ export default function Jobs() {
                 <option value="closed">Closed</option>
               </select>
             </div>
+            <div className="view-toggle" style={{ marginLeft: 'auto', display: 'flex', gap: '0.25rem' }}>
+              <button
+                type="button"
+                className={`btn btn-sm ${viewMode === 'list' ? 'btn-primary' : 'btn-outline'}`}
+                onClick={() => setViewMode('list')}
+                title="List view"
+              >
+                <List size={15} /> List
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${viewMode === 'map' ? 'btn-primary' : 'btn-outline'}`}
+                onClick={() => setViewMode('map')}
+                title="Map view"
+              >
+                <Map size={15} /> Map
+              </button>
+            </div>
           </div>
         </form>
 
-        {loading ? (
-          <LoadingSpinner />
-        ) : jobs.length === 0 ? (
-          <div className="empty-state">
-            <Briefcase size={48} />
-            <p>No jobs found.</p>
-          </div>
-        ) : (
-          <>
-            <div className="jobs-list">
-              {jobs.map((job) => (
-                <Link to={`/jobs/${job.id}`} key={job.id} className="job-card">
-                  <div className="job-card-header">
-                    <h3>{job.title}</h3>
-                    <span className={`badge ${job.status === 'open' ? 'badge-success' : 'badge-gray'}`}>
-                      {job.status}
-                    </span>
-                  </div>
-                  <p className="job-desc">{job.description?.slice(0, 180)}{job.description?.length > 180 ? '...' : ''}</p>
-                  <div className="job-card-meta">
-                    {job.category && <span className="tag">{job.category.name}</span>}
-                    <span><MapPin size={14} /> {job.city}</span>
-                    {job.budget_range && <span><DollarSign size={14} /> {job.budget_range}</span>}
-                    <span className="text-muted">{new Date(job.created_at).toLocaleDateString()}</span>
-                  </div>
-                  <div className="job-card-poster">
-                    Posted by {job.posted_by?.first_name} {job.posted_by?.last_name}
-                  </div>
-                </Link>
-              ))}
-            </div>
+        {viewMode === 'map' && (
+          <Suspense fallback={<LoadingSpinner />}>
+            <LazyJobMapView category={filters.category} />
+          </Suspense>
+        )}
 
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button disabled={page <= 1} onClick={() => setPage(page - 1)} className="btn btn-sm btn-outline">
-                  <ChevronLeft size={16} /> Prev
-                </button>
-                <span>Page {page} of {totalPages}</span>
-                <button disabled={page >= totalPages} onClick={() => setPage(page + 1)} className="btn btn-sm btn-outline">
-                  Next <ChevronRight size={16} />
-                </button>
+        {viewMode === 'list' && (
+          loading ? (
+            <LoadingSpinner />
+          ) : jobs.length === 0 ? (
+            <div className="empty-state">
+              <Briefcase size={48} />
+              <p>No jobs found.</p>
+            </div>
+          ) : (
+            <>
+              <div className="jobs-list">
+                {jobs.map((job) => (
+                  <Link to={`/jobs/${job.id}`} key={job.id} className="job-card">
+                    <div className="job-card-header">
+                      <h3>{job.title}</h3>
+                      <span className={`badge ${job.status === 'open' ? 'badge-success' : 'badge-gray'}`}>
+                        {job.status}
+                      </span>
+                    </div>
+                    <p className="job-desc">{job.description?.slice(0, 180)}{job.description?.length > 180 ? '...' : ''}</p>
+                    <div className="job-card-meta">
+                      {job.category && <span className="tag">{job.category.name}</span>}
+                      <span><MapPin size={14} /> {job.city}</span>
+                      {job.budget_range && <span><DollarSign size={14} /> {job.budget_range}</span>}
+                      <span className="text-muted">{new Date(job.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="job-card-poster">
+                      Posted by {job.posted_by?.first_name} {job.posted_by?.last_name}
+                    </div>
+                  </Link>
+                ))}
               </div>
-            )}
-          </>
+
+              {totalPages > 1 && (
+                <div className="pagination">
+                  <button disabled={page <= 1} onClick={() => setPage(page - 1)} className="btn btn-sm btn-outline">
+                    <ChevronLeft size={16} /> Prev
+                  </button>
+                  <span>Page {page} of {totalPages}</span>
+                  <button disabled={page >= totalPages} onClick={() => setPage(page + 1)} className="btn btn-sm btn-outline">
+                    Next <ChevronRight size={16} />
+                  </button>
+                </div>
+              )}
+            </>
+          )
         )}
       </div>
     </div>

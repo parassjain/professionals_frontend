@@ -96,6 +96,21 @@ export default function Home() {
         <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>
       </Helmet>
 
+      <div className="hero">
+        <div className="hero-content container">
+          <h1>Find Trusted Local Professionals in India</h1>
+          <p>Hire verified maids, cooks, drivers, plumbers, electricians and 50+ other professionals near you.</p>
+          <div className="hero-actions">
+            <button className="btn btn-primary" onClick={() => navigate('/professionals')}>
+              <Search size={18} /> Find a Professional
+            </button>
+            <button className="btn btn-outline" onClick={handleJoinProfessional}>
+              Become a Professional
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="stats-section">
         <div className="container">
           <div className="stats-grid">

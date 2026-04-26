@@ -141,6 +141,9 @@ export const updateJob = (id, data) =>
 export const deleteJob = (id) =>
   api.delete(`/jobs/${id}/`);
 
+export const getJobsMap = (params) =>
+  api.get('/jobs/map/', { params });
+
 // Reviews
 export const getReviews = (params) =>
   api.get('/reviews/', { params });
