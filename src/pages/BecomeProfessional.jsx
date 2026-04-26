@@ -9,7 +9,7 @@ export default function BecomeProfessional() {
   const { user, fetchUser } = useAuth();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  const [form, setForm] = useState({ headline: '', bio: '', years_experience: 0, address: '', services: [] });
+  const [form, setForm] = useState({ headline: '', bio: '', years_experience: 0, address: '', alternate_phone: '', services: [] });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -165,6 +165,15 @@ export default function BecomeProfessional() {
               min={0}
               value={form.years_experience}
               onChange={(e) => setForm({ ...form, years_experience: parseInt(e.target.value) || 0 })}
+            />
+          </div>
+          <div className="form-group">
+            <label>Alternate Phone (optional)</label>
+            <input
+              type="tel"
+              value={form.alternate_phone}
+              onChange={(e) => setForm({ ...form, alternate_phone: e.target.value })}
+              placeholder="+91 98765 43210"
             />
           </div>
           <div className="form-group">

@@ -199,7 +199,7 @@ function CategoriesTab() {
 const EMPTY_PRO = {
   email: '', first_name: '', last_name: '', phone: '', city: '',
   headline: '', bio: '', years_experience: 0, address: '',
-  services: [], is_verified: false,
+  alternate_phone: '', services: [], is_verified: false,
 };
 
 function ProfessionalsTab() {
@@ -328,9 +328,14 @@ function ProfessionalsTab() {
                 <input className="form-input" type="number" min={0} value={form.years_experience} onChange={(e) => setForm({ ...form, years_experience: e.target.value })} />
               </div>
               <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Address</label>
-                <input className="form-input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Street, area, city" />
+                <label className="form-label">Alternate Phone</label>
+                <input className="form-input" value={form.alternate_phone} onChange={(e) => setForm({ ...form, alternate_phone: e.target.value })} placeholder="+91 98765 43210" />
               </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Address</label>
+              <input className="form-input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Street, area, city" />
             </div>
 
             {/* Services */}
