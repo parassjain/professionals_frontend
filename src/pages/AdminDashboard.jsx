@@ -210,8 +210,8 @@ function ProfessionalsTab() {
 
   const fetchAll = async () => {
     const [proRes, catRes] = await Promise.all([adminListProfessionals(), getCategories()]);
-    setProfessionals(proRes?.data || []);
-    setCategories(catRes?.data || []);
+    setProfessionals(proRes?.results || proRes?.data || []);
+    setCategories(catRes || []);
     setLoading(false);
   };
 
