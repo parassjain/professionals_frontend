@@ -442,7 +442,7 @@ img { max-width: 100%; height: auto; }
 .stat-card h3 { 
   font-size: 2rem; 
   font-weight: 700; 
-  color: white;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -637,7 +637,7 @@ img { max-width: 100%; height: auto; }
   flex-shrink: 0;
   overflow: hidden;
   position: relative;
-  border: 2px solid white;
+  border: 2px solid var(--bg-card);
   box-shadow: var(--shadow-sm);
 }
 
