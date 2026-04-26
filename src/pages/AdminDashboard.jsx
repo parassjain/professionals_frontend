@@ -370,7 +370,7 @@ function ProfessionalsTab() {
             </tr>
           </thead>
           <tbody>
-            {professionals.map((pro) => (
+            {professionals?.map((pro) => (
               <tr key={pro.public_id} style={{ borderBottom: '1px solid var(--gray-100)' }}>
                 <td style={{ ...tdStyle, fontWeight: 500 }}>
                   {pro.user?.first_name} {pro.user?.last_name}
