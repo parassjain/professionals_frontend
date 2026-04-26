@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
   getAllCategories, getAllCategoriesAdmin, getSupercategories, createCategory, updateCategory, deleteCategory,
-  adminListProfessionals, adminVerifyProfessional, getCategories,
+  adminListProfessionals, adminVerifyProfessional,
   getSiteStats, adminCreateProfessional, deleteProfessionalProfile,
 } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -214,7 +214,7 @@ function ProfessionalsTab() {
 
   const fetchAll = async () => {
     try {
-      const [proRes, catRes] = await Promise.all([adminListProfessionals(), getCategories()]);
+      const [proRes, catRes] = await Promise.all([adminListProfessionals(), getAllCategoriesAdmin()]);
       const proData = Array.isArray(proRes) ? proRes : (proRes?.results || proRes?.data || []);
       const catData = Array.isArray(catRes) ? catRes : (catRes?.results || catRes?.data || []);
       setProfessionals(proData);
