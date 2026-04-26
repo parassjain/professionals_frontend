@@ -209,9 +209,17 @@ function ProfessionalsTab() {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   const fetchAll = async () => {
-    const [proRes, catRes] = await Promise.all([adminListProfessionals(), getCategories()]);
-    setProfessionals(proRes?.results || proRes?.data || []);
-    setCategories(catRes || []);
+    try {
+      const [proRes, catRes] = await Promise.all([adminListProfessionals(), getCategories()]);
+      const proData = proRes?.results || proRes?.data || proRes || [];
+      const catData = Array.isArray(catRes) ? catRes : (catRes?.results || catRes?.data || []);
+      setProfessionals(proData);
+      setCategories(catData);
+    } catch (err) {
+      console.error('Failed to fetch:', err);
+      setProfessionals([]);
+      setCategories([]);
+    }
     setLoading(false);
   };
 
@@ -370,7 +378,7 @@ function ProfessionalsTab() {
             </tr>
           </thead>
           <tbody>
-            {professionals?.map((pro) => (
+            {(professionals || []).map((pro) => (
               <tr key={pro.public_id} style={{ borderBottom: '1px solid var(--gray-100)' }}>
                 <td style={{ ...tdStyle, fontWeight: 500 }}>
                   {pro.user?.first_name} {pro.user?.last_name}
