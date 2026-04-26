@@ -383,33 +383,29 @@ export default function Profile() {
               </div>
             )}
 
-            {user?.is_professional && (
-              <>
-                {/* My Jobs */}
-                <div className="detail-section">
-                  <div className="section-header-row">
-                    <h2><Briefcase size={20} /> My Job Postings</h2>
-                    <Link to="/jobs/create" className="btn btn-sm btn-outline">Post a Job</Link>
-                  </div>
-                  {myJobs.length === 0 ? (
-                    <p className="text-muted">You haven't posted any jobs yet.</p>
-                  ) : (
-                    <div className="jobs-list compact">
-                      {myJobs.slice(0, 5).map((job) => (
-                        <Link to={`/jobs/${job.id}`} key={job.id} className="job-card">
-                          <h3>{job.title}</h3>
-                          <div className="job-card-meta">
-                            <span className={`badge ${job.status === 'open' ? 'badge-green' : 'badge-gray'}`}>{job.status}</span>
-                            <span>{job.city}</span>
-                            <span>{new Date(job.created_at).toLocaleDateString()}</span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+            {/* My Jobs */}
+            <div className="detail-section">
+              <div className="section-header-row">
+                <h2><Briefcase size={20} /> My Job Postings</h2>
+                <Link to="/jobs/create" className="btn btn-sm btn-outline">Post a Job</Link>
+              </div>
+              {myJobs.length === 0 ? (
+                <p className="text-muted">You haven't posted any jobs yet.</p>
+              ) : (
+                <div className="jobs-list compact">
+                  {myJobs.slice(0, 5).map((job) => (
+                    <Link to={`/jobs/${job.id}`} key={job.id} className="job-card">
+                      <h3>{job.title}</h3>
+                      <div className="job-card-meta">
+                        <span className={`badge ${job.status === 'open' ? 'badge-green' : 'badge-gray'}`}>{job.status}</span>
+                        <span>{job.city}</span>
+                        <span>{new Date(job.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              </>
-            )}
+              )}
+            </div>
 
             {/* Reviews Received */}
             <div className="detail-section">
