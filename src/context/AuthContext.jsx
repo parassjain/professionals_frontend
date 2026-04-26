@@ -29,8 +29,13 @@ export function AuthProvider({ children }) {
       localStorage.setItem('user', JSON.stringify(data));
       setUser(data);
       return data;
-    } catch {
-      clearAuth();
+    } catch (err) {
+      // Only clear auth on explicit rejection — not on network errors or
+      // 5xx responses that occur during server restarts/downtime.
+      const status = err.response?.status;
+      if (status === 401 || status === 403) {
+        clearAuth();
+      }
       return null;
     }
   }, [clearAuth]);
