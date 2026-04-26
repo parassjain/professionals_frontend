@@ -49,7 +49,7 @@ export default function Categories() {
         <p className="page-subtitle">Browse professionals by category to find the right expert</p>
 
         {popularServices.length > 0 && (
-          <div className="mb-4 mt-4 text-center">
+          <div className="m-4 mt-4 text-center">
             <h2 className="section-title">Most Popular Services</h2>
             <div className="card-grid-8">
               {popularServices.map((cat) => (
