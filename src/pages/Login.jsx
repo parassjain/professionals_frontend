@@ -65,12 +65,13 @@ export default function Login() {
   const handleSendPhoneOTP = async (e) => {
     e.preventDefault();
     setError('');
+    if (!/^\d{10}$/.test(phoneNum.trim())) { setError('Enter a valid 10-digit mobile number.'); setLoading(false); return; }
     setLoading(true);
     try {
       if (!recaptchaRef.current) {
         recaptchaRef.current = new RecaptchaVerifier(firebaseAuth, 'login-recaptcha-container', { size: 'invisible' });
       }
-      const result = await signInWithPhoneNumber(firebaseAuth, phoneNum.trim(), recaptchaRef.current);
+      const result = await signInWithPhoneNumber(firebaseAuth, `+91${phoneNum.trim()}`, recaptchaRef.current);
       confirmationRef.current = result;
       setPhoneStep('otp');
     } catch (err) {
@@ -199,9 +200,23 @@ export default function Login() {
             {phoneStep === 'phone' ? (
               <form onSubmit={handleSendPhoneOTP}>
                 <div className="form-group">
-                  <label><Phone size={16} /> Phone number</label>
-                  <input type="tel" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} required placeholder="+91 98765 43210" disabled={loading} autoFocus />
-                  <p className="text-muted text-sm" style={{ marginTop: 4 }}>Include country code, e.g. +91 for India.</p>
+                  <label><Phone size={16} /> Mobile number</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+                    <span style={{ padding: '0.55rem 0.75rem', background: 'var(--gray-100)', border: '1px solid var(--border)', borderRight: 'none', borderRadius: '6px 0 0 6px', color: 'var(--gray-600)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>+91</span>
+                    <input
+                      className="form-input"
+                      style={{ borderRadius: '0 6px 6px 0' }}
+                      type="tel"
+                      inputMode="numeric"
+                      maxLength={10}
+                      value={phoneNum}
+                      onChange={(e) => setPhoneNum(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                      required
+                      placeholder="98765 43210"
+                      disabled={loading}
+                      autoFocus
+                    />
+                  </div>
                 </div>
                 <div id="login-recaptcha-container" />
                 <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
@@ -211,7 +226,7 @@ export default function Login() {
             ) : (
               <form onSubmit={handleVerifyPhoneOTP}>
                 <p className="text-muted" style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>
-                  OTP sent to <strong>{phoneNum}</strong>.{' '}
+                  OTP sent to <strong>+91 {phoneNum}</strong>.{' '}
                   <button type="button" className="btn-link" onClick={() => { setPhoneStep('phone'); setOtp(''); setError(''); }}>Change</button>
                 </p>
                 <div className="form-group">

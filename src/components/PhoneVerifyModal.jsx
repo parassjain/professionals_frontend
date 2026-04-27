@@ -81,18 +81,21 @@ export default function PhoneVerifyModal({ onClose, onVerified }) {
           <form onSubmit={handleSendOTP}>
             <div className="form-group">
               <label className="form-label">Phone number (with country code)</label>
-              <input
-                className="form-input"
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 98765 43210"
-                disabled={loading}
-                autoFocus
-              />
-              <p className="text-muted text-sm" style={{ marginTop: 4 }}>
-                Include the country code, e.g. +91 for India.
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+                <span style={{ padding: '0.55rem 0.75rem', background: 'var(--gray-100)', border: '1px solid var(--border)', borderRight: 'none', borderRadius: '6px 0 0 6px', color: 'var(--gray-600)', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>+91</span>
+                <input
+                  className="form-input"
+                  style={{ borderRadius: '0 6px 6px 0' }}
+                  type="tel"
+                  inputMode="numeric"
+                  maxLength={10}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  placeholder="98765 43210"
+                  disabled={loading}
+                  autoFocus
+                />
+              </div>
             </div>
             <div id="recaptcha-container" />
             <button className="btn btn-primary btn-full" type="submit" disabled={loading}>
@@ -102,7 +105,7 @@ export default function PhoneVerifyModal({ onClose, onVerified }) {
         ) : (
           <form onSubmit={handleVerifyOTP}>
             <p className="text-muted" style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>
-              OTP sent to <strong>{phone}</strong>.{' '}
+              OTP sent to <strong>+91 {phone}</strong>.{' '}
               <button type="button" className="btn-link" onClick={() => { setStep('phone'); setOtp(''); setError(''); }}>
                 Change number
               </button>
