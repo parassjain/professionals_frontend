@@ -25,14 +25,14 @@ export default function PhoneVerifyModal({ onClose, onVerified }) {
   const handleSendOTP = async (e) => {
     e.preventDefault();
     setError('');
-    if (!phone.trim()) { setError('Enter a phone number.'); return; }
+    if (!/^\d{10}$/.test(phone.trim())) { setError('Enter a valid 10-digit mobile number.'); return; }
 
     setLoading(true);
     try {
       if (!recaptchaRef.current) {
         recaptchaRef.current = new RecaptchaVerifier(firebaseAuth, 'recaptcha-container', { size: 'invisible' });
       }
-      const result = await signInWithPhoneNumber(firebaseAuth, phone.trim(), recaptchaRef.current);
+      const result = await signInWithPhoneNumber(firebaseAuth, `+91${phone.trim()}`, recaptchaRef.current);
       confirmationRef.current = result;
       setStep('otp');
     } catch (err) {
