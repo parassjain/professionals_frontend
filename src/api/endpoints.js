@@ -13,6 +13,12 @@ export const googleLogin = (code) =>
 export const googleOneTap = (credential) =>
   api.post('/users/google-one-tap/', { credential });
 
+export const firebasePhoneVerify = (idToken) =>
+  api.post('/users/phone/firebase-verify/', { id_token: idToken });
+
+export const firebasePhoneLogin = (idToken) =>
+  api.post('/users/phone/firebase-login/', { id_token: idToken });
+
 export const refreshToken = (refresh) =>
   api.post('/auth/token/refresh/', { refresh });
 

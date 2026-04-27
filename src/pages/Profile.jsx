@@ -5,6 +5,7 @@ import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile
 import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Code, Globe, AlertCircle, Sparkles } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
+import PhoneVerifyModal from '../components/PhoneVerifyModal';
 
 const MAX_IMAGE_SIZE_MB = 2;
 const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
@@ -32,6 +33,7 @@ export default function Profile() {
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiError, setAiError] = useState('');
   const [aiApplying, setAiApplying] = useState(false);
+  const [showPhoneModal, setShowPhoneModal] = useState(false);
   const userRef = useRef(user);
 
   const PLATFORMS = ['facebook', 'linkedin', 'twitter', 'github', 'instagram', 'youtube', 'website'];
@@ -214,6 +216,12 @@ export default function Profile() {
 
   return (
     <div className="section">
+      {showPhoneModal && (
+        <PhoneVerifyModal
+          onClose={() => setShowPhoneModal(false)}
+          onVerified={() => { setShowPhoneModal(false); fetchUser(); }}
+        />
+      )}
       <div className="container">
         <div className="detail-layout">
           <div className="detail-main">
@@ -234,13 +242,29 @@ export default function Profile() {
                     ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email verified" />
                     : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Email not verified" />}
                 </p>
-                {user.phone && (
+                {user.phone ? (
                   <p className="text-muted">
                     <Phone size={14} /> {user.phone}
                     {user.is_phone_verified
                       ? <CheckCircle size={13} color="#22c55e" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone verified" />
-                      : <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone not verified" />}
+                      : (
+                        <>
+                          <XCircle size={13} color="#94a3b8" style={{ marginLeft: '5px', verticalAlign: 'middle' }} title="Phone not verified" />
+                          <button className="btn btn-sm btn-outline" style={{ marginLeft: 8, padding: '1px 8px', fontSize: '0.75rem' }} onClick={() => setShowPhoneModal(true)}>
+                            Verify
+                          </button>
+                        </>
+                      )}
                   </p>
+                ) : (
+                  !user.is_phone_verified && (
+                    <p className="text-muted">
+                      <Phone size={14} />
+                      <button className="btn btn-sm btn-outline" style={{ marginLeft: 6, padding: '1px 8px', fontSize: '0.75rem' }} onClick={() => setShowPhoneModal(true)}>
+                        Add &amp; Verify Phone
+                      </button>
+                    </p>
+                  )
                 )}
                 {user.city && <p className="text-muted"><MapPin size={14} /> {user.city}</p>}
                 {user.is_professional && <span className="badge badge-blue">Professional</span>}
