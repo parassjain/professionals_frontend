@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProfessionalRoute from './components/ProfessionalRoute';
 import AdminRoute from './components/AdminRoute';
 import LoadingSpinner from './components/LoadingSpinner';
+import Analytics from './components/Analytics';
 import './index.css';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -46,6 +47,7 @@ export default function App() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ''}>
       <BrowserRouter>
+        <Analytics />
         <AuthProvider>
           <div className="app-layout">
             <Navbar />
