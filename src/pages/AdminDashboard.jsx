@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
-  getAllCategories, getAllCategoriesAdmin, getSupercategories, createCategory, updateCategory, deleteCategory,
+  getAllCategoriesAdmin, getSupercategories, createCategory, updateCategory, deleteCategory,
   adminListProfessionals, adminVerifyProfessional,
   getSiteStats, adminCreateProfessional, deleteProfessionalProfile,
 } from '../api/endpoints';
@@ -34,7 +34,7 @@ function CategoriesTab() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const [allRes, superRes] = await Promise.all([getAllCategories(), getSupercategories()]);
+      const [allRes, superRes] = await Promise.all([getAllCategoriesAdmin(), getSupercategories()]);
       const allData = Array.isArray(allRes) ? allRes : (allRes?.data || allRes?.results || []);
       const superData = Array.isArray(superRes) ? superRes : (superRes?.data || superRes?.results || []);
       setCategories(allData);
