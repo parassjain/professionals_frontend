@@ -63,7 +63,7 @@ export const getPopularServices = () =>
   api.get('/categories/popular/');
 
 export const getAllCategoriesAdmin = () =>
-  api.get('/categories/all_admin/');
+  api.get('/admin/categories/');
 
 export const getSupercategories = () =>
   api.get('/categories/supercategories/');
@@ -112,10 +112,10 @@ export const getProfessionalsMap = (params) =>
   api.get('/professionals/map/', { params });
 
 export const adminListProfessionals = () =>
-  api.get('/professionals/admin-list/');
+  api.get('/admin/professionals/');
 
 export const adminCreateProfessional = (data) =>
-  api.post('/professionals/admin-create/', data);
+  api.post('/admin/professionals/', data);
 
 export const adminVerifyProfessional = (id, is_verified) =>
   api.patch(`/professionals/${id}/`, { is_verified });
