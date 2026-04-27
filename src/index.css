@@ -1361,7 +1361,7 @@ img { max-width: 100%; height: auto; }
 
 /* Reviews */
 .review-form {
-  background: var(--gray-50);
+  background: var(--bg-card);
   padding: 1.5rem;
   border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
@@ -1414,8 +1414,8 @@ img { max-width: 100%; height: auto; }
 .anonymous-note {
   font-size: 0.8rem;
   color: var(--text-muted);
-  background: var(--gray-100);
-  border-left: 3px solid var(--gray-300);
+  background: var(--border-light);
+  border-left: 3px solid var(--border);
   padding: 0.5rem 0.75rem;
   border-radius: 0 6px 6px 0;
   margin-bottom: 0.75rem;

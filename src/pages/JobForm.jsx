@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createJob, updateJob, getJob, getCategories } from '../api/endpoints';
+import { createJob, updateJob, getJob, getAllCategories } from '../api/endpoints';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const LocationPicker = lazy(() => import('../components/LocationPicker'));
@@ -19,7 +19,7 @@ export default function JobForm() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getCategories().then((r) => setCategories((r.data || []).filter((c) => c.parent !== null))).catch(() => {});
+    getAllCategories().then((r) => setCategories(r.data || [])).catch(() => {});
     if (isEdit) {
       getJob(id).then((r) => {
         const j = r.data;
