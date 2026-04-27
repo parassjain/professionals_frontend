@@ -1038,6 +1038,24 @@ img { max-width: 100%; height: auto; }
   border-top: 1px solid var(--border-light);
 }
 
+.ai-suggestion-card {
+  margin-top: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid #a78bfa;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+.ai-suggestion-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #6d28d9;
+  margin-bottom: 1rem;
+}
+
 .detail-section h2 {
   display: flex;
   align-items: center;

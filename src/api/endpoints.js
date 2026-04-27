@@ -105,6 +105,9 @@ export const revealContact = (id) =>
 export const getMyProfessionalProfile = () =>
   api.get('/professionals/mine/');
 
+export const refineBioWithAI = (publicId) =>
+  api.post(`/professionals/${publicId}/refine-bio/`);
+
 export const getProfessionalsMap = (params) =>
   api.get('/professionals/map/', { params });
 

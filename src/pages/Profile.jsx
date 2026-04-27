@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getMyJobs, getMyGivenReviews, getMyReceivedReviews, getMyProfessionalProfile, addPortfolioImage, deletePortfolioImage, addSocialLink, deleteSocialLink } from '../api/endpoints';
-import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Code, Globe, AlertCircle } from 'lucide-react';
+import { updateCurrentUser, updateCurrentUserWithFile, updateProfessionalProfile, getMyJobs, getMyGivenReviews, getMyReceivedReviews, getMyProfessionalProfile, addPortfolioImage, deletePortfolioImage, addSocialLink, deleteSocialLink, refineBioWithAI } from '../api/endpoints';
+import { User, Mail, Phone, MapPin, Edit, Briefcase, Star, CheckCircle, XCircle, Trash2, ImagePlus, Link2, Code, Globe, AlertCircle, Sparkles } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -28,6 +28,10 @@ export default function Profile() {
   const [socialLinks, setSocialLinks] = useState([]);
   const [socialForm, setSocialForm] = useState({ platform: '', url: '' });
   const [socialError, setSocialError] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState(null);
+  const [aiError, setAiError] = useState('');
+  const [aiApplying, setAiApplying] = useState(false);
   const userRef = useRef(user);
 
   const PLATFORMS = ['facebook', 'linkedin', 'twitter', 'github', 'instagram', 'youtube', 'website'];
@@ -172,6 +176,39 @@ export default function Profile() {
     }
   };
 
+  const handleRefineWithAI = async () => {
+    if (!proProfile) return;
+    setAiLoading(true);
+    setAiError('');
+    setAiSuggestion(null);
+    try {
+      const { data } = await refineBioWithAI(proProfile.public_id);
+      setAiSuggestion({ headline: data.headline, bio: data.bio });
+    } catch (err) {
+      setAiError(err.response?.data?.detail || 'Failed to get AI suggestions. Please try again.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleApplyAI = async () => {
+    if (!aiSuggestion || !proProfile) return;
+    setAiApplying(true);
+    setAiError('');
+    try {
+      await updateProfessionalProfile(proProfile.public_id, {
+        headline: aiSuggestion.headline,
+        bio: aiSuggestion.bio,
+      });
+      setProProfile({ ...proProfile, headline: aiSuggestion.headline, bio: aiSuggestion.bio });
+      setAiSuggestion(null);
+    } catch (err) {
+      setAiError('Failed to apply suggestions.');
+    } finally {
+      setAiApplying(false);
+    }
+  };
+
   if (authLoading || loading) return <LoadingSpinner />;
   if (!user) { navigate('/login'); return null; }
 
@@ -299,19 +336,28 @@ export default function Profile() {
               <div className="detail-section">
                 <div className="section-header-row">
                   <h2>Professional Profile</h2>
-                  <button
-                    className={`btn btn-sm ${proProfile.is_active ? 'btn-outline' : 'btn-primary'}`}
-                    onClick={async () => {
-                      try {
-                        await updateProfessionalProfile(proProfile.public_id, { is_active: !proProfile.is_active });
-                        setProProfile({ ...proProfile, is_active: !proProfile.is_active });
-                      } catch (err) {
-                        setError('Failed to update listing status.');
-                      }
-                    }}
-                  >
-                    {proProfile.is_active ? 'Disable Listing' : 'Enable Listing'}
-                  </button>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <button
+                      className="btn btn-sm btn-outline"
+                      onClick={handleRefineWithAI}
+                      disabled={aiLoading}
+                    >
+                      <Sparkles size={14} /> {aiLoading ? 'Thinking...' : 'Refine with AI'}
+                    </button>
+                    <button
+                      className={`btn btn-sm ${proProfile.is_active ? 'btn-outline' : 'btn-primary'}`}
+                      onClick={async () => {
+                        try {
+                          await updateProfessionalProfile(proProfile.public_id, { is_active: !proProfile.is_active });
+                          setProProfile({ ...proProfile, is_active: !proProfile.is_active });
+                        } catch (err) {
+                          setError('Failed to update listing status.');
+                        }
+                      }}
+                    >
+                      {proProfile.is_active ? 'Disable Listing' : 'Enable Listing'}
+                    </button>
+                  </div>
                 </div>
                 {!proProfile.is_active && (
                   <div className="alert alert-error" style={{ marginBottom: '10px' }}>
@@ -330,6 +376,51 @@ export default function Profile() {
                     {proProfile.services?.map((s) => <span key={s.id} className="tag">{s.name}</span>)}
                   </div>
                 </Link>
+
+                {aiError && <div className="alert alert-error" style={{ marginTop: '12px' }}>{aiError}</div>}
+
+                {aiSuggestion && (
+                  <div className="ai-suggestion-card">
+                    <div className="ai-suggestion-header">
+                      <Sparkles size={16} />
+                      <span>AI Suggestions — review and edit before applying</span>
+                    </div>
+                    <div className="form-group">
+                      <label>Suggested Headline</label>
+                      <input
+                        type="text"
+                        value={aiSuggestion.headline}
+                        maxLength={100}
+                        onChange={(e) => setAiSuggestion({ ...aiSuggestion, headline: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Suggested Bio</label>
+                      <textarea
+                        rows={4}
+                        value={aiSuggestion.bio}
+                        maxLength={400}
+                        onChange={(e) => setAiSuggestion({ ...aiSuggestion, bio: e.target.value })}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={handleApplyAI}
+                        disabled={aiApplying}
+                      >
+                        {aiApplying ? 'Applying...' : 'Apply'}
+                      </button>
+                      <button
+                        className="btn btn-outline btn-sm"
+                        onClick={() => { setAiSuggestion(null); setAiError(''); }}
+                        disabled={aiApplying}
+                      >
+                        Dismiss
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
