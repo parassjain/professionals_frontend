@@ -10,6 +10,9 @@ export const register = (data) =>
 export const googleLogin = (code) =>
   api.post('/users/google/', { code });
 
+export const googleOneTap = (credential) =>
+  api.post('/users/google-one-tap/', { credential });
+
 export const refreshToken = (refresh) =>
   api.post('/auth/token/refresh/', { refresh });
 

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getCurrentUser, login as apiLogin, register as apiRegister, googleLogin as apiGoogleLogin, logout as apiLogout } from '../api/endpoints';
+import { getCurrentUser, login as apiLogin, register as apiRegister, googleLogin as apiGoogleLogin, googleOneTap as apiGoogleOneTap, logout as apiLogout } from '../api/endpoints';
 
 const AuthContext = createContext(null);
 
@@ -71,13 +71,19 @@ export function AuthProvider({ children }) {
     return userRes.data;
   };
 
+  const oneTapLogin = async (credential) => {
+    const { data } = await apiGoogleOneTap(credential);
+    saveAuth({ access: data.access, refresh: data.refresh }, data.user);
+    return data.user;
+  };
+
   const logout = async () => {
     try { await apiLogout(); } catch { /* ignore */ }
     clearAuth();
   };
 
   return (
-    <AuthContext.Provider value={{ user, tokens, loading, login, register, googleLogin, logout, fetchUser, isAuthenticated: !!tokens?.access }}>
+    <AuthContext.Provider value={{ user, tokens, loading, login, register, googleLogin, oneTapLogin, logout, fetchUser, isAuthenticated: !!tokens?.access }}>
       {children}
     </AuthContext.Provider>
   );

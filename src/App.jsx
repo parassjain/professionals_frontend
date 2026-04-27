@@ -10,6 +10,7 @@ import ProfessionalRoute from './components/ProfessionalRoute';
 import AdminRoute from './components/AdminRoute';
 import LoadingSpinner from './components/LoadingSpinner';
 import Analytics from './components/Analytics';
+import GoogleOneTap from './components/GoogleOneTap';
 import './index.css';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -49,6 +50,7 @@ export default function App() {
       <BrowserRouter>
         <Analytics />
         <AuthProvider>
+          <GoogleOneTap />
           <div className="app-layout">
             <Navbar />
             <main className="main-content">
