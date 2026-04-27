@@ -19,7 +19,7 @@ export default function JobForm() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getCategories().then((r) => setCategories(r.data)).catch(() => {});
+    getCategories().then((r) => setCategories((r.data || []).filter((c) => c.parent !== null))).catch(() => {});
     if (isEdit) {
       getJob(id).then((r) => {
         const j = r.data;
