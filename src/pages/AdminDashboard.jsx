@@ -142,6 +142,7 @@ function CategoriesTab() {
               <th style={thStyle}>Parent</th>
               <th style={thStyle}>Slug</th>
               <th style={{ ...thStyle, textAlign: 'center' }}>Pros</th>
+              <th style={{ ...thStyle, textAlign: 'center' }}>Status</th>
               <th style={{ ...thStyle, textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
