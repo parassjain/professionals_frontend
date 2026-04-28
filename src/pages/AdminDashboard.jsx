@@ -175,6 +175,22 @@ function CategoriesTab() {
                     {cat.professional_count || 0}
                   </span>
                 </td>
+                <td style={{ ...tdStyle, textAlign: 'center' }}>
+                  <button
+                    className="btn btn-sm"
+                    onClick={() => handleToggle(cat.slug)}
+                    title={cat.is_active ? 'Disable category' : 'Enable category'}
+                    style={{
+                      background: cat.is_active ? '#dcfce7' : 'var(--gray-100)',
+                      color: cat.is_active ? '#16a34a' : 'var(--gray-500)',
+                      border: 'none',
+                      fontWeight: 600,
+                      minWidth: 68,
+                    }}
+                  >
+                    {cat.is_active ? 'Active' : 'Disabled'}
+                  </button>
+                </td>
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
                   {deleteConfirm === cat.slug ? (
                     <span style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
@@ -192,7 +208,7 @@ function CategoriesTab() {
               </tr>
             ))}
             {categories.length === 0 && (
-              <tr><td colSpan={6} style={{ ...tdStyle, textAlign: 'center', color: 'var(--gray-400)' }}>No categories yet. Add your first category above.</td></tr>
+              <tr><td colSpan={7} style={{ ...tdStyle, textAlign: 'center', color: 'var(--gray-400)' }}>No categories yet. Add your first category above.</td></tr>
             )}
           </tbody>
         </table>
