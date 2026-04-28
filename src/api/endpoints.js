@@ -74,6 +74,9 @@ export const getPopularServices = () =>
 export const getAllCategoriesAdmin = () =>
   api.get('/admin/categories/');
 
+export const toggleCategoryActive = (slug) =>
+  api.post(`/admin/categories/${slug}/toggle/`);
+
 export const getSupercategories = () =>
   api.get('/categories/supercategories/');
 

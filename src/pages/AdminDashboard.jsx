@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus, X, Check, ShieldCheck, ShieldOff, Users, Briefcase, Star, Shield } from 'lucide-react';
 import {
-  getAllCategoriesAdmin, getSupercategories, createCategory, updateCategory, deleteCategory,
+  getAllCategoriesAdmin, getSupercategories, createCategory, updateCategory, deleteCategory, toggleCategoryActive,
   adminListProfessionals, adminVerifyProfessional,
   getSiteStats, adminCreateProfessional, deleteProfessionalProfile,
 } from '../api/endpoints';
@@ -75,6 +75,13 @@ function CategoriesTab() {
   const handleDelete = async (slug) => {
     try { await deleteCategory(slug); setDeleteConfirm(null); setCategories((p) => p.filter((c) => c.slug !== slug)); }
     catch { setError('Failed to delete category.'); }
+  };
+
+  const handleToggle = async (slug) => {
+    try {
+      const { data } = await toggleCategoryActive(slug);
+      setCategories((p) => p.map((c) => c.slug === slug ? { ...c, is_active: data.is_active } : c));
+    } catch { setError('Failed to toggle category.'); }
   };
 
   if (loading) return <LoadingSpinner />;
